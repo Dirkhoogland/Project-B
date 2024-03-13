@@ -1,24 +1,7 @@
-
-Project B/.vs/Project B/DesignTimeBuild/.dtbcache.v2
-Project B/.vs/Project B/FileContentIndex/05771931-760b-495d-92b5-37897133cd54.vsidx
-Project B/.vs/Project B/FileContentIndex/3721c90b-e919-45b3-bdad-7669ee89bf98.vsidx
-Project B/.vs/Project B/FileContentIndex/5a541686-1635-4fce-9d8b-a1836e05f8dd.vsidx
-Project B/.vs/Project B/FileContentIndex/98072352-a2a6-4f43-90fe-b94f3228548e.vsidx
-Project B/.vs/Project B/FileContentIndex/c21feea5-405e-424f-8ffd-72d0c9e3d8a5.vsidx
-Project B/obj/Debug/net7.0/Project B.AssemblyInfo.cs
-Project B/obj/Debug/net7.0/Project B.AssemblyInfoInputs.cache
-Project B/obj/Debug/net7.0/Project B.assets.cache
-Project B/obj/Debug/net7.0/Project B.GeneratedMSBuildEditorConfig.editorconfig
-Project B/obj/Project B.csproj.nuget.dgspec.json
-Project B/obj/project.assets.json
-Project B/obj/project.nuget.cache
-Project Btest/obj/Debug/net7.0/Project Btest.AssemblyInfo.cs
-Project Btest/obj/Debug/net7.0/Project Btest.AssemblyInfoInputs.cache
-Project Btest/obj/Debug/net7.0/Project Btest.assets.cache
-Project Btest/obj/Debug/net7.0/Project Btest.GeneratedMSBuildEditorConfig.editorconfig
-Project Btest/obj/Project Btest.csproj.nuget.dgspec.json
-Project Btest/obj/project.assets.json
-Project Btest/obj/project.nuget.cache
+Project B/.vs
+Project B/obj
+Project B/bin
+Project Btest/obj
 Project B/.vs/Project B/DesignTimeBuild/.dtbcache.v2
 Project B/.vs/Project B/FileContentIndex/05771931-760b-495d-92b5-37897133cd54.vsidx
 Project B/.vs/Project B/FileContentIndex/5a541686-1635-4fce-9d8b-a1836e05f8dd.vsidx
