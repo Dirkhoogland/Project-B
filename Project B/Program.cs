@@ -1,2 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Project_B.DataAcces;
+
+namespace Project_B
+{
+    public class Project_B()
+    {
+        static void Main()
+        {
+            DataAccess.Database();
+        }
+    }
+}
