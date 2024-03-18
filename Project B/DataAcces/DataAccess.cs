@@ -15,9 +15,9 @@ namespace Project_B.DataAcces
         {
             SQLiteConnection sqlite_conn;
             sqlite_conn = CreateConnection();
-            //CreateTable(sqlite_conn);
-            //InsertData(sqlite_conn);
-            ReadData(sqlite_conn);
+            CreateTable(sqlite_conn);
+            InsertData(sqlite_conn);
+            // ReadData(sqlite_conn);
         }
         private static string databasePath
         {
@@ -40,28 +40,38 @@ namespace Project_B.DataAcces
         static void CreateTable(SQLiteConnection conn)
         {
             // creates the user table with a ID, Email And name
-            SQLiteCommand sqlite_cmd;
-            string Createsql = "CREATE TABLE Users("+
-                "ID INTEGER PRIMARY KEY AUTOINCREMENT,"+  
-                "Email VARCHAR(255),"+
-                "Name VARCHAR(225))";
-            sqlite_cmd = conn.CreateCommand();
-            sqlite_cmd.CommandText = Createsql;
-            sqlite_cmd.ExecuteNonQuery();
+            try
+            {
+                SQLiteCommand sqlite_cmd;
+                string Createsql = "CREATE TABLE Users(" +
+                    "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "Email VARCHAR(255)," +
+                    "Name VARCHAR(225))";
+                sqlite_cmd = conn.CreateCommand();
+                sqlite_cmd.CommandText = Createsql;
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { }
         }
 
         static void InsertData(SQLiteConnection conn)
         {
-            // inserts test data of 3 users.
+            SQLiteDataReader sqlite_datareader;
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = conn.CreateCommand();
-            sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email ','Dirk'); ";
-            sqlite_cmd.ExecuteNonQuery();
-            sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email1 ','Berat'); ";
-            sqlite_cmd.ExecuteNonQuery();
-            sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email2 ','Mitchel'); ";
-            sqlite_cmd.ExecuteNonQuery();
-
+            sqlite_cmd.CommandText = "SELECT * FROM Users";
+            sqlite_datareader = sqlite_cmd.ExecuteReader();
+            // inserts test data of 3 users.
+            if (sqlite_datareader.Read() == false)
+            {
+                sqlite_cmd = conn.CreateCommand();
+                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email ','Dirk'); ";
+                sqlite_cmd.ExecuteNonQuery();
+                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email1 ','Berat'); ";
+                sqlite_cmd.ExecuteNonQuery();
+                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email2 ','Mitchel'); ";
+                sqlite_cmd.ExecuteNonQuery();
+            }
 
         }
 
