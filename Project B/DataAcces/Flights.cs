@@ -69,7 +69,7 @@ public class Flight
             sqlite_cmd.ExecuteNonQuery();
         }
     }
-    public static Flight GenerateRandomFlight()
+    public static Flight GenerateRandomFlightAirbus()
     {
         var random = new Random();
         var flight = new Flight
@@ -82,7 +82,33 @@ public class Flight
         };
         return flight;
     }
+    public static Flight GenerateRandomFlightBoeing737()
+    {
+        var random = new Random();
+        var flight = new Flight
+        {
+            DepartureTime = DateTime.Now.AddDays(random.Next(1, 365)),
+            Terminal = $"Terminal {random.Next(1, 6)}",
+            FlightNumber = $"EU{random.Next(1000, 9999)}",
+            AircraftType = "Boeing 737",
+            Seats = 186
+        };
+        return flight;
+    }
 
+    public static Flight GenerateRandomFlightBoeing787()
+    {
+        var random = new Random();
+        var flight = new Flight
+        {
+            DepartureTime = DateTime.Now.AddDays(random.Next(1, 365)),
+            Terminal = $"Terminal {random.Next(1, 6)}",
+            FlightNumber = $"EU{random.Next(1000, 9999)}",
+            AircraftType = "Boeing 787",
+            Seats = 219
+        };
+        return flight;
+    }
     public Flight(DateTime departureTime, string terminal)
     {
         DepartureTime = departureTime;
