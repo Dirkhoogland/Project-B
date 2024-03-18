@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Project_B.BusinessLogic
 {
-    internal class BusinessLogic
+    public class Registration
     {
+        public static bool RegistrationLogic(String Email, String Password)
+        {
+            return true;
+        }
     }
 }
