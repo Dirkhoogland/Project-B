@@ -1,3 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+namespace Project_B.DataAcces
+{
 public class Flight
 {
     public DateTime DepartureTime { get; set; }
@@ -12,6 +22,23 @@ public class Flight
     public string Status { get; set; }
     public string Gate { get; set; }
 
+    private static string databasePath
+    {
+        get
+        {
+            return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
+        }
+    }
+    static SQLiteConnection CreateConnection()
+    {
+        SQLiteConnection sqlite_conn;
+        // Create a new database connection:
+        sqlite_conn = new SQLiteConnection($"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ");
+        // Open the connection:
+        try { sqlite_conn.Open(); }
+        catch (Exception ex) { }
+        return sqlite_conn;
+    }
     static void CreateTable(SQLiteConnection conn)
     {
         try
@@ -41,9 +68,9 @@ public class Flight
         }
     }
 
-    public void AddFlight(Flight flight)
+    public static void AddFlight(Flight flight)
     {
-        if (FlightExists(flight.FlightNumber))
+        if (flight.FlightExists(flight.FlightNumber))
         {
             return;
         }
@@ -83,15 +110,31 @@ public class Flight
     {
 
     }
-    public static List<Flight> GetFlights()
+public static List<Flight> GetFlights()
+{
+    var flights = new List<Flight>();
+    using (var conn = CreateConnection())
     {
-        var flights = new List<Flight>();
-        using (var conn = CreateConnection())
+        SQLiteCommand sqlite_cmd = conn.CreateCommand();
+        sqlite_cmd.CommandText = "SELECT * FROM Flights";
+        using (SQLiteDataReader reader = sqlite_cmd.ExecuteReader())
         {
-            // Read flight data from the database
+            while (reader.Read())
+            {
+                var flight = new Flight
+                {
+                    FlightNumber = reader["FlightNumber"].ToString(),
+                    DepartureTime = DateTime.Parse(reader["DepartureTime"].ToString()),
+                    Terminal = reader["Terminal"].ToString(),
+                    AircraftType = reader["AircraftType"].ToString(),
+                    Seats = int.Parse(reader["Seats"].ToString())
+                };
+                flights.Add(flight);
+            }
         }
-        return flights;
     }
+    return flights;
+}
     public override string ToString()
     {
         return $"{DepartureTime} {Terminal}";
@@ -101,11 +144,12 @@ public class Flight
     {
         CreateTable(CreateConnection());
         var flight = GenerateRandomFlight();
-        AddFlight(flight);
+        Flight.AddFlight(flight); // Change AddFlight method call to be static
         var flights = GetFlights();
         foreach (var f in flights)
         {
             Console.WriteLine(f);
         }
     }
+}
 }
