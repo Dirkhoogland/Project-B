@@ -2,7 +2,7 @@
 
 namespace Project_B
 {
-    public class Project_B()
+    public class Project_B
     {
         static void Main()
         {
