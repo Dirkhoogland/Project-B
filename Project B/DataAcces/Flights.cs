@@ -139,17 +139,5 @@ public static List<Flight> GetFlights()
     {
         return $"{DepartureTime} {Terminal}";
     }
-    
-    static void Main(string[] args)
-    {
-        CreateTable(CreateConnection());
-        var flight = GenerateRandomFlight();
-        Flight.AddFlight(flight); // Change AddFlight method call to be static
-        var flights = GetFlights();
-        foreach (var f in flights)
-        {
-            Console.WriteLine(f);
-        }
-    }
 }
 }
