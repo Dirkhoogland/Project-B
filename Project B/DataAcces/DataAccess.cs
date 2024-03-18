@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
@@ -38,7 +39,7 @@ namespace Project_B.DataAcces
 
         static void CreateTable(SQLiteConnection conn)
         {
-
+            // creates the user table with a ID, Email And name
             SQLiteCommand sqlite_cmd;
             string Createsql = "CREATE TABLE Users("+
                 "ID INTEGER PRIMARY KEY AUTOINCREMENT,"+  
@@ -51,6 +52,7 @@ namespace Project_B.DataAcces
 
         static void InsertData(SQLiteConnection conn)
         {
+            // inserts test data of 3 users.
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = conn.CreateCommand();
             sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email ','Dirk'); ";
@@ -65,6 +67,7 @@ namespace Project_B.DataAcces
 
         static void ReadData(SQLiteConnection conn)
         {
+            // reads data of the current user table 
             SQLiteDataReader sqlite_datareader;
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = conn.CreateCommand();
@@ -73,8 +76,14 @@ namespace Project_B.DataAcces
             sqlite_datareader = sqlite_cmd.ExecuteReader();
             while (sqlite_datareader.Read())
             {
-                string myreader = sqlite_datareader.GetString(0);
-                Console.WriteLine(myreader);
+                string Id = sqlite_datareader.GetInt32(0).ToString();
+                string Email = sqlite_datareader.GetTextReader(1).ReadToEnd();
+                string Name = sqlite_datareader.GetTextReader(2).ReadToEnd();
+                Console.WriteLine( Id + " " +  Email + " " +  Name);
+                // var myreader = sqlite_datareader.GetValues();
+                //var test = myreader.GetKey(1);
+                //var test2 = myreader.GetKey(2);
+                //Console.WriteLine(test.ToString() + test2.ToString());
             }
             conn.Close();
         }
