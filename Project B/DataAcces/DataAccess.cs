@@ -17,7 +17,7 @@ namespace Project_B.DataAcces
             sqlite_conn = CreateConnection();
             CreateTable(sqlite_conn);
             InsertData(sqlite_conn);
-            // ReadData(sqlite_conn);
+            //ReadData(sqlite_conn);
         }
         private static string databasePath
         {
@@ -85,11 +85,19 @@ namespace Project_B.DataAcces
 
             sqlite_datareader = sqlite_cmd.ExecuteReader();
             while (sqlite_datareader.Read())
-            {
+            {   // haalt het exact er uit 
                 string Id = sqlite_datareader.GetInt32(0).ToString();
                 string Email = sqlite_datareader.GetTextReader(1).ReadToEnd();
                 string Name = sqlite_datareader.GetTextReader(2).ReadToEnd();
                 Console.WriteLine( Id + " " +  Email + " " +  Name);
+
+                // loopt er overheen om de data te printen
+                for (int i = 0; i < sqlite_datareader.FieldCount; i++)
+                {
+                    var temp = sqlite_datareader.GetValue(i);
+                    Console.Write(temp);
+                }
+                Console.WriteLine();
                 // var myreader = sqlite_datareader.GetValues();
                 //var test = myreader.GetKey(1);
                 //var test2 = myreader.GetKey(2);
