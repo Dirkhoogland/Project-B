@@ -39,24 +39,6 @@ public class Flight
         catch (Exception ex) { }
         return sqlite_conn;
     }
-    static void CreateTable(SQLiteConnection conn)
-    {
-        try
-        {
-            SQLiteCommand sqlite_cmd;
-            string Createsql = "CREATE TABLE IF NOT EXISTS Flights(" +
-                "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "FlightNumber VARCHAR(255)," +
-                "DepartureTime DATETIME," +
-                "Terminal VARCHAR(255)," +
-                "AircraftType VARCHAR(255)," +
-                "Seats INTEGER)";
-            sqlite_cmd = conn.CreateCommand();
-            sqlite_cmd.CommandText = Createsql;
-            sqlite_cmd.ExecuteNonQuery();
-        }
-        catch (Exception ex) {}
-    }
     public bool FlightExists(string flightNumber)
     {
         using (var conn = CreateConnection())
