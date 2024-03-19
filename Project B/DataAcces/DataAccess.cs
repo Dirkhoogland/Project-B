@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 namespace Project_B.DataAcces
@@ -19,7 +20,7 @@ namespace Project_B.DataAcces
             InsertData(sqlite_conn);
             //ReadData(sqlite_conn);
         }
-        private static string databasePath
+        public static string databasePath
         {
             get
             {
@@ -39,13 +40,14 @@ namespace Project_B.DataAcces
 
         static void CreateTable(SQLiteConnection conn)
         {
-            // creates the user table with a ID, Email And name
+            // creates the user table with a ID, Email Password And name
             try
             {
                 SQLiteCommand sqlite_cmd;
                 string Createsql = "CREATE TABLE Users(" +
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "Email VARCHAR(255)," +
+                    "Password VARCHAR(255)," +
                     "Name VARCHAR(225))";
                 sqlite_cmd = conn.CreateCommand();
                 sqlite_cmd.CommandText = Createsql;
@@ -104,6 +106,9 @@ namespace Project_B.DataAcces
                 //Console.WriteLine(test.ToString() + test2.ToString());
             }
             conn.Close();
+
+            
         }
+
     }
 }

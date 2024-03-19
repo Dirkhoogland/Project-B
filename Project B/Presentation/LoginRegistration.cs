@@ -14,11 +14,12 @@ namespace Project_B.Presentation
         {   bool check = false;
             while (check is false)
             {
-                Console.WriteLine("Wil je in loggen of Registreren \n Login/Register");
+                Console.WriteLine("Wil je in loggen of Registreren \n Login/Register/Guest");
                 string? input = Console.ReadLine();
                 input.ToLower();
                 if (input == "login") { Registrationscreen(); }
-                if (input == "Register") { Login(); }
+                if (input == "register") { Login(); }
+                else if (input == "guest") { Guest(); }
             }
         }
         // registration asks for user details to then send to the business logic side
@@ -26,21 +27,29 @@ namespace Project_B.Presentation
         {   bool check = false;
             string? Email = null;
             string? Password = null;
+            string? Name = null;
             // Asks users email and password for registration, the strings are nullable so the function/responses will loop if not both filled in.
             while (check is false)
             {
                 Console.WriteLine("Please fill in your Email");
                 Email = Console.ReadLine();
+                Console.WriteLine("Please fill in your Name");
+                Name = Console.ReadLine();
                 Console.WriteLine("Please fill in your Password");
                 Password = Console.ReadLine();
-                if (Email != null || Password != null) { check = true; }
+                if (Email != null || Password != null || Name != null) { check = true; }
             }
-            bool successful = BusinessLogic.Registration.RegistrationLogic(Email, Password);
+            bool successful = BusinessLogic.Registration.RegistrationLogic(Email, Password, Name);
         }
 
         public void Login()
         {
             Console.WriteLine();
+        }
+
+        public void Guest()
+        {
+
         }
     }
 }
