@@ -18,7 +18,7 @@ namespace Project_B.Presentation
             }
         }
         // registration asks for user details to then send to the business logic side
-        public static void Registrationscreen()
+        private static void Registrationscreen()
         {   bool check = false;
             string? Email = null;
             string? Password = null;
@@ -46,12 +46,12 @@ namespace Project_B.Presentation
             }
         }
 
-        public static void Login()
+        private static void Login()
         {
             Console.WriteLine();
         }
 
-        public static void Guest()
+        private static void Guest()
         {
 
         }
