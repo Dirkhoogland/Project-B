@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project_B.BusinessLogic
 {
-    internal class Class1
+    internal class BusinessLogic
     {
     }
 }
