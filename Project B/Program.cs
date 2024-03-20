@@ -13,6 +13,7 @@ namespace Project_B
             Login();
 
         }
+        // log in function to connect it with the login/registrations page. 
         public static void Login()
         {
             LoginRegistrations.LoginScreen();

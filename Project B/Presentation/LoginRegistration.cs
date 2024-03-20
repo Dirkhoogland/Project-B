@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Project_B.BusinessLogic;
+﻿using Project_B.BusinessLogic;
 
 namespace Project_B.Presentation
 {
@@ -13,7 +8,7 @@ namespace Project_B.Presentation
         public static void LoginScreen()
         {   bool check = false;
             while (check is false)
-            {
+            {   
                 Console.WriteLine("Wil je in loggen of Registreren \n Login/Register/Guest");
                 string? inputunchecked = Console.ReadLine();
                 string input = inputunchecked.ToLower();
@@ -39,6 +34,7 @@ namespace Project_B.Presentation
                 Password = Console.ReadLine();
                 if (Email != null && Password != null && Name != null) { check = true; }
             }
+            // the bool is to see if the user passed the already existing check, users can have the same name but not the same Email
             bool successful = Registration.RegistrationLogic(Email, Name, Password);
             if ( successful == false)
             {
