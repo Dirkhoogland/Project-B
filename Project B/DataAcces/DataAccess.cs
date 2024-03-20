@@ -27,7 +27,7 @@ namespace Project_B.DataAcces
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
         }
-        static SQLiteConnection CreateConnection()
+        public static SQLiteConnection CreateConnection()
         {
             SQLiteConnection sqlite_conn;
             // Create a new database connection:
@@ -47,8 +47,8 @@ namespace Project_B.DataAcces
                 string Createsql = "CREATE TABLE Users(" +
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "Email VARCHAR(255)," +
-                    "Password VARCHAR(255)," +
-                    "Name VARCHAR(225))";
+                    "Name VARCHAR(255)," +
+                    "Password VARCHAR(225))";
                 sqlite_cmd = conn.CreateCommand();
                 sqlite_cmd.CommandText = Createsql;
                 sqlite_cmd.ExecuteNonQuery();
@@ -67,13 +67,14 @@ namespace Project_B.DataAcces
             if (sqlite_datareader.Read() == false)
             {
                 sqlite_cmd = conn.CreateCommand();
-                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email ','Dirk'); ";
+                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name, Password) VALUES('Email ','Dirk', 'Password'); ";
                 sqlite_cmd.ExecuteNonQuery();
-                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email1 ','Berat'); ";
+                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name, Password) VALUES('Email1 ','Berat', 'Password'); ";
                 sqlite_cmd.ExecuteNonQuery();
-                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email2 ','Mitchel'); ";
+                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name, Password) VALUES('Email2 ','Mitchel', 'Password'); ";
                 sqlite_cmd.ExecuteNonQuery();
             }
+            conn.Close();
 
         }
 

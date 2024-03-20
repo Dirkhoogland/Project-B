@@ -7,10 +7,10 @@ using Project_B.BusinessLogic;
 
 namespace Project_B.Presentation
 {
-    public class LoginRegistration
+    public class LoginRegistrations
     {
         // checks if the user wants to log in or register 
-        public void RegistrationorLogin()
+        public static void LoginScreen()
         {   bool check = false;
             while (check is false)
             {
@@ -23,7 +23,7 @@ namespace Project_B.Presentation
             }
         }
         // registration asks for user details to then send to the business logic side
-        public void Registrationscreen()
+        public static void Registrationscreen()
         {   bool check = false;
             string? Email = null;
             string? Password = null;
@@ -39,15 +39,15 @@ namespace Project_B.Presentation
                 Password = Console.ReadLine();
                 if (Email != null || Password != null || Name != null) { check = true; }
             }
-            bool successful = BusinessLogic.Registration.RegistrationLogic(Email, Password, Name);
+            bool successful = Registration.RegistrationLogic(Email, Password, Name);
         }
 
-        public void Login()
+        public static void Login()
         {
             Console.WriteLine();
         }
 
-        public void Guest()
+        public static void Guest()
         {
 
         }

@@ -11,6 +11,15 @@ namespace Project_B.BusinessLogic
     {
         public static bool RegistrationLogic(string Email, string Password, string Name)
         {
+
+            List<Users> users = Users.Getusers();
+            foreach (Users user in users) 
+            { 
+                if (user.Email == Email)
+                {
+                    return false;
+                }
+            }
             return true;
         }
     }
