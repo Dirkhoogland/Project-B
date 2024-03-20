@@ -9,7 +9,7 @@ namespace Project_B.BusinessLogic
 {
     public class Registration
     {
-        public static bool RegistrationLogic(string Email, string Password, string Name)
+        public static bool RegistrationLogic(string Email, string Name, string Password)
         {
 
             List<Users> users = Users.Getusers();
@@ -20,6 +20,7 @@ namespace Project_B.BusinessLogic
                     return false;
                 }
             }
+            Users.Newuser(Email, Name, Password);
             return true;
         }
     }

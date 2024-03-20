@@ -33,8 +33,8 @@ namespace Project_B.DataAcces
             // Create a new database connection:
             sqlite_conn = new SQLiteConnection($"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ");
             // Open the connection:
-            try { sqlite_conn.Open(); }
-            catch (Exception ex) { }
+            try { sqlite_conn.Open();}
+            catch (Exception ex) { Console.WriteLine(ex); }
             return sqlite_conn;
         }
 
@@ -52,12 +52,14 @@ namespace Project_B.DataAcces
                 sqlite_cmd = conn.CreateCommand();
                 sqlite_cmd.CommandText = Createsql;
                 sqlite_cmd.ExecuteNonQuery();
+
             }
             catch (Exception ex) { }
+
         }
 
         static void InsertData(SQLiteConnection conn)
-        {
+        {   
             SQLiteDataReader sqlite_datareader;
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = conn.CreateCommand();

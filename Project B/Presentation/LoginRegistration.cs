@@ -17,9 +17,9 @@ namespace Project_B.Presentation
                 Console.WriteLine("Wil je in loggen of Registreren \n Login/Register/Guest");
                 string? input = Console.ReadLine();
                 input.ToLower();
-                if (input == "login") { Registrationscreen(); }
-                if (input == "register") { Login(); }
-                else if (input == "guest") { Guest(); }
+                if (input == "login") { check = true;  Login(); }
+                else if (input == "register") { check = true; Registrationscreen(); }
+                else if (input == "guest") { check = true;  Guest(); }
             }
         }
         // registration asks for user details to then send to the business logic side
@@ -37,9 +37,9 @@ namespace Project_B.Presentation
                 Name = Console.ReadLine();
                 Console.WriteLine("Please fill in your Password");
                 Password = Console.ReadLine();
-                if (Email != null || Password != null || Name != null) { check = true; }
+                if (Email != null && Password != null && Name != null) { check = true; }
             }
-            bool successful = Registration.RegistrationLogic(Email, Password, Name);
+            bool successful = Registration.RegistrationLogic(Email, Name, Password);
         }
 
         public static void Login()

@@ -1,5 +1,7 @@
 ﻿using Project_B.DataAcces;
 using Project_B.Presentation;
+using System.Drawing.Printing;
+using System.Xml.Linq;
 
 namespace Project_B
 {
@@ -8,6 +10,11 @@ namespace Project_B
         static void Main()
         {
             DataAccess.Database();
+            Login();
+
+        }
+        public static void Login()
+        {
             LoginRegistrations.LoginScreen();
         }
     }
