@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 namespace Project_B.DataAcces
 {
     public class DataAccess
@@ -14,11 +15,9 @@ namespace Project_B.DataAcces
         // string[] args
         public static void Database()
         {
-            SQLiteConnection sqlite_conn;
-            sqlite_conn = CreateConnection();
-            CreateTable(sqlite_conn);
-            InsertData(sqlite_conn);
-            //ReadData(sqlite_conn);
+            CreateTable();
+            InsertData();
+            ReadData();
         }
         public static string databasePath
         {
@@ -27,90 +26,98 @@ namespace Project_B.DataAcces
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
         }
-        public static SQLiteConnection CreateConnection()
-        {
-            SQLiteConnection sqlite_conn;
-            // Create a new database connection:
-            sqlite_conn = new SQLiteConnection($"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ");
-            // Open the connection:
-            try { sqlite_conn.Open();}
-            catch (Exception ex) { Console.WriteLine(ex); }
-            return sqlite_conn;
-        }
-
-        static void CreateTable(SQLiteConnection conn)
+        static void CreateTable()
         {
             // creates the user table with a ID, Email Password And name
             try
             {
-                SQLiteCommand sqlite_cmd;
-                string Createsql = "CREATE TABLE Users(" +
+                string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sql = "CREATE TABLE Users(" +
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "Email VARCHAR(255)," +
                     "Name VARCHAR(255)," +
                     "Password VARCHAR(225))";
-                sqlite_cmd = conn.CreateCommand();
-                sqlite_cmd.CommandText = Createsql;
-                sqlite_cmd.ExecuteNonQuery();
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
 
             }
             catch (Exception ex) { }
 
         }
 
-        static void InsertData(SQLiteConnection conn)
-        {   
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Users";
-            sqlite_datareader = sqlite_cmd.ExecuteReader();
-            // inserts test data of 3 users.
-            if (sqlite_datareader.Read() == false)
+        static void InsertData()
+        {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string sql = "SELECT * FROM Users";
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
-                sqlite_cmd = conn.CreateCommand();
-                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name, Password) VALUES('Email ','Dirk', 'Password'); ";
-                sqlite_cmd.ExecuteNonQuery();
-                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name, Password) VALUES('Email1 ','Berat', 'Password'); ";
-                sqlite_cmd.ExecuteNonQuery();
-                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name, Password) VALUES('Email2 ','Mitchel', 'Password'); ";
-                sqlite_cmd.ExecuteNonQuery();
-            }
-            conn.Close();
+                c.Open();
 
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                {
+                    using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                    {
+                        if (rdr.Read() == false)
+                        {
+
+
+
+                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email ','Dirk', 'Password');";
+
+                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                             {
+                                    cmd1.ExecuteNonQuery();
+                             }
+                            
+                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email1 ','Berat', 'Password'); ";
+
+
+                            using (SQLiteCommand cmd2 = new SQLiteCommand(sql, c))
+                            {
+                                    cmd2.ExecuteNonQuery();
+                            }
+                            
+                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email2 ','Mitchel', 'Password'); ";
+                            using (SQLiteCommand cmd3 = new SQLiteCommand(sql, c))
+                            {
+                                    cmd3.ExecuteNonQuery();
+                            }
+                            }
+                        }
+                    }
+                }
         }
 
-        static void ReadData(SQLiteConnection conn)
+        static void ReadData()
         {
-            // reads data of the current user table 
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Users";
-
-            sqlite_datareader = sqlite_cmd.ExecuteReader();
-            while (sqlite_datareader.Read())
-            {   // haalt het exact er uit 
-                string Id = sqlite_datareader.GetInt32(0).ToString();
-                string Email = sqlite_datareader.GetTextReader(1).ReadToEnd();
-                string Name = sqlite_datareader.GetTextReader(2).ReadToEnd();
-                Console.WriteLine( Id + " " +  Email + " " +  Name);
-
-                // loopt er overheen om de data te printen
-                for (int i = 0; i < sqlite_datareader.FieldCount; i++)
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string sql = "SELECT * FROM Users";
+            List<Users> Userslist = new List<Users>();
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
                 {
-                    var temp = sqlite_datareader.GetValue(i);
-                    Console.Write(temp);
-                }
-                Console.WriteLine();
-                // var myreader = sqlite_datareader.GetValues();
-                //var test = myreader.GetKey(1);
-                //var test2 = myreader.GetKey(2);
-                //Console.WriteLine(test.ToString() + test2.ToString());
-            }
-            conn.Close();
+                    using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            int Id = rdr.GetInt32(0);
+                            string Email = rdr.GetString(1);
+                            string Name = rdr.GetString(2);
+                            string Password = rdr.GetString(3);
+                            Console.WriteLine(Id + " "+ Email + " "+ Name + " "+ Password);
+                        }
 
-            
+                    }
+                }
+            }
         }
 
     }

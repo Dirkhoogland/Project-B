@@ -15,8 +15,8 @@ namespace Project_B.Presentation
             while (check is false)
             {
                 Console.WriteLine("Wil je in loggen of Registreren \n Login/Register/Guest");
-                string? input = Console.ReadLine();
-                input.ToLower();
+                string? inputunchecked = Console.ReadLine();
+                string input = inputunchecked.ToLower();
                 if (input == "login") { check = true;  Login(); }
                 else if (input == "register") { check = true; Registrationscreen(); }
                 else if (input == "guest") { check = true;  Guest(); }
@@ -40,6 +40,14 @@ namespace Project_B.Presentation
                 if (Email != null && Password != null && Name != null) { check = true; }
             }
             bool successful = Registration.RegistrationLogic(Email, Name, Password);
+            if ( successful == false)
+            {
+                Console.WriteLine($"Email already exists: {Email}");
+            }
+            else
+            {
+                Console.WriteLine($"Successfully created user: {Name} with Email: {Email}");
+            }
         }
 
         public static void Login()

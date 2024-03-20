@@ -28,10 +28,8 @@ namespace Project_B.DataAcces
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
                 c.Open();
-                
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
                 { 
-
                     using (SQLiteDataReader rdr = cmd.ExecuteReader())
                     {
                         while (rdr.Read())
@@ -46,7 +44,6 @@ namespace Project_B.DataAcces
                         Console.WriteLine(Userslist);
                     }
                 }
-
             }
                 
             return Userslist;
@@ -54,31 +51,17 @@ namespace Project_B.DataAcces
         // function to send user data to the database
         public static bool Newuser(string Email, string Name, string Password)
         {
-            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sql = $"INSERT INTO Users(Email, Name, Password) VALUES('{Email} ','{Name}', '{Password}'); ";
-
-            try
+         string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+         string sql = $"INSERT INTO Users(Email, Name, Password) VALUES('{Email} ','{Name}', '{Password}'); ";
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
-                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
-                {
-                    c.Open();
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
-                    {
-                        cmd.ExecuteNonQuery();
-                        
-                    }
-                }
-                return true;
+              c.Open();
+              using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+              {
+               cmd.ExecuteNonQuery(); 
+              }
             }
-            finally
-            {
-
-            }
-            return false;
-
-
+         return true;
         }
-         
-         
     }
 }
