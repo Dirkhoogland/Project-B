@@ -68,14 +68,14 @@ namespace Project_B.DataAcces
 
 
 
-                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email ','Dirk', 'Password');";
+                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email','Dirk', 'Password');";
 
                              using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                              {
                                     cmd1.ExecuteNonQuery();
                              }
                             
-                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email1 ','Berat', 'Password'); ";
+                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email1','Berat', 'Password'); ";
 
 
                             using (SQLiteCommand cmd2 = new SQLiteCommand(sql, c))
@@ -83,7 +83,7 @@ namespace Project_B.DataAcces
                                     cmd2.ExecuteNonQuery();
                             }
                             
-                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email2 ','Mitchel', 'Password'); ";
+                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email2','Mitchel', 'Password'); ";
                             using (SQLiteCommand cmd3 = new SQLiteCommand(sql, c))
                             {
                                     cmd3.ExecuteNonQuery();

@@ -41,7 +41,6 @@ namespace Project_B.DataAcces
                             Users user = new Users(Id, Email, Name, Password);
                             Userslist.Add(user);
                         }
-                        Console.WriteLine(Userslist);
                     }
                 }
             }

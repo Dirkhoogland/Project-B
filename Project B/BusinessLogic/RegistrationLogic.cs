@@ -13,9 +13,9 @@ namespace Project_B.BusinessLogic
         {
 
             List<Users> users = Users.Getusers();
-            foreach (Users user in users) 
-            { 
-                if (user.Email.ToString() == Email)
+            foreach(Users user in users) 
+            {   Console.WriteLine(user.Email); Console.WriteLine(Email);
+                if(user.Email == Email)
                 {
                     return false;
                 }
