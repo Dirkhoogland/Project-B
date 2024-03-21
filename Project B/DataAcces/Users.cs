@@ -93,6 +93,7 @@ namespace Project_B.DataAcces
         }
         public static bool RemoveUser(string Email)
         {
+            //"Data Source=C:\\Users\\Eigenaar\\source\\Project B\\Project-B\\Project B\\DataSource\\database.db; Version = 3; New = True; Compress = True; "
             try
             {
                 string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -128,7 +129,7 @@ namespace Project_B.DataAcces
                 }
                 return true;
             }
-            catch (Exception ex) { }
+            catch (Exception ex) {  }
             return false;
         }
     }
