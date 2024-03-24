@@ -9,14 +9,14 @@ namespace Project_B
         static void Main()
         {
             DataAccess.Database();
-            Login();
-            lay_out lay_out = new lay_out();
-            lay_out.ToonMenu();
+            // Login();
+            // lay_out lay_out = new lay_out();
+            // lay_out.ToonMenu();
         }
         // log in function to connect it with the login/registrations page. 
-        private static void Login()
-        {
-            LoginRegistrations.LoginScreen();
-        }
+        // private static void Login()
+        // {
+        //     LoginRegistrations.LoginScreen();
+        // }
     }
 }

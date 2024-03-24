@@ -43,6 +43,32 @@ namespace Project_B.DataAcces
             catch (Exception ex) { }
 
         }
+
+        public void CreateFlightsTable()
+        {
+            try
+            {
+                string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sql = "CREATE TABLE Flights(" +
+                    "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "Departure VARCHAR(255)," +
+                    "Destination VARCHAR(255)," +
+                    "DepartureTime DATETIME," +
+                    "ArrivalTime DATETIME," +
+                    "Airline VARCHAR(255))";
+                
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex) {}
+
+        }
         // the insert data function is a temple for inserting data into the sqlite DB, using the current Users database.
         // the connectionstring will need a reference to the DataAccess file if used outside of it.
         static void InsertData()
