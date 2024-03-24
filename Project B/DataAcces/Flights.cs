@@ -237,13 +237,13 @@ namespace Project_B.DataAcces
 
             if (AskQuestion("Do you want to update the gate? (yes/no): ") == "yes")
             {
-                Console.WriteLine("Enter the new gate: ");
+                Console.WriteLine("Enter the new gate: (1-20) ");
                 flightToUpdate.Gate = Console.ReadLine();
             }
 
             if (AskQuestion("Do you want to update the terminal? (yes/no): ") == "yes")
             {
-                Console.WriteLine("Enter the new terminal: ");
+                Console.WriteLine("Enter the new terminal: (1-4) ");
                 flightToUpdate.Terminal = Console.ReadLine();
             }
 
