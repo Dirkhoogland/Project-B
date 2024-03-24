@@ -14,6 +14,7 @@ namespace Project_B
             // lay_out lay_out = new lay_out();
             // lay_out.ToonMenu();
             // CreateFlights();
+            // Flight.AdminUpdateFlight();
             FlightInformation();
         }
         // log in function to connect it with the login/registrations page. 

@@ -21,6 +21,7 @@ namespace Project_B.DataAcces
         public string Airline { get; set; }
         public string Status { get; set; }
         public string Gate { get; set; }
+        public int FlightID { get; set; }
 
         private static string databasePath
         {
@@ -92,6 +93,180 @@ namespace Project_B.DataAcces
             sqlite_cmd.Parameters.AddWithValue("@Gate", flight.Gate);
             sqlite_cmd.ExecuteNonQuery();
             sqlite_conn.Close();
+        }
+        public static void UpdateFlight(Flight updatedFlight)
+        {
+            using (SQLiteConnection conn = CreateConnection())
+            {
+                string sql = "UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Status = @Status, Gate = @Gate WHERE FlightID = @FlightID";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@DepartureTime", updatedFlight.DepartureTime);
+                    cmd.Parameters.AddWithValue("@Terminal", updatedFlight.Terminal);
+                    cmd.Parameters.AddWithValue("@FlightNumber", updatedFlight.FlightNumber);
+                    cmd.Parameters.AddWithValue("@AircraftType", updatedFlight.AircraftType);
+                    cmd.Parameters.AddWithValue("@Seats", updatedFlight.Seats);
+                    cmd.Parameters.AddWithValue("@AvailableSeats", updatedFlight.AvailableSeats);
+                    cmd.Parameters.AddWithValue("@Destination", updatedFlight.Destination);
+                    cmd.Parameters.AddWithValue("@Origin", updatedFlight.Origin);
+                    cmd.Parameters.AddWithValue("@Airline", updatedFlight.Airline);
+                    cmd.Parameters.AddWithValue("@Status", updatedFlight.Status);
+                    cmd.Parameters.AddWithValue("@Gate", updatedFlight.Gate);
+                    cmd.Parameters.AddWithValue("@FlightID", updatedFlight.FlightID);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected == 0)
+                    {
+                        Console.WriteLine("No flight found with the given FlightID.");
+                    }
+                }
+            }
+        }
+        public static Flight GetFlightById(int flightId)
+        {
+            Flight flight = new Flight();
+            using (SQLiteConnection conn = CreateConnection())
+            {
+                string sql = "SELECT * FROM Flights WHERE FlightID = @FlightID";
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@FlightID", flightId);
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            flight.FlightID = int.Parse(reader["FlightID"].ToString());
+                            flight.DepartureTime = DateTime.Parse(reader["DepartureTime"].ToString());
+                            flight.Terminal = reader["Terminal"].ToString();
+                            flight.FlightNumber = reader["FlightNumber"].ToString();
+                            flight.AircraftType = reader["AircraftType"].ToString();
+                            flight.Seats = int.Parse(reader["Seats"].ToString());
+                            flight.AvailableSeats = int.Parse(reader["AvailableSeats"].ToString());
+                            flight.Destination = reader["Destination"].ToString();
+                            flight.Origin = reader["Origin"].ToString();
+                            flight.Airline = reader["Airline"].ToString();
+                            flight.Status = reader["Status"].ToString();
+                            flight.Gate = reader["Gate"].ToString();
+                        }
+                    }
+                }
+            }
+            return flight;
+        }
+        public static void AdminUpdateFlight()
+        {
+            Console.WriteLine("Enter the FlightID of the flight you want to update: ");
+            Console.WriteLine("If you don't want to update anything, type '0'");
+            int flightId = int.Parse(Console.ReadLine());
+            if (flightId == 0) { return; }
+
+            Flight flightToUpdate = GetFlightById(flightId);
+
+            if (AskQuestion("Do you want to update the departure time? (yes/no): ") == "yes")
+            {
+                Console.Write("Enter the new departure time (yyyy-MM-dd HH:mm:ss): ");
+                DateTime newDepartureTime;
+                if (DateTime.TryParse(Console.ReadLine(), out newDepartureTime))
+                {
+                    flightToUpdate.DepartureTime = newDepartureTime;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date and time format.");
+                }
+            }
+
+            if (AskQuestion("Do you want to update the destination? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new destination: ");
+                flightToUpdate.Destination = Console.ReadLine();
+            }
+
+            if (AskQuestion("Do you want to update the flight number? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new flight number: ");
+                flightToUpdate.FlightNumber = Console.ReadLine();
+            }
+
+            if (AskQuestion("Do you want to update the aircraft type? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new aircraft type: ");
+                flightToUpdate.AircraftType = Console.ReadLine();
+            }
+
+            if (AskQuestion("Do you want to update the seats? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new amount of seats: ");
+                int newSeats;
+                if (int.TryParse(Console.ReadLine(), out newSeats))
+                {
+                    flightToUpdate.Seats = newSeats;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a number.");
+                }
+            }
+
+            if (AskQuestion("Do you want to update the available seats? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new amount of available seats: ");
+                int newAvailableSeats;
+                if (int.TryParse(Console.ReadLine(), out newAvailableSeats))
+                {
+                    flightToUpdate.AvailableSeats = newAvailableSeats;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a number.");
+                }
+            }
+
+            if (AskQuestion("Do you want to update the origin? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new origin: ");
+                flightToUpdate.Origin = Console.ReadLine();
+            }
+
+            if (AskQuestion("Do you want to update the status? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new status: ");
+                flightToUpdate.Status = Console.ReadLine();
+            }
+
+            if (AskQuestion("Do you want to update the gate? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new gate: ");
+                flightToUpdate.Gate = Console.ReadLine();
+            }
+
+            if (AskQuestion("Do you want to update the terminal? (yes/no): ") == "yes")
+            {
+                Console.WriteLine("Enter the new terminal: ");
+                flightToUpdate.Terminal = Console.ReadLine();
+            }
+
+            UpdateFlight(flightToUpdate);
+        }
+        public static string AskQuestion(string question)
+        {
+            string input;
+            do
+            {
+                Console.WriteLine(question);
+                input = Console.ReadLine().ToLower();
+                if (input == "yes" || input == "no")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                }
+            } while (true);
+
+            return input;
         }
         public static void CreateFlightBoeing737()
         {
