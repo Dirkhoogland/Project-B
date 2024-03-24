@@ -9,18 +9,33 @@ namespace Project_B
     {
         static void Main()
         {
-            DataAccess.Database();
-            //// Flight.CreateFlightBoeing737();
-            //// Flight.CreateFlightBoeing787();
-            //// Flight.CreateFlightAirbus330();
+            // DataAccess.Database();
             // Login();
             // lay_out lay_out = new lay_out();
             // lay_out.ToonMenu();
+            // CreateFlights();
+            FlightInformation();
         }
-        //// log in function to connect it with the login/registrations page. 
-        // private static void Login()
-        // {
-        //     LoginRegistrations.LoginScreen();
-        // }
+        // log in function to connect it with the login/registrations page. 
+        private static void Login()
+        {
+            LoginRegistrations.LoginScreen();
+        }
+        // functie om de vlucht informatie te laten zien
+        private static void FlightInformation()
+        {
+            var flights = Flight.GetFlights();
+            foreach (var flight in flights)
+            {
+                Console.WriteLine(flight);
+            }
+        }
+        // functie om een paar vluchten aan te maken voor test
+        private static void CreateFlights()
+        {
+            Flight.CreateFlightBoeing737();
+            Flight.CreateFlightBoeing787();
+            Flight.CreateFlightAirbus330();
+        }
     }
 }
