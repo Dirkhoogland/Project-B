@@ -49,25 +49,42 @@ namespace Project_B.DataAcces
             try
             {
                 string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-                string sql = "CREATE TABLE Flights(" +
+                string[] sqlCommands = new string[]
+                {
+                    "CREATE TABLE IF NOT EXISTS Flights(" +
                     "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "FlightNumber VARCHAR(255)," +
                     "Departure VARCHAR(255)," +
                     "Destination VARCHAR(255)," +
+                    "Origin VARCHAR(255)," +
                     "DepartureTime DATETIME," +
+                    "Status VARCHAR(255)," +
                     "ArrivalTime DATETIME," +
-                    "Airline VARCHAR(255))";
-                
+                    "Terminal VARCHAR(255)," +
+                    "AircraftType VARCHAR(255)," +
+                    "Gate VARCHAR(255)," +
+                    "Seats INTEGER," +
+                    "AvailableSeats INTEGER," +
+                    "Airline VARCHAR(255))",
+                    "ALTER TABLE Flights ADD COLUMN Origin VARCHAR(255)",
+                    "ALTER TABLE Flights ADD COLUMN Status VARCHAR(255)",
+                    "ALTER TABLE Flights ADD COLUMN Gate VARCHAR(255)",
+                    "ALTER TABLE Flights ADD COLUMN AvailableSeats INTEGER"
+                };
+
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
                     c.Open();
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                    foreach (var sql in sqlCommands)
                     {
-                        cmd.ExecuteNonQuery();
+                        using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
                     }
                 }
             }
-            catch (Exception ex) {}
-
+            catch (Exception ex) { }
         }
         // the insert data function is a temple for inserting data into the sqlite DB, using the current Users database.
         // the connectionstring will need a reference to the DataAccess file if used outside of it.
