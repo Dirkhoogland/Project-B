@@ -33,7 +33,7 @@ namespace Project_B.Presentation
             Console.WriteLine();
         }
     
-        static void ReserveSeat()
+        public static void ReserveSeat()
         {
             Console.WriteLine("Beschikbare stoelen:");
             DisplaySeatLayout();
@@ -63,7 +63,7 @@ namespace Project_B.Presentation
             Console.WriteLine("Stoel succesvol gereserveerd!");
         }
 
-        static void DisplaySeatLayout()
+        public static void DisplaySeatLayout()
         {
             Console.WriteLine("Stoelindeling:");
             Console.WriteLine("Rij  Stoelen");
