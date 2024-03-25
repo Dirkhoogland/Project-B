@@ -8,16 +8,17 @@ namespace Project_B.DataAcces
         {
             CreateTable();
             InsertData();
-            ReadData();
+            //ReadData();
         }
         // this function gets the path to the database for use in this application
+
         public static string databasePath
         {
-            get
+           get
             {   // gets the path to where ever its currently on your pc/laptop and then into a DataSource file, which if its correctly downloaded from github it should find.
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
-        }
+         }
         static void CreateTable()
         {
             // creates the user table with a ID, Email Name And Password, the ID is with an Primary key and Autoincrement.
