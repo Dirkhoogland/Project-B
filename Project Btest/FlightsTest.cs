@@ -18,8 +18,8 @@ namespace Project_Btest
             try
             {
                 string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-                string[] sqlCommands = new string[]
-                {
+                string sqlCommands =
+                
                     "CREATE TABLE IF NOT EXISTS Flights(" +
                     "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "FlightNumber VARCHAR(255)," +
@@ -32,27 +32,26 @@ namespace Project_Btest
                     "Gate VARCHAR(255)," +
                     "Seats INTEGER," +
                     "AvailableSeats INTEGER," +
-                    "Airline VARCHAR(255))",
-                    "ALTER TABLE Flights ADD COLUMN Origin VARCHAR(255)",
-                    "ALTER TABLE Flights ADD COLUMN Status VARCHAR(255)",
-                    "ALTER TABLE Flights ADD COLUMN Gate VARCHAR(255)",
-                    "ALTER TABLE Flights ADD COLUMN AvailableSeats INTEGER"
-                };
+                    "Airline VARCHAR(255))";
+                
 
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
                     c.Open();
-                    foreach (var sql in sqlCommands)
-                    {
-                        using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+
+                        using (SQLiteCommand cmd = new SQLiteCommand(sqlCommands, c))
                         {
                             cmd.ExecuteNonQuery();
                         }
-                    }
+                    
                 }
             }
             catch (Exception ex) { }
         }
-
+        [TestMethod]
+        public void Test1()
+        {
+            CreateFlightsTable();
+        }
     }
 }
