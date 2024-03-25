@@ -1,4 +1,4 @@
-using System;
+using Project_B.DataAcces;
 using System.Data.SQLite;
 
 namespace Project_Btest
@@ -48,10 +48,34 @@ namespace Project_Btest
             }
             catch (Exception ex) { }
         }
+        public void DeleteRow()
+        {
+            try
+            {
+                string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sqlCommands = "DELETE FROM Flights WHERE FlightID = >= 1";
+
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlCommands, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (Exception ex) { }
+        }
         [TestMethod]
         public void Test1()
         {
             CreateFlightsTable();
+
+
+
+            DeleteRow();
         }
     }
 }
