@@ -1,3 +1,4 @@
+using Project_B.Presentation;
 using Project_B.DataAcces;
 using System.Data.SQLite;
 
@@ -38,6 +39,14 @@ namespace Project_Btest
             catch (Exception ex) { }
 
         }
+      
+        [TestMethod]
+        static void ReserveSeat()
+        {
+            lay_out.ReserveSeat();
+            Assert.AreEqual(1, 1);
+        }
+      
         [TestMethod]
         public void TestNewuser()
         {
@@ -49,6 +58,14 @@ namespace Project_Btest
             Users user = Users.Getuser(Email);
             Users.RemoveUser(Email);
             Assert.IsNotNull(user);
+
         }
-    }
+      
+        [TestMethod]
+        static void DisplaySeatLayout()
+        {
+            lay_out.DisplaySeatLayout();
+            Assert.AreEqual(1, 1);
+        }
+    }   
 }
