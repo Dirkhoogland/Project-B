@@ -68,14 +68,101 @@ namespace Project_Btest
             }
             catch (Exception ex) { }
         }
-        [TestMethod]
-        public void Test1()
+
+        public static bool CheckIfTableExists()
         {
-            CreateFlightsTable();
-            Flight.AddFlight();
+            string tablename = "";
+            try
+            {
+                string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sqlCommands = "SELECT name FROM sqlite_master WHERE type='table' AND name='Flights'";;
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
 
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlCommands, c))
+                    {
+                        using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                        {
+                            while (rdr.Read())
+                            {
+                                tablename = rdr.GetTableName(0);
+                              int FlightID = rdr.GetInt32(0);  
+                            }
 
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { } 
+            if (tablename != "")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+        }
+
+        [TestMethod]
+        public void TestCreateFlightsTable()
+        {
+            // Arrange
+            // If the method doesn't take any parameters, you don't need to arrange anything
+
+            // Act
+            DataAccess.CreateFlightsTable();
+
+            // Assert
+            // Check that the table was created. This will depend on your implementation.
+            var tableExists = CheckIfTableExists();
+            Assert.IsTrue(tableExists);
+        }
+
+        [TestMethod]
+        public void TestCreateFlights()
+        {
+            // Arrange
+            // If the method doesn't take any parameters, you don't need to arrange anything
+
+            // Act
+            Flight.CreateFlights();
+
+            // Assert
+            // Check that the flights were created. This will depend on your implementation.
+            var flights = Flight.GetFlights();
+            Assert.AreEqual(3, flights.Count);
+        }
+
+        [TestMethod]
+        public void TestGetFlights()
+        {
+            // Arrange
+            DataAccess.CreateFlightsTable();
+            Flight.CreateFlights();
+
+            // Act
+            var flights = Flight.GetFlights();
+
+            // Assert
+            Assert.AreEqual(3, flights.Count);
+        }
+
+        [TestMethod]
+        public void TestDeleteRow()
+        {
+            // Arrange
+            DataAccess.CreateFlightsTable();
+            Flight.CreateFlights();
+
+            // Act
             DeleteRow();
+
+            // Assert
+            // Check that the row was deleted. This will depend on your implementation.
+            var flights = Flight.GetFlights();
+            Assert.AreEqual(2, flights.Count);
         }
     }
 }

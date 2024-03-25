@@ -44,7 +44,7 @@ namespace Project_B.DataAcces
 
         }
 
-        public void CreateFlightsTable()
+        public static void CreateFlightsTable()
         {
             try
             {

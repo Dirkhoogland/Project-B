@@ -13,7 +13,7 @@ namespace Project_B
             // Login();
             // lay_out lay_out = new lay_out();
             // lay_out.ToonMenu();
-            // CreateFlights();
+            Flight.CreateFlights();
             // Flight.AdminUpdateFlight();
             FlightInformation();
         }
@@ -22,6 +22,7 @@ namespace Project_B
         {
             LoginRegistrations.LoginScreen();
         }
+        
         // functie om de vlucht informatie te laten zien
         private static void FlightInformation()
         {
@@ -30,13 +31,6 @@ namespace Project_B
             {
                 Console.WriteLine(flight);
             }
-        }
-        // functie om een paar vluchten aan te maken voor test
-        private static void CreateFlights()
-        {
-            Flight.CreateFlightBoeing737();
-            Flight.CreateFlightBoeing787();
-            Flight.CreateFlightAirbus330();
         }
     }
 }

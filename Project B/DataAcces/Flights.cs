@@ -325,5 +325,13 @@ namespace Project_B.DataAcces
             };
             AddFlight(flight);
         }
+        
+        // functie om een paar vluchten aan te maken voor test
+        public static void CreateFlights()
+        {
+            Flight.CreateFlightBoeing737();
+            Flight.CreateFlightBoeing787();
+            Flight.CreateFlightAirbus330();
+        }
     }
 }

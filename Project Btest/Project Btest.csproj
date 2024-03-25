@@ -18,7 +18,8 @@
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Project B\Project B.csproj" />
+      <ProjectReference Include="..\Project B\Project B.csproj" />
+  </ItemGroup>
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
