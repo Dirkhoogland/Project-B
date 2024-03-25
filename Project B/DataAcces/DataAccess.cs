@@ -52,6 +52,20 @@ namespace Project_B.DataAcces
                 sqlite_cmd.ExecuteNonQuery();
             }
             catch (Exception ex) { }
+
+            // creates tickets table with user ID, flight ID, user name
+            try
+            {
+                SQLiteCommand sqlite_cmd;
+                string CreateTicketsql = "CREATE TABLE Tickets(" +
+                    "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "UserID INTEGER," +
+                    "Name VARCHAR(225))";
+                sqlite_cmd = conn.CreateCommand();
+                sqlite_cmd.CommandText = CreateTicketsql;
+                sqlite_cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { }
         }
 
         static void InsertData(SQLiteConnection conn)
@@ -70,6 +84,15 @@ namespace Project_B.DataAcces
                 sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email1 ','Berat'); ";
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email2 ','Mitchel'); ";
+                sqlite_cmd.ExecuteNonQuery();
+                sqlite_cmd.CommandText = "INSERT INTO Users(Email, Name) VALUES('Email3 ','Badr'); ";
+                sqlite_cmd.ExecuteNonQuery();
+
+                sqlite_cmd.CommandText = "INSERT INTO Tickets(UserID, Name) VALUES(1,'Dirk'); ";
+                sqlite_cmd.ExecuteNonQuery();
+                sqlite_cmd.CommandText = "INSERT INTO Tickets(UserID, Name) VALUES(2,'Berat'); ";
+                sqlite_cmd.ExecuteNonQuery();
+                sqlite_cmd.CommandText = "INSERT INTO Tickets(UserID, Name) VALUES(3,'Mitchel'); ";
                 sqlite_cmd.ExecuteNonQuery();
             }
 
