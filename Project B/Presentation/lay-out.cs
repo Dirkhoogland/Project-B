@@ -2,7 +2,7 @@ namespace Project_B.Presentation
 {
     public class lay_out
     {
-        static bool[,] seats = new bool[34, 6];
+        static bool[,] seats = new bool[33, 6];
         public void ToonMenu()
         {
             Console.WriteLine("Welkom bij het stoelreserveringssysteem voor het vliegtuig!");
@@ -38,7 +38,7 @@ namespace Project_B.Presentation
             Console.WriteLine("Beschikbare stoelen:");
             DisplaySeatLayout();
 
-            Console.Write("Voer de rijnummer in (1-34): ");
+            Console.Write("Voer de rijnummer in (1-33): ");
             int row = Convert.ToInt32(Console.ReadLine());
 
             Console.Write("Voer de stoelnummer in (A-F): ");
@@ -47,7 +47,7 @@ namespace Project_B.Presentation
             int rowIndex = row - 1;
             int seatIndex = seat - 'A';
 
-            if (rowIndex < 0 || rowIndex >= 34 || seatIndex < 0 || seatIndex >= 6)
+            if (rowIndex < 0 || rowIndex >= 33 || seatIndex < 0 || seatIndex >= 6)
             {
                 Console.WriteLine("Ongeldige stoel. Probeer het opnieuw.");
                 return;
@@ -68,7 +68,7 @@ namespace Project_B.Presentation
             Console.WriteLine("Stoelindeling:");
             Console.WriteLine("Rij  Stoelen");
 
-            for (int row = 0; row < 34; row++)
+            for (int row = 0; row < 33; row++)
             {
                 Console.Write($"{row + 1}    ");
 
