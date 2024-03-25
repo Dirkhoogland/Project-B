@@ -53,7 +53,7 @@ namespace Project_Btest
             try
             {
                 string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-                string sqlCommands = "DELETE FROM Flights WHERE FlightID = >= 1";
+                string sqlCommands = "DELETE FROM Flights";
 
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
@@ -109,28 +109,33 @@ namespace Project_Btest
         public void TestCreateFlightsTable()
         {
             // Act
+            DeleteRow();
             DataAccess.CreateFlightsTable();
 
             // Assert
             var tableExists = CheckIfTableExists();
             Assert.IsTrue(tableExists);
+            DeleteRow();
         }
 
         [TestMethod]
         public void TestCreateFlights()
         {
             // Act
+            DeleteRow();
             Flight.CreateFlights();
 
             // Assert
             var flights = Flight.GetFlights();
             Assert.AreEqual(3, flights.Count);
+            DeleteRow();
         }
 
         [TestMethod]
         public void TestGetFlights()
         {
             // Arrange
+            DeleteRow();
             DataAccess.CreateFlightsTable();
             Flight.CreateFlights();
 
@@ -139,12 +144,14 @@ namespace Project_Btest
 
             // Assert
             Assert.AreEqual(3, flights.Count);
+            DeleteRow();
         }
 
         [TestMethod]
         public void TestDeleteRow()
         {
             // Arrange
+            DeleteRow();
             DataAccess.CreateFlightsTable();
             Flight.CreateFlights();
 
@@ -153,7 +160,8 @@ namespace Project_Btest
 
             // Assert
             var flights = Flight.GetFlights();
-            Assert.AreEqual(2, flights.Count);
+            Assert.AreEqual(0, flights.Count);
+            DeleteRow();
         }
     }
 }
