@@ -72,7 +72,7 @@ namespace Project_Btest
         public void Test1()
         {
             CreateFlightsTable();
-
+            Flight.AddFlight();
 
 
             DeleteRow();
