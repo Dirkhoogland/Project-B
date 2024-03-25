@@ -108,14 +108,10 @@ namespace Project_Btest
         [TestMethod]
         public void TestCreateFlightsTable()
         {
-            // Arrange
-            // If the method doesn't take any parameters, you don't need to arrange anything
-
             // Act
             DataAccess.CreateFlightsTable();
 
             // Assert
-            // Check that the table was created. This will depend on your implementation.
             var tableExists = CheckIfTableExists();
             Assert.IsTrue(tableExists);
         }
@@ -123,14 +119,10 @@ namespace Project_Btest
         [TestMethod]
         public void TestCreateFlights()
         {
-            // Arrange
-            // If the method doesn't take any parameters, you don't need to arrange anything
-
             // Act
             Flight.CreateFlights();
 
             // Assert
-            // Check that the flights were created. This will depend on your implementation.
             var flights = Flight.GetFlights();
             Assert.AreEqual(3, flights.Count);
         }
@@ -160,7 +152,6 @@ namespace Project_Btest
             DeleteRow();
 
             // Assert
-            // Check that the row was deleted. This will depend on your implementation.
             var flights = Flight.GetFlights();
             Assert.AreEqual(2, flights.Count);
         }
