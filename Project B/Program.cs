@@ -14,6 +14,8 @@ namespace Project_B
             Login();
             lay_out lay_out = new lay_out();
             lay_out.ToonMenu();
+            // Verwijder de CreateFlightsTable()
+            DataAccess.CreateFlightsTable();
             Flight.CreateFlights();
             Flight.AdminUpdateFlight();
             FlightInformation();
