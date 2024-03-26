@@ -1,6 +1,8 @@
 Project B/.vs
 Project B/obj
 Project B/bin
+Project B/DataSource/database.db
+Project Btest/DataSource/database.db
 Project Btest/.vs
 Project Btest/obj
 Project Btest/bin
