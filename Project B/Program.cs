@@ -14,11 +14,12 @@ namespace Project_B
             // Login();
             // lay_out lay_out = new lay_out();
             // lay_out.ToonMenu();
-            DataAccess.CreateFlightsTable();
-            Flight.CreateFlights();
+            // DataAccess.CreateFlightsTable();
+            // Flight.CreateFlights();
             // Flight.AdminUpdateFlight();
-            FlightInformation();
-
+            // FlightInformation();
+            Flight.FilterFlights();
+            Console.ReadLine();
 
         }
         // log in function to connect it with the login/registrations page. 

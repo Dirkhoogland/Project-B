@@ -356,6 +356,53 @@ namespace Project_B.DataAcces
         // Filter-systeem:
         // Implementeer een zoekfilter waarmee gebruikers vluchten naar een specifieke locatie kunnen vinden.
         // Implementeer functionaliteit om zoekopdrachten te filteren op bestemming, waardoor gebruikers alle beschikbare vluchten naar die specifieke locatie kunnen bekijken.
-        // Ontwikkel filters voor onder andere vertrekdatum, luchtvaartmaatschappij, en reisklasse om de zoekresultaten te verbeteren.
+        // Ontwikkel filters voor onder andere vertrekdatum en luchtvaartmaatschappij om de zoekresultaten te verbeteren.
+        public static void FilterFlights()
+        {
+            List<Flight> flights = GetFlights();
+
+            Console.WriteLine("Do you want to filter by destination? (yes/no)");
+            if (Console.ReadLine().ToLower() == "yes")
+            {
+                Console.WriteLine("Enter the destination you want to filter on: ");
+                string destination = Console.ReadLine().ToLower();
+                flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
+            }
+            Console.Clear();
+            Console.WriteLine("Do you want to filter by departure time? (yes/no)");
+            if (Console.ReadLine().ToLower() == "yes")
+            {
+                Console.WriteLine("Enter the departure date you want to filter on (yyyy-MM-dd): ");
+                DateTime departureDate;
+                if (DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out departureDate))
+                {
+                    flights = flights.Where(f => f.DepartureTime.Date == departureDate.Date).ToList();
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date format.");
+                }
+            }
+            Console.Clear();
+            Console.WriteLine("Do you want to filter by airline? (yes/no)");
+            if (Console.ReadLine().ToLower() == "yes")
+            {
+                Console.WriteLine("Enter the airline you want to filter on: ");
+                string airline = Console.ReadLine();
+                flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
+            }
+            Console.Clear();
+            if (flights.Count == 0)
+            {
+                Console.WriteLine("No flights found with the given filters.");
+            }
+            else
+            {
+                foreach (Flight flight in flights)
+                {
+                    Console.WriteLine(flight);
+                }
+            }
+        }
     }
 }
