@@ -36,52 +36,54 @@ class TicketManager{
             conn.Open();
             using (SQLiteCommand command = new SQLiteCommand(sql_select, conn)){
                 command.Parameters.AddWithValue("@user_mail", user_mail);
-                object time_result = command.ExecuteScalar();
+                using (SQLiteDataReader reader = command.ExecuteReader()){
+                    if (reader.Read()){
+                        long ticket_id = reader.GetInt64(0);
+                        DateTime purchase_time = reader.GetDateTime(reader.GetOrdinal("PurchaseTime"));
 
-                if (time_result != null){
-                    DateTime purchase_time = Convert.ToDateTime(time_result);
-                    Console.WriteLine("A ticket has been found.");
+                        Console.WriteLine("A ticket has been found.");
 
-                    using (SQLiteCommand command_del = new SQLiteCommand(sql_delete, conn)){
-                        command_del.Parameters.AddWithValue("@user_mail", user_mail);
+                        using (SQLiteCommand command_del = new SQLiteCommand(sql_delete, conn)){
+                            command_del.Parameters.AddWithValue("@user_mail", user_mail);
 
-                    int row_removed = command_del.ExecuteNonQuery();
+                            int row_removed = command_del.ExecuteNonQuery();
 
-                    DateTime compare_time = purchase_time.AddHours(3);
+                            DateTime compare_time = purchase_time.AddHours(3);
 
-                    if (compare_time > DateTime.Now){
-                        Console.WriteLine("Your purchase has been cancelled and refunded. More info is sent to your E-Mail address.");
-                        AutoMail.SendMail(user_mail, "New South: Ticket Cancellation", EmailBody(true));
+                            if (compare_time > DateTime.Now){
+                                Console.WriteLine("Your purchase has been cancelled and refunded. More info is sent to your E-Mail address.");
+                                AutoMail.SendMail(user_mail, "New South: Ticket Cancellation", EmailBody(true, ticket_id, purchase_time));
+                            }
+
+                            else{
+                                Console.WriteLine("Your purchase has been cancelled. More info is sent to your E-Mail address.");
+                                AutoMail.SendMail(user_mail, "New South: Ticket Cancellation", EmailBody(false, ticket_id, purchase_time));
+                            }
+                        }
                     }
-
                     else{
-                        Console.WriteLine("Your purchase has been cancelled. More info is sent to your E-Mail address.");
-                        AutoMail.SendMail(user_mail, "New South: Ticket Cancellation", EmailBody(false));
+                        Console.WriteLine("No ticket has been found.");
                     }
-                    }
-                }
-
-                else{
-                    Console.WriteLine("No ticket has been found.");
-                }
+                } 
             }
         }
     }
 
-    public static string EmailBody(bool refund){
+
+    public static string EmailBody(bool refund, long flight_id, DateTime purchase_time){
         if (refund == true){
-            string body_true = @"Dear [Customer Name],
+            string body_true = $@"Dear [Customer Name],
 
 We hope this email finds you well.
 
 We wanted to inform you that your ticket purchase has been successfully cancelled and refunded. Below are the details of your cancellation:
 
-Ticket ID: [Ticket ID]
-Purchase Time: [Purchase Time]
-Cancellation Time: [Cancellation Time]
-Refund Amount: [Refund Amount]
+Ticket ID: {flight_id}
+Purchase Time: {purchase_time}
+Cancellation Time: {DateTime.Now}
+Refund Amount: [TBA]
 
-If you have any questions or concerns regarding your cancellation and refund, please don't hesitate to contact us at [Your Contact Information].
+If you have any questions or concerns regarding your cancellation and refund, please don't hesitate to contact us at newsouthairlines@gmail.com.
 
 Thank you for choosing us, and we look forward to serving you in the future.
 
@@ -90,23 +92,27 @@ New South";
             return body_true;
         }
 
-        string body_false = @"Dear [Customer Name],
+        if (refund == false){
+            string body_false = $@"Dear [Customer Name],
 
 We hope this email finds you well.
 
 We wanted to inform you that your ticket purchase has been successfully cancelled and refunded. Below are the details of your cancellation:
 
-Ticket ID: [Ticket ID]
-Purchase Time: [Purchase Time]
-Cancellation Time: [Cancellation Time]
-Refund Amount: [Refund Amount]
+Ticket ID: {flight_id}
+Purchase Time: {purchase_time}
+Cancellation Time: {DateTime.Now}
+Refund Amount: Inelligible
 
-If you have any questions or concerns regarding your cancellation and refund, please don't hesitate to contact us at [Your Contact Information].
+If you have any questions or concerns regarding your cancellation and refund, please don't hesitate to contact us at newsouthairlines@gmail.com.
 
 Thank you for choosing us, and we look forward to serving you in the future.
 
 Best regards,
 New South";
-        return body_false;
+            return body_false;
+            }
+
+        return "Invalid parameters.";
         }
     }
