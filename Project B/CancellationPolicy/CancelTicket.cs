@@ -28,6 +28,7 @@ class TicketManager{
         string user_mail = Console.ReadLine();
 
         string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+        // LIMIT 1 als tijdelijke 'fix' voor verwijderen van meerdere tickets. Hieraan nog werken
         string sql_select = "SELECT PurchaseTime FROM Tickets WHERE Email = @user_mail LIMIT 1";
         string sql_delete = "DELETE FROM Tickets WHERE Email = @user_mail";
 

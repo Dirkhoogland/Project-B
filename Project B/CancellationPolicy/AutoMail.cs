@@ -5,7 +5,7 @@ class AutoMail{
     public static void SendMail(string recipient, string subject, string body){
         using SmtpClient client = new SmtpClient("smtp.gmail.com"){
             Port = 587,
-            Credentials = new NetworkCredential("newsouthconfirmation@gmail.com", "newsouthprojectb"),
+            Credentials = new NetworkCredential("newsouthconfirmation", "vhdd bqks skhs phdv"),
             EnableSsl = true
         };
 
