@@ -46,6 +46,7 @@ namespace Project_B.DataAcces
                 string sql_tickets = "CREATE TABLE Tickets(" +
                     "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "Email VARCHAR(255)," +
+                    "PurchaseTime DATETIME" +
                     "Name VARCHAR(255))";
                 // using statements are used to confine the use of the connection to only this function, so the database remains useable outside of it since its automatially closed and does not remain open on a function when it shouldnt be
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
