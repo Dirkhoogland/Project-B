@@ -67,7 +67,7 @@ namespace Project_B.Presentation
         {
             Console.WriteLine("Stoelindeling:");
             Console.WriteLine("Rij  Stoelen");
-            Console.WriteLine("     A B C D E F");
+            Console.WriteLine("     A B C  D E F");
 
             for (int row = 0; row < 33; row++)
             {
@@ -77,11 +77,20 @@ namespace Project_B.Presentation
                 {
                     if (seats[row, seat])
                     {
-                        Console.Write("X ");
+                        Console.Write("X");
                     }
                     else
                     {
-                        Console.Write("O ");
+                        Console.Write("O");
+                    }
+
+                    if (seat == 2) 
+                    {
+                        Console.Write("  "); 
+                    }
+                    else
+                    {
+                        Console.Write(" ");
                     }
                 }
 
