@@ -154,6 +154,26 @@ namespace Project_B.DataAcces
             }
             return flight;
         }
+        public static void DeleteRow()
+        {
+            try
+            {
+                string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sqlCommands = "DELETE FROM Flights";
+
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlCommands, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (Exception ex) { }
+        }
         public static void AdminUpdateFlight()
         {
             Console.WriteLine("Enter the FlightID of the flight you want to update: ");
@@ -333,5 +353,9 @@ namespace Project_B.DataAcces
             Flight.CreateFlightBoeing787();
             Flight.CreateFlightAirbus330();
         }
+        // Filter-systeem:
+        // Implementeer een zoekfilter waarmee gebruikers vluchten naar een specifieke locatie kunnen vinden.
+        // Implementeer functionaliteit om zoekopdrachten te filteren op bestemming, waardoor gebruikers alle beschikbare vluchten naar die specifieke locatie kunnen bekijken.
+        // Ontwikkel filters voor onder andere vertrekdatum, luchtvaartmaatschappij, en reisklasse om de zoekresultaten te verbeteren.
     }
 }
