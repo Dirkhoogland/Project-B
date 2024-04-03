@@ -6,8 +6,9 @@ namespace Project_B
     {
         static void Main()
         {
-            TicketManager.AddTicket("TestMail", "TestName", DateTime.Now);
-            DataAccess.Database();
+            TicketManager.AddTicket("bjarouialt@gmail.com", DateTime.Now);
+            TicketManager.CancelTicket();
+            //DataAccess.Database();
         }
     }
 }
