@@ -88,8 +88,16 @@ namespace Project_B.DataAcces
                     }
                 }
             }
-            Users user = new Users(Id, UserEmail, Name, Password);
-            return user;
+            try
+            {
+                Users user = new Users(Id, UserEmail, Name, Password);
+                return user;
+            }
+            finally
+            {
+                Console.WriteLine("Could not find user");
+            }
+
         }
         public static bool RemoveUser(string Email)
         {
