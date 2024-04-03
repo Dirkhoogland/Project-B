@@ -16,5 +16,11 @@ namespace Project_B.BusinessLogic
             else { return false; }
 
         }
+
+        public static CurrentUser Guestlogin(string Email)
+        {
+            CurrentUser user = new(0, Email, "Guest", "Guest", true);
+            return user;
+        }
     }
 }

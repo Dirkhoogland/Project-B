@@ -17,13 +17,13 @@ namespace Project_B.Presentation
                 string? inputunchecked = Console.ReadLine();
                 string input = inputunchecked.ToLower();
                 if (input == "login") { check = true; currentUser = Loginscreen(); }
-                else if (input == "register") { check = true; Registrationscreen(); }
-                else if (input == "guest") { check = true;  Guestscreen(); }
+                else if (input == "register") { check = true; currentUser = Registrationscreen(); }
+                else if (input == "guest") { check = true; currentUser = Guestscreen(); }
             }
             return currentUser;
         }
         // registration asks for user details to then send to the business logic side
-        private static void Registrationscreen()
+        private static CurrentUser Registrationscreen()
         {   bool check = false;
             string? Email = null;
             string? Password = null;
@@ -49,6 +49,10 @@ namespace Project_B.Presentation
             {
                 Console.WriteLine($"Successfully created user: {Name} with Email: {Email}");
             }
+            Login.LoginLogic(Email, Password);
+            Users User = Users.Getuser(Email);
+            CurrentUser currentUser = new CurrentUser(User.Id, User.Email, User.Name, User.Password, true);
+            return currentUser;
         }
 
         private static CurrentUser Loginscreen()
@@ -74,16 +78,28 @@ namespace Project_B.Presentation
             }
             else
             {
-                Console.WriteLine($"Successfully logged in user: {Email}");
                 Users User = Users.Getuser(Email);
+                Console.WriteLine($"Successfully logged in user: {User.Name}");
+
                 CurrentUser currentUser = new CurrentUser(User.Id, User.Email, User.Name, User.Password, true);
                 return currentUser;
             }
         }
 
-        private static void Guestscreen()
+        private static CurrentUser Guestscreen()
         {
+            bool check = false;
+            string? Email = null;
 
+            // Asks users email and password for registration, the strings are nullable so the function/responses will loop if not both filled in.
+            while (check is false)
+            {
+                Console.WriteLine("Please fill in your Email");
+                Email = Console.ReadLine();
+                if (Email != null) { check = true; }
+            }
+            CurrentUser user = Login.Guestlogin(Email);
+            return user;
         }
     }
 }
