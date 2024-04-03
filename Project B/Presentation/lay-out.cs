@@ -67,6 +67,7 @@ namespace Project_B.Presentation
         {
             Console.WriteLine("Stoelindeling:");
             Console.WriteLine("Rij  Stoelen");
+            Console.WriteLine("     A B C D E F");
 
             for (int row = 0; row < 33; row++)
             {
