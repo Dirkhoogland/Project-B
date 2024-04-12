@@ -345,6 +345,24 @@ namespace Project_B.DataAcces
             };
             AddFlight(flight);
         }
+        public static void CreateSetFlight()
+        {
+            Flight flight = new Flight
+            {
+                DepartureTime = new DateTime(2024, 12, 31, 12, 0, 0),
+                Terminal = "1",
+                FlightNumber = "1234",
+                AircraftType = "Airbus 330",
+                Seats = 345,
+                AvailableSeats = 345,
+                Destination = "London",
+                Origin = "Amsterdam",
+                Airline = "New South",
+                Status = "On time",
+                Gate = "1"
+            };
+            AddFlight(flight);
+        }
         
         // functie om een paar vluchten aan te maken voor test
         public static void CreateFlights()
@@ -368,7 +386,7 @@ namespace Project_B.DataAcces
                 string destination = Console.ReadLine().ToLower();
                 flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
             }
-            Console.Clear();
+            // Console.Clear();
             Console.WriteLine("Do you want to filter by departure time? (yes/no)");
             if (Console.ReadLine().ToLower() == "yes")
             {
@@ -383,7 +401,7 @@ namespace Project_B.DataAcces
                     Console.WriteLine("Invalid date format.");
                 }
             }
-            Console.Clear();
+            // Console.Clear();
             Console.WriteLine("Do you want to filter by airline? (yes/no)");
             if (Console.ReadLine().ToLower() == "yes")
             {
@@ -391,7 +409,7 @@ namespace Project_B.DataAcces
                 string airline = Console.ReadLine();
                 flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
             }
-            Console.Clear();
+            // Console.Clear();
             if (flights.Count == 0)
             {
                 Console.WriteLine("No flights found with the given filters.");
