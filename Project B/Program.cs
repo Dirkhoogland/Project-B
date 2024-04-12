@@ -18,7 +18,8 @@ namespace Project_B
             Flight.CreateFlights();
             Flight.AdminUpdateFlight();
             FlightInformation();
-
+            Flight.FilterFlights();
+            Console.ReadLine();
 
         }
         // log in function to connect it with the login/registrations page. 
