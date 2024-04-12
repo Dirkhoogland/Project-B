@@ -10,14 +10,14 @@ namespace Project_B
         static void Main()
         {
 
-            // DataAccess.Database();
-            // Login();
-            // lay_out lay_out = new lay_out();
-            // lay_out.ToonMenu();
-            // DataAccess.CreateFlightsTable();
-            // Flight.CreateFlights();
-            // Flight.AdminUpdateFlight();
-            // FlightInformation();
+            DataAccess.Database();
+            Login();
+            lay_out lay_out = new lay_out();
+            lay_out.ToonMenu();
+            DataAccess.CreateFlightsTable();
+            Flight.CreateFlights();
+            Flight.AdminUpdateFlight();
+            FlightInformation();
             Flight.FilterFlights();
             Console.ReadLine();
 
