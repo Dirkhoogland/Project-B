@@ -162,8 +162,16 @@ namespace Project_B.Presentation
         Console.Write("Voer de stoelnummer in (A-F): ");
         char seat = Convert.ToChar(Console.ReadLine().ToUpper());
 
+        int rowIndex = row - 1;
+        int seatIndex = seat - 'A';
 
-        Seat chosenSeat = seats[row, seat];
+        if (rowIndex < 0 || rowIndex >= 33 || seatIndex < 0 || seatIndex >= 6)
+        {
+            Console.WriteLine("Ongeldige stoel. Probeer het opnieuw.");
+            return;
+        }
+
+        Seat chosenSeat = seats[rowIndex, seatIndex];
         if (chosenSeat.IsReserved)
         {
             Console.WriteLine("Deze stoel is al gereserveerd. Kies een andere stoel.");
