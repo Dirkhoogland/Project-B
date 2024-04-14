@@ -12,8 +12,9 @@ namespace Project_B
 
             //DataAccess.Database();
             Login();
-            lay_out lay_out = new lay_out();
-            lay_out.ToonMenu();
+            Seat seat = new Seat();
+            seat.lay_out();
+            seat.ToonMenu();
             // Verwijder de CreateFlightsTable() als je niet Database wilt aanmaken, dan kan ook 3 eronder niet gebruikt worden. Verwijder changes als je database hebt aangemaakt ivm bugs.
             DataAccess.CreateFlightsTable();
             Flight.CreateFlights();
