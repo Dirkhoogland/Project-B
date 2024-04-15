@@ -178,18 +178,18 @@ namespace Project_B.Presentation
             return;
         }
 
-        Console.WriteLine($"You have chosen seat {row}{seat}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
-        Console.Write("Do you want to reserve this seat? (yes/no): ");
+        Console.WriteLine($"Je hebt deze stoel gekozen: {row}{seat}. Klasse: {chosenSeat.Class}, Prijs: {chosenSeat.Price}");
+        Console.Write("Wil je deze stoel selecteren? (Ja/Nee): ");
         string confirmation = Console.ReadLine().ToLower();
 
-        if (confirmation == "yes")
+        if (confirmation == "ja")
         {
             chosenSeat.IsReserved = true;
-            Console.WriteLine("Seat successfully reserved!");
+            Console.WriteLine("Stoel succesvol gereserveerd!");
         }
         else
         {
-            Console.WriteLine("Reservation cancelled.");
+            Console.WriteLine("je hebt je stoel gecanceled.");
         }
     }
 
