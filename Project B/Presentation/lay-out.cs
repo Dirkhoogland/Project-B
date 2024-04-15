@@ -195,7 +195,7 @@ namespace Project_B.Presentation
 
     public static void DisplaySeatLayout()
     {
-    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.ForegroundColor = ConsoleColor.Cyan;
 
     Console.WriteLine("Stoelindeling:");
     Console.WriteLine("Rij  Stoelen");
