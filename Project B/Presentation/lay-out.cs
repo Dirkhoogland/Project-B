@@ -194,7 +194,7 @@ namespace Project_B.Presentation
     }
 
     public static void DisplaySeatLayout()
-    {
+{
     Console.ForegroundColor = ConsoleColor.Cyan;
 
     Console.WriteLine("Stoelindeling:");
@@ -203,6 +203,15 @@ namespace Project_B.Presentation
 
     for (int row = 0; row < 33; row++)
     {
+        if (row == 15 || row == 16) // Rows 16 and 17 (0-indexed)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+        }
+
         Console.Write($"{row + 1}    ");
 
         for (int seat = 0; seat < 6; seat++)
@@ -233,4 +242,3 @@ namespace Project_B.Presentation
 }
 }
 }
-
