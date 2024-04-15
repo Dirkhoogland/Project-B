@@ -11,7 +11,13 @@ namespace Project_B
         {
 
             DataAccess.Database();
-            Login();
+            CurrentUser currentuser = Login();
+            try
+            {
+                Console.WriteLine($"Name: {currentuser.Name} Logged in: {currentuser.LoggedIn}");
+            }
+            catch(Exception ex) { }
+            // Verwijder de CreateFlightsTable() als je niet Database wilt aanmaken, dan kan ook 3 eronder niet gebruikt worden. Verwijder changes als je database hebt aangemaakt ivm bugs.          
             lay_out lay_out = new lay_out();
             lay_out.ToonMenu();
             DataAccess.CreateFlightsTable();
@@ -21,11 +27,13 @@ namespace Project_B
             Flight.FilterFlights();
             Console.ReadLine();
 
+
         }
         // log in function to connect it with the login/registrations page. 
-        private static void Login()
+        private static CurrentUser Login()
         {
-            LoginRegistrations.LoginScreen();
+            CurrentUser currentuser = null;
+            return currentuser = LoginRegistrations.LoginScreen();
         }
         
         // functie om de vlucht informatie te laten zien
