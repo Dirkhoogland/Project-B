@@ -112,11 +112,18 @@ namespace Project_B.Presentation
     static Seat[,] seats = new Seat[33, 6]; 
     public void lay_out()
     {
-        for (int i = 0; i < 33; i++)
+    for (int i = 0; i < 33; i++)
         {
             for (int j = 0; j < 6; j++)
             {
-                seats[i, j] = new Seat { Class = "Economy", Price = 100m, IsReserved = false };
+                if (j == 0 || j == 5) 
+                {
+                    seats[i, j] = new Seat { Class = "Economy", Price = 125m, IsReserved = false };
+                }
+                else
+                {
+                    seats[i, j] = new Seat { Class = "Economy", Price = 100m, IsReserved = false };
+                }
             }
         }
     }
