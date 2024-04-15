@@ -123,7 +123,7 @@ namespace Project_Btest
         {
             // Act
             DeleteRow();
-            Flight.CreateFlights();
+            Flight.CreateTestFlights();
 
             // Assert
             var flights = Flight.GetFlights();
@@ -137,7 +137,7 @@ namespace Project_Btest
             // Arrange
             DeleteRow();
             DataAccess.CreateFlightsTable();
-            Flight.CreateFlights();
+            Flight.CreateTestFlights();
 
             // Act
             var flights = Flight.GetFlights();
@@ -153,7 +153,7 @@ namespace Project_Btest
             // Arrange
             DeleteRow();
             DataAccess.CreateFlightsTable();
-            Flight.CreateFlights();
+            Flight.CreateTestFlights();
 
             // Act
             DeleteRow();

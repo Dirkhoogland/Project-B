@@ -15,7 +15,7 @@ namespace Project_B
             // lay_out lay_out = new lay_out();
             // lay_out.ToonMenu();
             // DataAccess.CreateFlightsTable();
-            // Flight.CreateFlights();
+            // Flight.CreateTestFlights();
             Flight.AdminUpdateFlight();
             Flight.FlightInformation();
             Flight.FilterFlights();
