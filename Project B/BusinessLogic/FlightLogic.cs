@@ -9,7 +9,7 @@ public class FlightLogic
 
     public void CreateFlights()
     {
-        Flight.CreateFlights();
+        Flight.CreateTestFlights();
     }
 
     public void DeleteFlights()

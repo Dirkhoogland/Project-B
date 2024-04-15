@@ -9,9 +9,6 @@ namespace Project_B
     {
         static void Main()
         {
-
-
-
             DataAccess.Database();
             CurrentUser currentuser = Login();
             try
@@ -24,14 +21,12 @@ namespace Project_B
             seat.ToonMenu();
             //lay_out lay_out = new lay_out();
             //lay_out.ToonMenu();
-
             DataAccess.CreateFlightsTable();
-            Flight.CreateFlights();
+            Flight.CreateTestFlights();
             Flight.AdminUpdateFlight();
-            FlightInformation();
+            Flight.FlightInformation();
             Flight.FilterFlights();
             Console.ReadLine();
-
 
         }
         // log in function to connect it with the login/registrations page. 
@@ -41,14 +36,5 @@ namespace Project_B
             return currentuser = LoginRegistrations.LoginScreen();
         }
         
-        // functie om de vlucht informatie te laten zien
-        private static void FlightInformation()
-        {
-            var flights = Flight.GetFlights();
-            foreach (var flight in flights)
-            {
-                Console.WriteLine(flight);
-            }
-        }
     }
 }
