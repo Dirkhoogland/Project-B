@@ -194,7 +194,7 @@ namespace Project_B.Presentation
     }
 
     public static void DisplaySeatLayout()
-{
+    {
     Console.ForegroundColor = ConsoleColor.Yellow;
 
     Console.WriteLine("Stoelindeling:");
@@ -229,7 +229,7 @@ namespace Project_B.Presentation
         Console.WriteLine();
     }
 
-    Console.ResetColor(); // Reset the color to the default
+    Console.ResetColor(); 
 }
 }
 }
