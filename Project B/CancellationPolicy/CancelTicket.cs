@@ -29,7 +29,7 @@ class TicketManager{
 
         string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
         // LIMIT 1 als tijdelijke 'fix' voor verwijderen van meerdere tickets. Hieraan nog werken
-        string sql_select = "SELECT PurchaseTime FROM Tickets WHERE Email = @user_mail LIMIT 1";
+        string sql_select = "SELECT FlightID, PurchaseTime FROM Tickets WHERE Email = @user_mail LIMIT 1";
         string sql_delete = "DELETE FROM Tickets WHERE Email = @user_mail";
 
         using (SQLiteConnection conn = new SQLiteConnection(ConnectionString)){
@@ -38,7 +38,7 @@ class TicketManager{
                 command.Parameters.AddWithValue("@user_mail", user_mail);
                 using (SQLiteDataReader reader = command.ExecuteReader()){
                     if (reader.Read()){
-                        long ticket_id = reader.GetInt64(0);
+                        int ticket_id = reader.GetInt32(0);
                         DateTime purchase_time = reader.GetDateTime(reader.GetOrdinal("PurchaseTime"));
 
                         Console.WriteLine("A ticket has been found.");
