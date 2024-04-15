@@ -178,7 +178,15 @@ namespace Project_B.DataAcces
         {
             Console.WriteLine("Enter the FlightID of the flight you want to update: ");
             Console.WriteLine("If you don't want to update anything, type '0'");
-            int flightId = int.Parse(Console.ReadLine());
+
+            int flightId;
+            while (!int.TryParse(Console.ReadLine(), out flightId))
+            {
+                Console.WriteLine("Invalid input. Please enter a number.");
+                Console.WriteLine("Enter the FlightID of the flight you want to update: ");
+                Console.WriteLine("If you don't want to update anything, type '0'");
+            }
+
             if (flightId == 0) { return; }
 
             Flight flightToUpdate = GetFlightById(flightId);

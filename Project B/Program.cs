@@ -16,8 +16,8 @@ namespace Project_B
             // lay_out.ToonMenu();
             // DataAccess.CreateFlightsTable();
             // Flight.CreateFlights();
-            // Flight.AdminUpdateFlight();
-            // FlightInformation();
+            Flight.AdminUpdateFlight();
+            FlightInformation();
             Flight.FilterFlights();
             Console.ReadLine();
 
