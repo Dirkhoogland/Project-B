@@ -17,13 +17,15 @@ namespace Project_B
                 Console.WriteLine($"Name: {currentuser.Name} Logged in: {currentuser.LoggedIn}");
             }
             catch(Exception ex) { }
-            //lay_out lay_out = new lay_out();
-            //lay_out.ToonMenu();
-            // Verwijder de CreateFlightsTable() als je niet Database wilt aanmaken, dan kan ook 3 eronder niet gebruikt worden. Verwijder changes als je database hebt aangemaakt ivm bugs.
-            //DataAccess.CreateFlightsTable();
-            //Flight.CreateFlights();
-            //Flight.AdminUpdateFlight();
-            //FlightInformation();
+            // Verwijder de CreateFlightsTable() als je niet Database wilt aanmaken, dan kan ook 3 eronder niet gebruikt worden. Verwijder changes als je database hebt aangemaakt ivm bugs.          
+            lay_out lay_out = new lay_out();
+            lay_out.ToonMenu();
+            DataAccess.CreateFlightsTable();
+            Flight.CreateFlights();
+            Flight.AdminUpdateFlight();
+            FlightInformation();
+            Flight.FilterFlights();
+            Console.ReadLine();
 
 
         }

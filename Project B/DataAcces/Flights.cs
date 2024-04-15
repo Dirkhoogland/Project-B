@@ -154,6 +154,26 @@ namespace Project_B.DataAcces
             }
             return flight;
         }
+        public static void DeleteRow()
+        {
+            try
+            {
+                string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sqlCommands = "DELETE FROM Flights";
+
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlCommands, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (Exception ex) { }
+        }
         public static void AdminUpdateFlight()
         {
             Console.WriteLine("Enter the FlightID of the flight you want to update: ");
@@ -325,6 +345,24 @@ namespace Project_B.DataAcces
             };
             AddFlight(flight);
         }
+        public static void CreateSetFlight()
+        {
+            Flight flight = new Flight
+            {
+                DepartureTime = new DateTime(2024, 12, 31, 12, 0, 0),
+                Terminal = "1",
+                FlightNumber = "1234",
+                AircraftType = "Airbus 330",
+                Seats = 345,
+                AvailableSeats = 345,
+                Destination = "London",
+                Origin = "Amsterdam",
+                Airline = "New South",
+                Status = "On time",
+                Gate = "1"
+            };
+            AddFlight(flight);
+        }
         
         // functie om een paar vluchten aan te maken voor test
         public static void CreateFlights()
@@ -332,6 +370,57 @@ namespace Project_B.DataAcces
             Flight.CreateFlightBoeing737();
             Flight.CreateFlightBoeing787();
             Flight.CreateFlightAirbus330();
+        }
+        // Filter-systeem:
+        // Implementeer een zoekfilter waarmee gebruikers vluchten naar een specifieke locatie kunnen vinden.
+        // Implementeer functionaliteit om zoekopdrachten te filteren op bestemming, waardoor gebruikers alle beschikbare vluchten naar die specifieke locatie kunnen bekijken.
+        // Ontwikkel filters voor onder andere vertrekdatum en luchtvaartmaatschappij om de zoekresultaten te verbeteren.
+        public static void FilterFlights()
+        {
+            List<Flight> flights = GetFlights();
+
+            Console.WriteLine("Do you want to filter by destination? (yes/no)");
+            if (Console.ReadLine().ToLower() == "yes")
+            {
+                Console.WriteLine("Enter the destination you want to filter on: ");
+                string destination = Console.ReadLine().ToLower();
+                flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
+            }
+            // Console.Clear();
+            Console.WriteLine("Do you want to filter by departure time? (yes/no)");
+            if (Console.ReadLine().ToLower() == "yes")
+            {
+                Console.WriteLine("Enter the departure date you want to filter on (yyyy-MM-dd): ");
+                DateTime departureDate;
+                if (DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out departureDate))
+                {
+                    flights = flights.Where(f => f.DepartureTime.Date == departureDate.Date).ToList();
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date format.");
+                }
+            }
+            // Console.Clear();
+            Console.WriteLine("Do you want to filter by airline? (yes/no)");
+            if (Console.ReadLine().ToLower() == "yes")
+            {
+                Console.WriteLine("Enter the airline you want to filter on: ");
+                string airline = Console.ReadLine();
+                flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
+            }
+            // Console.Clear();
+            if (flights.Count == 0)
+            {
+                Console.WriteLine("No flights found with the given filters.");
+            }
+            else
+            {
+                foreach (Flight flight in flights)
+                {
+                    Console.WriteLine(flight);
+                }
+            }
         }
     }
 }
