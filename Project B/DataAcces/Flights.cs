@@ -22,8 +22,6 @@ namespace Project_B.DataAcces
         public string Status { get; set; }
         public string Gate { get; set; }
         public int FlightID { get; set; }
-        private const string Yes = "yes";
-        private const string No = "no";
 
         private static string databasePath
         {
@@ -196,7 +194,7 @@ namespace Project_B.DataAcces
             int flightId;
             while (!int.TryParse(Console.ReadLine(), out flightId))
             {
-                Console.WriteLine("Invalid input. Please enter a number.");
+                Console.WriteLine("\nInvalid input. Please enter a number.");
                 Console.WriteLine("Enter the FlightID of the flight you want to update: ");
                 Console.WriteLine("If you don't want to update anything, type '0'");
             }
@@ -209,53 +207,43 @@ namespace Project_B.DataAcces
 
             Flight flightToUpdate = GetFlightById(flightId);
 
-            UpdateFlightProperty<Flight, DateTime>(flightToUpdate, "Do you want to update the departure time? (yes/no): ", 
+            UpdateFlightProperty<Flight, DateTime>(flightToUpdate, "\nDo you want to update the departure time? (yes/no): ", 
                 "Enter the new departure time (yyyy-MM-dd HH:mm:ss): ", 
                 DateTime.TryParse, 
                 (flight, value) => flight.DepartureTime = value);
 
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "Do you want to update the destination? (yes/no): ", 
+            UpdateFlightProperty<Flight, string>(flightToUpdate, "\nDo you want to update the destination? (yes/no): ", 
                 "Enter the new destination: ", 
                 (string input, out string result) => { result = input; return true; }, 
                 (flight, value) => flight.Destination = value);
 
-            UpdateFlightProperty<Flight, DateTime>(flightToUpdate, "Do you want to update the departure time? (yes/no): ", 
-                "Enter the new departure time (yyyy-MM-dd HH:mm:ss): ", 
-                DateTime.TryParse, 
-                (flight, value) => flight.DepartureTime = value);
-
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "Do you want to update the destination? (yes/no): ", 
-                "Enter the new destination: ", 
-                (string input, out string result) => { result = input; return true; }, 
-                (flight, value) => flight.Destination = value);
-
-            UpdateFlightProperty<Flight, int>(flightToUpdate, "Do you want to update the number of seats? (yes/no): ", 
+            UpdateFlightProperty<Flight, int>(flightToUpdate, "\nDo you want to update the number of seats? (yes/no): ", 
                 "Enter the new number of seats: ", 
                 int.TryParse, 
                 (flight, value) => flight.Seats = value);
 
-            UpdateFlightProperty<Flight, int>(flightToUpdate, "Do you want to update the number of available seats? (yes/no): ", 
+            UpdateFlightProperty<Flight, int>(flightToUpdate, "\nDo you want to update the number of available seats? (yes/no): ", 
                 "Enter the new number of available seats: ", 
                 int.TryParse, 
                 (flight, value) => flight.AvailableSeats = value);
 
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "Do you want to update the gate? (yes/no): ", 
-                "Enter the new gate: ", 
+            UpdateFlightProperty<Flight, string>(flightToUpdate, "\nDo you want to update the gate? (yes/no): ", 
+                "Enter the new gate: (1-20) ", 
                 (string input, out string result) => { result = input; return true; }, 
                 (flight, value) => flight.Gate = value);
 
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "Do you want to update the terminal? (yes/no): ", 
-                "Enter the new terminal: ", 
+            UpdateFlightProperty<Flight, string>(flightToUpdate, "\nDo you want to update the terminal? (yes/no): ", 
+                "Enter the new terminal: (1-4) ", 
                 (string input, out string result) => { result = input; return true; }, 
                 (flight, value) => flight.Terminal = value);
 
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "Do you want to update the airline? (yes/no): ", 
+            UpdateFlightProperty<Flight, string>(flightToUpdate, "\nDo you want to update the airline? (yes/no): ", 
                 "Enter the new airline: ", 
                 (string input, out string result) => { result = input; return true; }, 
                 (flight, value) => flight.Airline = value);
 
             UpdateFlight(flightToUpdate);
-            Console.WriteLine("Flight updated.");
+            Console.WriteLine("\nFlight updated.");
             System.Threading.Thread.Sleep(3000);
             Console.Clear();
         }
@@ -461,41 +449,43 @@ namespace Project_B.DataAcces
                         Console.WriteLine("No flights found that match the filter criteria.");
                         return;
                     }
-                }
-            }
-
-            Console.WriteLine("Do you want to filter by airline? (yes/no)");
-            while ((input = Console.ReadLine().ToLower()) != "no")
-            {
-                if (input != "yes")
-                {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-                }
-                else
-                {
-                    Console.WriteLine("Enter the airline you want to filter on: ");
-                    string airline;
-                    while (true)
-                    {
-                        airline = Console.ReadLine().ToLower();
-                        if (flights.Any(f => f.Airline.ToLower() == airline))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid airline. Please enter a valid airline: ");
-                        }
-                    }
-                    flights = flights.Where(f => f.Airline.ToLower() == airline).ToList();
-                    if (flights.Count == 0)
-                    {
-                        Console.WriteLine("No flights found that match the filter criteria.");
-                        return;
-                    }
+                    break;
                 }
             }
             Console.Clear();
+
+            // Console.WriteLine("Do you want to filter by airline? (yes/no)");
+            // while ((input = Console.ReadLine().ToLower()) != "no")
+            // {
+            //     if (input != "yes")
+            //     {
+            //         Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+            //     }
+            //     else
+            //     {
+            //         Console.WriteLine("Enter the airline you want to filter on: ");
+            //         string airline;
+            //         while (true)
+            //         {
+            //             airline = Console.ReadLine().ToLower();
+            //             if (flights.Any(f => f.Airline.ToLower() == airline))
+            //             {
+            //                 break;
+            //             }
+            //             else
+            //             {
+            //                 Console.WriteLine("Invalid airline. Please enter a valid airline: ");
+            //             }
+            //         }
+            //         flights = flights.Where(f => f.Airline.ToLower() == airline).ToList();
+            //         if (flights.Count == 0)
+            //         {
+            //             Console.WriteLine("No flights found that match the filter criteria.");
+            //             return;
+            //         }
+            //     }
+            // }
+            // Console.Clear();
 
             if (flights.Count == 0)
             {
