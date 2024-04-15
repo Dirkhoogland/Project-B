@@ -194,38 +194,43 @@ namespace Project_B.Presentation
     }
 
     public static void DisplaySeatLayout()
+{
+    Console.ForegroundColor = ConsoleColor.Yellow;
+
+    Console.WriteLine("Stoelindeling:");
+    Console.WriteLine("Rij  Stoelen");
+    Console.WriteLine("     A B C  D E F");
+
+    for (int row = 0; row < 33; row++)
     {
-        Console.WriteLine("Stoelindeling:");
-        Console.WriteLine("Rij  Stoelen");
-        Console.WriteLine("     A B C  D E F");
+        Console.Write($"{row + 1}    ");
 
-        for (int row = 0; row < 33; row++)
+        for (int seat = 0; seat < 6; seat++)
         {
-            Console.Write($"{row + 1}    ");
-
-            for (int seat = 0; seat < 6; seat++)
+            if (seats[row, seat].IsReserved)
             {
-                if (seats[row, seat].IsReserved)
-                {
-                    Console.Write("X");
-                }
-                else
-                {
-                    Console.Write("O");
-                }
-
-                if (seat == 2)
-                {
-                    Console.Write("  ");
-                }
-                else
-                {
-                    Console.Write(" ");
-                }
+                Console.Write("X");
+            }
+            else
+            {
+                Console.Write("O");
             }
 
-            Console.WriteLine();
+            if (seat == 2)
+            {
+                Console.Write("  ");
+            }
+            else
+            {
+                Console.Write(" ");
+            }
         }
+
+        Console.WriteLine();
     }
+
+    Console.ResetColor(); // Reset the color to the default
 }
 }
+}
+
