@@ -203,7 +203,7 @@ namespace Project_B.Presentation
 
     for (int row = 0; row < 33; row++)
     {
-        if (row == 15 || row == 16) // Rows 16 and 17 (0-indexed)
+        if (row == 15 || row == 16) 
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
         }
