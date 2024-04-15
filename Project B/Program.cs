@@ -9,7 +9,12 @@ namespace Project_B
     {
         static void Main()
         {
-
+            DataAccess.CreateFlightsTable();
+            Flight.CreateTestFlights();
+            Flight.AdminUpdateFlight();
+            Flight.FlightInformation();
+            Flight.FilterFlights();
+            Console.ReadLine();
         }
         // log in function to connect it with the login/registrations page. 
         private static void Login()
