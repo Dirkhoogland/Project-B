@@ -198,6 +198,7 @@ namespace Project_B.DataAcces
                 if (DateTime.TryParse(Console.ReadLine(), out newDepartureTime))
                 {
                     flightToUpdate.DepartureTime = newDepartureTime;
+                    Console.WriteLine("Departure time updated.");
                 }
                 else
                 {
@@ -209,73 +210,93 @@ namespace Project_B.DataAcces
             {
                 Console.WriteLine("Enter the new destination: ");
                 flightToUpdate.Destination = Console.ReadLine();
+                Console.WriteLine("Destination updated.");
             }
 
             if (AskQuestion("Do you want to update the flight number? (yes/no): ") == "yes")
             {
                 Console.WriteLine("Enter the new flight number: ");
                 flightToUpdate.FlightNumber = Console.ReadLine();
+                Console.WriteLine("Flight number updated.");
             }
 
             if (AskQuestion("Do you want to update the aircraft type? (yes/no): ") == "yes")
             {
                 Console.WriteLine("Enter the new aircraft type: ");
                 flightToUpdate.AircraftType = Console.ReadLine();
+                Console.WriteLine("Aircraft type updated.");
             }
 
             if (AskQuestion("Do you want to update the seats? (yes/no): ") == "yes")
             {
-                Console.WriteLine("Enter the new amount of seats: ");
                 int newSeats;
-                if (int.TryParse(Console.ReadLine(), out newSeats))
-                {
-                    flightToUpdate.Seats = newSeats;
-                }
-                else
+                Console.WriteLine("Enter the new amount of seats: ");
+                while (!int.TryParse(Console.ReadLine(), out newSeats))
                 {
                     Console.WriteLine("Invalid input. Please enter a number.");
+                    Console.WriteLine("Enter the new amount of seats: ");
                 }
+                flightToUpdate.Seats = newSeats;
+                Console.WriteLine("Seats updated.");
             }
 
             if (AskQuestion("Do you want to update the available seats? (yes/no): ") == "yes")
             {
-                Console.WriteLine("Enter the new amount of available seats: ");
                 int newAvailableSeats;
-                if (int.TryParse(Console.ReadLine(), out newAvailableSeats))
-                {
-                    flightToUpdate.AvailableSeats = newAvailableSeats;
-                }
-                else
+                Console.WriteLine("Enter the new amount of available seats: ");
+                while (!int.TryParse(Console.ReadLine(), out newAvailableSeats))
                 {
                     Console.WriteLine("Invalid input. Please enter a number.");
+                    Console.WriteLine("Enter the new amount of available seats: ");
                 }
+                flightToUpdate.AvailableSeats = newAvailableSeats;
+                Console.WriteLine("Available seats updated.");
             }
 
             if (AskQuestion("Do you want to update the origin? (yes/no): ") == "yes")
             {
                 Console.WriteLine("Enter the new origin: ");
                 flightToUpdate.Origin = Console.ReadLine();
+                Console.WriteLine("Origin updated.");
             }
 
             if (AskQuestion("Do you want to update the status? (yes/no): ") == "yes")
             {
                 Console.WriteLine("Enter the new status: ");
                 flightToUpdate.Status = Console.ReadLine();
+                Console.WriteLine("Status updated.");
             }
 
             if (AskQuestion("Do you want to update the gate? (yes/no): ") == "yes")
             {
+                int newGate;
                 Console.WriteLine("Enter the new gate: (1-20) ");
-                flightToUpdate.Gate = Console.ReadLine();
+                while (!int.TryParse(Console.ReadLine(), out newGate) || newGate < 1 || newGate > 20)
+                {
+                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Enter the new gate: (1-20) ");
+                }
+                flightToUpdate.Gate = newGate.ToString();
+                Console.WriteLine("Gate updated.");
             }
 
             if (AskQuestion("Do you want to update the terminal? (yes/no): ") == "yes")
             {
+                int newTerminal;
                 Console.WriteLine("Enter the new terminal: (1-4) ");
-                flightToUpdate.Terminal = Console.ReadLine();
+                while (!int.TryParse(Console.ReadLine(), out newTerminal) || newTerminal < 1 || newTerminal > 4)
+                {
+                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Enter the new terminal: (1-4) ");
+                }
+                flightToUpdate.Terminal = newTerminal.ToString();
+                Console.WriteLine("Terminal updated.");
             }
 
             UpdateFlight(flightToUpdate);
+            Console.WriteLine("Flight updated.");
+            System.Threading.Thread.Sleep(3000);
+            Console.Clear();
         }
         public static string AskQuestion(string question)
         {
@@ -385,39 +406,72 @@ namespace Project_B.DataAcces
         // Ontwikkel filters voor onder andere vertrekdatum en luchtvaartmaatschappij om de zoekresultaten te verbeteren.
         public static void FilterFlights()
         {
+            Console.ReadLine();
+            Console.Clear();
             List<Flight> flights = GetFlights();
 
             Console.WriteLine("Do you want to filter by destination? (yes/no)");
-            if (Console.ReadLine().ToLower() == "yes")
+            string input;
+            while ((input = Console.ReadLine().ToLower()) == "yes" || input.All(char.IsDigit))
             {
-                Console.WriteLine("Enter the destination you want to filter on: ");
-                string destination = Console.ReadLine().ToLower();
-                flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
-            }
-            // Console.Clear();
-            Console.WriteLine("Do you want to filter by departure time? (yes/no)");
-            if (Console.ReadLine().ToLower() == "yes")
-            {
-                Console.WriteLine("Enter the departure date you want to filter on (yyyy-MM-dd): ");
-                DateTime departureDate;
-                if (DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out departureDate))
+                if (input.All(char.IsDigit))
                 {
-                    flights = flights.Where(f => f.DepartureTime.Date == departureDate.Date).ToList();
+                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Do you want to filter by destination? (yes/no)");
                 }
                 else
                 {
-                    Console.WriteLine("Invalid date format.");
+                    Console.WriteLine("Enter the destination you want to filter on: ");
+                    string destination = Console.ReadLine().ToLower();
+                    flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
+                    break;
                 }
             }
-            // Console.Clear();
-            Console.WriteLine("Do you want to filter by airline? (yes/no)");
-            if (Console.ReadLine().ToLower() == "yes")
+            Console.Clear();
+
+            Console.WriteLine("Do you want to filter by departure time? (yes/no)");
+            while ((input = Console.ReadLine().ToLower()) == "yes" || input.All(char.IsDigit))
             {
-                Console.WriteLine("Enter the airline you want to filter on: ");
-                string airline = Console.ReadLine();
-                flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
+                if (input.All(char.IsDigit))
+                {
+                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Do you want to filter by departure time? (yes/no)");
+                }
+                else
+                {
+                    Console.WriteLine("Enter the departure date you want to filter on (yyyy-MM-dd): ");
+                    DateTime departureDate;
+                    if (DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out departureDate))
+                    {
+                        flights = flights.Where(f => f.DepartureTime.Date == departureDate.Date).ToList();
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid date format.");
+                    }
+                }
             }
-            // Console.Clear();
+            Console.Clear();
+
+            Console.WriteLine("Do you want to filter by airline? (yes/no)");
+            while ((input = Console.ReadLine().ToLower()) == "yes" || input.All(char.IsDigit))
+            {
+                if (input.All(char.IsDigit))
+                {
+                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Do you want to filter by airline? (yes/no)");
+                }
+                else
+                {
+                    Console.WriteLine("Enter the airline you want to filter on: ");
+                    string airline = Console.ReadLine().ToLower();
+                    flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
+                    break;
+                }
+            }
+            Console.Clear();
+
             if (flights.Count == 0)
             {
                 Console.WriteLine("No flights found with the given filters.");
