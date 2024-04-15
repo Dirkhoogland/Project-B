@@ -10,17 +10,6 @@ namespace Project_B
         static void Main()
         {
 
-            // DataAccess.Database();
-            // Login();
-            // lay_out lay_out = new lay_out();
-            // lay_out.ToonMenu();
-            // DataAccess.CreateFlightsTable();
-            // Flight.CreateTestFlights();
-            Flight.AdminUpdateFlight();
-            Flight.FlightInformation();
-            Flight.FilterFlights();
-            Console.ReadLine();
-
         }
         // log in function to connect it with the login/registrations page. 
         private static void Login()
