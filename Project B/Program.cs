@@ -10,6 +10,9 @@ namespace Project_B
         static void Main()
         {
 
+
+            // Verwijder de CreateFlightsTable() als je niet Database wilt aanmaken, dan kan ook 3 eronder niet gebruikt worden. Verwijder changes als je database hebt aangemaakt ivm bugs.
+
             DataAccess.Database();
             CurrentUser currentuser = Login();
             try
@@ -17,9 +20,13 @@ namespace Project_B
                 Console.WriteLine($"Name: {currentuser.Name} Logged in: {currentuser.LoggedIn}");
             }
             catch(Exception ex) { }
+            Seat seat = new Seat();
+            seat.lay_out();
+            seat.ToonMenu();
             // Verwijder de CreateFlightsTable() als je niet Database wilt aanmaken, dan kan ook 3 eronder niet gebruikt worden. Verwijder changes als je database hebt aangemaakt ivm bugs.          
-            lay_out lay_out = new lay_out();
-            lay_out.ToonMenu();
+            //lay_out lay_out = new lay_out();
+            //lay_out.ToonMenu();
+
             DataAccess.CreateFlightsTable();
             Flight.CreateFlights();
             Flight.AdminUpdateFlight();
