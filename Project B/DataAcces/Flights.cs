@@ -484,5 +484,13 @@ namespace Project_B.DataAcces
                 }
             }
         }
+        public static void FlightInformation()
+        {
+            var flights = Flight.GetFlights();
+            foreach (var flight in flights)
+            {
+                Console.WriteLine(flight);
+            }
+        }
     }
 }

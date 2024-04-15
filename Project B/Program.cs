@@ -17,7 +17,7 @@ namespace Project_B
             // DataAccess.CreateFlightsTable();
             // Flight.CreateFlights();
             Flight.AdminUpdateFlight();
-            FlightInformation();
+            Flight.FlightInformation();
             Flight.FilterFlights();
             Console.ReadLine();
 
@@ -28,14 +28,5 @@ namespace Project_B
             LoginRegistrations.LoginScreen();
         }
         
-        // functie om de vlucht informatie te laten zien
-        private static void FlightInformation()
-        {
-            var flights = Flight.GetFlights();
-            foreach (var flight in flights)
-            {
-                Console.WriteLine(flight);
-            }
-        }
     }
 }
