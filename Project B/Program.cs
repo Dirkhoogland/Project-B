@@ -9,20 +9,20 @@ namespace Project_B
     {
         static void Main()
         {
-            DataAccess.Database();
-            CurrentUser currentuser = Login();
-            try
-            {
-                Console.WriteLine($"Name: {currentuser.Name} Logged in: {currentuser.LoggedIn}");
-            }
-            catch(Exception ex) { }
-            Seat seat = new Seat();
-            seat.lay_out();
-            seat.ToonMenu();
+            // DataAccess.Database();
+            // CurrentUser currentuser = Login();
+            // try
+            // {
+            //     Console.WriteLine($"Name: {currentuser.Name} Logged in: {currentuser.LoggedIn}");
+            // }
+            // catch(Exception ex) { }
+            // Seat seat = new Seat();
+            // seat.lay_out();
+            // seat.ToonMenu();
             //lay_out lay_out = new lay_out();
             //lay_out.ToonMenu();
-            DataAccess.CreateFlightsTable();
-            Flight.CreateTestFlights();
+            // DataAccess.CreateFlightsTable();
+            // Flight.CreateTestFlights();
             Flight.AdminUpdateFlight();
             Flight.FlightInformation();
             Flight.FilterFlights();
