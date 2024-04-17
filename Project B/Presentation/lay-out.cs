@@ -171,7 +171,7 @@ namespace Project_B.Presentation
         Console.Write("Voer de rijnummer in (1-33): ");
         int row = Convert.ToInt32(Console.ReadLine());
 
-        Console.Write("Voer de stoelnummer in (A-F): ");
+        Console.Write("Voer de rij Letter in (A-F): ");
         char seat = Convert.ToChar(Console.ReadLine().ToUpper());
 
         int rowIndex = row - 1;
