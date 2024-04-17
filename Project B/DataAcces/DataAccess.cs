@@ -167,7 +167,7 @@ namespace Project_B.DataAcces
                 }
         }
         // this function reads all data from the users table, its a template to use in other functions
-        static void ReadData()
+        public static void ReadData()
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
             string sql = "SELECT * FROM Users"; 
