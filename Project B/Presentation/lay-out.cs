@@ -190,8 +190,8 @@ namespace Project_B.Presentation
             return;
         }
 
-        Console.WriteLine($"Je hebt deze stoel gekozen: {row}{seat}. Klasse: {chosenSeat.Class}, Prijs: {chosenSeat.Price}");
-        Console.Write("Wil je deze stoel selecteren? (Ja/Nee): ");
+        Console.WriteLine($"You have selected : {row}{seat}. class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
+        Console.Write("Do you want to reserve this seat? (Ja/Nee): ");
         string confirmation = Console.ReadLine().ToLower();
 
         if (confirmation == "ja")
