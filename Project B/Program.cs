@@ -21,6 +21,7 @@ namespace Project_B
             seat.ToonMenu();
             //lay_out lay_out = new lay_out();
             //lay_out.ToonMenu();
+
             DataAccess.CreateFlightsTable();
             Flight.CreateTestFlights();
             Flight.AdminUpdateFlight();
