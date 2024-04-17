@@ -10,7 +10,7 @@ namespace Project_B.DataAcces
             CreateTicketsTable();
             CreateFlightsTable();
             InsertData();
-            ReadData();
+            //ReadData();
         }
         // this function gets the path to the database for use in this application
 
