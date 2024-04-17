@@ -7,6 +7,8 @@ namespace Project_B.DataAcces
         public static void Database()
         {
             CreateTable();
+            CreateTicketsTable();
+            CreateFlightsTable();
             InsertData();
             ReadData();
         }
@@ -19,6 +21,7 @@ namespace Project_B.DataAcces
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
          }
+
         static void CreateTable()
         {
             // creates the user table with a ID, Email Name And Password, the ID is with an Primary key and Autoincrement.
@@ -40,6 +43,20 @@ namespace Project_B.DataAcces
                     }
                 }
 
+                string sql_tickets = "CREATE TABLE Tickets(" +
+                    "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "Email VARCHAR(255)," +
+                    "PurchaseTime DATETIME" +
+                    "Name VARCHAR(255))";
+                // using statements are used to confine the use of the connection to only this function, so the database remains useable outside of it since its automatially closed and does not remain open on a function when it shouldnt be
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql_tickets, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
             catch (Exception ex) { }
 
@@ -76,6 +93,33 @@ namespace Project_B.DataAcces
                     }
                 }
                 catch (Exception ex) { }
+
+        }
+
+        public static void CreateTicketsTable()
+        {
+
+        try
+           {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string sqlCommands =
+                "CREATE TABLE Tickets(" +
+                "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "Email VARCHAR(255)," +
+                "PurchaseTime DATETIME," +
+                "Name VARCHAR(255))";
+
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(sqlCommands, c))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                }
+            }
+            catch (Exception ex) { }
 
         }
         // the insert data function is a temple for inserting data into the sqlite DB, using the current Users database.

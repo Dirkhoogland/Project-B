@@ -123,7 +123,7 @@ namespace Project_Btest
         {
             // Act
             DeleteRow();
-            Flight.CreateFlights();
+            Flight.CreateTestFlights();
 
             // Assert
             var flights = Flight.GetFlights();
@@ -137,7 +137,7 @@ namespace Project_Btest
             // Arrange
             DeleteRow();
             DataAccess.CreateFlightsTable();
-            Flight.CreateFlights();
+            Flight.CreateTestFlights();
 
             // Act
             var flights = Flight.GetFlights();
@@ -153,7 +153,7 @@ namespace Project_Btest
             // Arrange
             DeleteRow();
             DataAccess.CreateFlightsTable();
-            Flight.CreateFlights();
+            Flight.CreateTestFlights();
 
             // Act
             DeleteRow();
@@ -161,6 +161,29 @@ namespace Project_Btest
             // Assert
             var flights = Flight.GetFlights();
             Assert.AreEqual(0, flights.Count);
+            DeleteRow();
+        }
+
+        [TestMethod]
+        public void TestFilterFlights()
+        {
+            // Arrange
+            DeleteRow();
+            DataAccess.CreateFlightsTable();
+            Flight.CreateSetFlight();
+            var input = new StringReader("yes\nLondon\nyes\n2024-12-31\nyes\nNew South\n");
+            Console.SetIn(input);
+
+            var output = new StringWriter();
+            Console.SetOut(output);
+
+            // Act
+            Flight.FilterFlights();
+
+            // Assert
+            var expectedOutput = "Time: 31-12-2024 12:00:00, Destination: London, Flight Number: 1234, Gate: 1, Status: On time, Terminal: 1";
+            Assert.IsTrue(output.ToString().Contains(expectedOutput));
+
             DeleteRow();
         }
     }
