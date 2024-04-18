@@ -94,7 +94,13 @@ namespace Project_B
                                 return;
                             case "View Flights":
                                 Console.Clear();
-                                Flight.FlightInformation();
+                                FlightsPresentation flightsPresentation = new FlightsPresentation();
+                                List<Flight> flights = flightsPresentation.ShowFlights();
+                                Flight selectedFlight = SelectFlight(flights);
+                                Console.Clear();
+                                Seat seat = new Seat();
+                                seat.lay_out();
+                                seat.ToonMenu();
                                 Console.ReadLine();
                                 break;
                             case "Flight History":
@@ -113,11 +119,58 @@ namespace Project_B
                     }
                 }
             }
-        private static CurrentUser Login()
-        {
-            CurrentUser currentuser = null;
-            return currentuser = LoginRegistrations.LoginScreen();
-        }
+            public static Flight SelectFlight(List<Flight> flights)
+            {
+                int currentIndex = 0;
+
+                while (true)
+                {
+                    Console.Clear();
+
+                    for (int i = 0; i < flights.Count; i++)
+                    {
+                        if (i == currentIndex)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(flights[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    ConsoleKeyInfo keyInfo;
+                    do
+                    {
+                        keyInfo = Console.ReadKey(true);
+                    } while (keyInfo.Key != ConsoleKey.UpArrow && keyInfo.Key != ConsoleKey.DownArrow && keyInfo.Key != ConsoleKey.Enter);
+
+                    if (keyInfo.Key == ConsoleKey.UpArrow)
+                    {
+                        if (currentIndex > 0)
+                        {
+                            currentIndex--;
+                        }
+                    }
+                    else if (keyInfo.Key == ConsoleKey.DownArrow)
+                    {
+                        if (currentIndex < flights.Count - 1)
+                        {
+                            currentIndex++;
+                        }
+                    }
+                    else if (keyInfo.Key == ConsoleKey.Enter)
+                    {
+                        return flights[currentIndex];
+                    }
+                }
+            }
+            private static CurrentUser Login()
+            {
+                CurrentUser currentuser = null;
+                return currentuser = LoginRegistrations.LoginScreen();
+            }
         }
     }
     // public class Project_B
@@ -131,9 +184,9 @@ namespace Project_B
         //         Console.WriteLine($"Name: {currentuser.Name} Logged in: {currentuser.LoggedIn}");
         //     }
         //     catch(Exception ex) { }
-        //     Seat seat = new Seat();
-        //     seat.lay_out();
-        //     seat.ToonMenu();
+            // Seat seat = new Seat();
+            // seat.lay_out();
+            // seat.ToonMenu();
         //     //lay_out lay_out = new lay_out();
         //     //lay_out.ToonMenu();
 

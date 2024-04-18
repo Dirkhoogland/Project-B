@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Project_B.Presentation;
 namespace Project_B.DataAcces
 {
     public class Flight
@@ -22,6 +23,7 @@ namespace Project_B.DataAcces
         public string Status { get; set; }
         public string Gate { get; set; }
         public int FlightID { get; set; }
+        public Seat? PlaneLayout { get; set; }
 
         private static string databasePath
         {
@@ -499,13 +501,14 @@ namespace Project_B.DataAcces
                 }
             }
         }
-        public static void FlightInformation()
+        public static List<Flight> FlightInformation()
         {
             var flights = Flight.GetFlights();
             foreach (var flight in flights)
             {
                 Console.WriteLine(flight);
             }
+            return flights;
         }
     }
 }

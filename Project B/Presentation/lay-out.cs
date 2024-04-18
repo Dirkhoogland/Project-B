@@ -102,7 +102,7 @@
 
 namespace Project_B.Presentation
 {
-    class Seat
+    public class Seat
     {
         public string Class { get; set; }
         public decimal Price { get; set; }
