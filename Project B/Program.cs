@@ -1,5 +1,6 @@
 ﻿using Project_B.DataAcces;
 using Project_B.Presentation;
+using Project_B.DataAcess;
 using System.Drawing.Printing;
 using System.Xml.Linq;
 namespace Project_B
@@ -73,7 +74,8 @@ namespace Project_B
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
-                                    if ("Admin" == "Admin")
+                                    List<string> adminNames = new List<string> { "Dirk", "Berat", "Mitchel", "Talha", "Badr" };
+                                    if (adminNames.Contains(currentuser.Name))
                                     {
                                         menuItems = menuItemsAdmin;
                                     }
@@ -100,15 +102,24 @@ namespace Project_B
                                 int currentOption = 0;
                                 string filterFlightsText = " Filter Flights ";
                                 string removeFiltersText = " Remove Filters ";
+                                string backText = " Back ";
                                 List<string> options = new List<string> { filterFlightsText };
                                 options.AddRange(flights.Select(f => f.ToString()));
 
                                 bool isFilterActive = false;
-
+                                bool isBackSelected = false;
                                 while (true)
                                 {
                                     Console.Clear();
 
+                                    if (isFilterActive)
+                                    {
+                                        options[1] = removeFiltersText;
+                                    }
+                                    else
+                                    {
+                                        options[1] = backText;
+                                    }
                                     for (int i = 0; i < options.Count; i++)
                                     {
                                         if (i == currentOption)
@@ -126,6 +137,11 @@ namespace Project_B
                                         {
                                             int padding = (Console.WindowWidth - removeFiltersText.Length) / 2;
                                             Console.WriteLine(new string('-', padding) + removeFiltersText + new string('-', padding));
+                                        }
+                                        else if (i == 1 && !isFilterActive) // Back
+                                        {
+                                            int padding = (Console.WindowWidth - backText.Length) / 2;
+                                            Console.WriteLine(new string('-', padding) + backText + new string('-', padding));
                                         }
                                         else
                                         {
@@ -155,11 +171,18 @@ namespace Project_B
                                             }
                                             else if (currentOption == 1 && isFilterActive) // Remove Filters
                                             {
-                                                flights = Flight.GetFlights(); // prints all flights (removes filter)
-                                                isFilterActive = false;
-                                                options = new List<string> { filterFlightsText };
-                                                options.AddRange(flights.Select(f => f.ToString()));
-                                                currentOption = 0;
+                                                flights = Flight.GetFlights(); // get the list of flights without any filters
+                                                options = new List<string> { filterFlightsText, backText }; // reset the options
+                                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
+                                                isFilterActive = false; // reset the filter flag
+                                                currentOption = 0; // reset the current option
+                                            }
+                                            else if (currentOption == 1 && !isFilterActive) // Back
+                                            {
+                                                menuItems = menuItemsUser;
+                                                currentIndex = 0;
+                                                isBackSelected = true;
+                                                break; // Break out of the while loop to return to the main menu
                                             }
                                             else // Select Flight
                                             {
@@ -172,6 +195,19 @@ namespace Project_B
                                             }
                                             break;
                                     }
+
+                                    if (isBackSelected) // Check if the flag is true
+                                    {
+                                        break; // Break out of the while loop
+                                    }
+                                }
+                                if (isBackSelected)
+                                {
+                                    break; // Break out of the "View Flights" case
+                                }
+                                else
+                                {
+                                    continue; // Continue with the next iteration of the main menu loop
                                 }
                             case "Flight History":
                                 Console.Clear();
@@ -188,7 +224,7 @@ namespace Project_B
                                 break;
                             case "Add Flight":
                                 Console.Clear();
-                                // Call your method to add a flight
+                                Flight.AdminAddFlight();
                                 break;
                         }
                     }
