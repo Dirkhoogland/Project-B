@@ -24,6 +24,7 @@ namespace Project_B.DataAcces
         public string Gate { get; set; }
         public int FlightID { get; set; }
         public Seat? PlaneLayout { get; set; }
+        public int FlightId { get; set; }
 
         private static string databasePath
         {
@@ -82,10 +83,47 @@ namespace Project_B.DataAcces
             sqlite_conn.Close();
             return flights;
         }
+        public static List<Flight> GetFlightsAdmin()
+        {
+            List<Flight> flights = new List<Flight>();
+            SQLiteConnection sqlite_conn = CreateConnection();
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd.CommandText = "SELECT * FROM Flights";
+            SQLiteDataReader sqlite_datareader = sqlite_cmd.ExecuteReader();
+            while (sqlite_datareader.Read())
+            {
+                try
+                {
+                    Flight flight = new Flight
+                    {
+                        FlightId = int.Parse(sqlite_datareader["FlightId"].ToString()),
+                        DepartureTime = DateTime.Parse(sqlite_datareader["DepartureTime"].ToString()),
+                        Terminal = sqlite_datareader["Terminal"].ToString(),
+                        FlightNumber = sqlite_datareader["FlightNumber"].ToString(),
+                        AircraftType = sqlite_datareader["AircraftType"].ToString(),
+                        Seats = int.Parse(sqlite_datareader["Seats"].ToString()),
+                        AvailableSeats = int.Parse(sqlite_datareader["AvailableSeats"].ToString()),
+                        Destination = sqlite_datareader["Destination"].ToString(),
+                        Origin = sqlite_datareader["Origin"].ToString(),
+                        Airline = sqlite_datareader["Airline"].ToString(),
+                        Status = sqlite_datareader["Status"].ToString(),
+                        Gate = sqlite_datareader["Gate"].ToString()
+                    };
+                    flights.Add(flight);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to parse flight data: {ex.Message}");
+                }
+            }
+            sqlite_conn.Close();
+            return flights;
+        }
         
         public override string ToString()
         {
-            return $"Time: {DepartureTime}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Status: {Status}, Terminal: {Terminal}";
+            return $"Time: {DepartureTime:HH:mm}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Status: {Status}, Terminal: {Terminal}";
         }
         public static void AddFlight(Flight flight)
         {
@@ -376,128 +414,163 @@ namespace Project_B.DataAcces
         // Implementeer een zoekfilter waarmee gebruikers vluchten naar een specifieke locatie kunnen vinden.
         // Implementeer functionaliteit om zoekopdrachten te filteren op bestemming, waardoor gebruikers alle beschikbare vluchten naar die specifieke locatie kunnen bekijken.
         // Ontwikkel filters voor onder andere vertrekdatum en luchtvaartmaatschappij om de zoekresultaten te verbeteren.
-        public static void FilterFlights()
+        public static List<Flight> FilterFlights()
         {
-            Console.ReadLine();
             Console.Clear();
             List<Flight> flights = GetFlights();
 
             if (flights == null)
             {
                 Console.WriteLine("Error: Failed to get flights.");
-                return;
+                return new List<Flight>(); // return an empty list if there's an error
             }
 
-            Console.WriteLine("Do you want to filter by destination? (yes/no)");
-            string input;
-            while ((input = Console.ReadLine().ToLower()) != "no")
+            int currentOption = 0;
+            string[] yesNoOptions = new string[] { "yes", "no" };
+
+            while (true)
             {
-                if (input != "yes")
+                Console.Clear();
+                Console.WriteLine("Do you want to filter by destination?");
+
+                for (int i = 0; i < yesNoOptions.Length; i++)
                 {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(yesNoOptions[i]);
+
+                    Console.ResetColor();
                 }
-                else
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
                 {
-                    Console.WriteLine("Enter the destination you want to filter on: ");
-                    string destination;
-                    while (true)
-                    {
-                        destination = Console.ReadLine().ToLower();
-                        if (flights.Any(f => f.Destination.ToLower() == destination))
+                    case ConsoleKey.UpArrow:
+                        if (currentOption > 0) currentOption--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (currentOption < yesNoOptions.Length - 1) currentOption++;
+                        break;
+                    case ConsoleKey.Enter:
+                        if (yesNoOptions[currentOption] == "yes")
                         {
-                            break;
+                            flights = FilterByDestination(flights);
                         }
-                        else
+                        // Continue with the next filter
+                        currentOption = 0; // reset the current option for the next question
+                        while (true)
                         {
-                            Console.WriteLine("Invalid destination. Please enter a valid destination: ");
+                            Console.Clear();
+                            Console.WriteLine("Do you want to filter by departure time?");
+
+                            for (int i = 0; i < yesNoOptions.Length; i++)
+                            {
+                                if (i == currentOption)
+                                {
+                                    Console.BackgroundColor = ConsoleColor.Gray;
+                                    Console.ForegroundColor = ConsoleColor.Black;
+                                }
+
+                                Console.WriteLine(yesNoOptions[i]);
+
+                                Console.ResetColor();
+                            }
+
+                            keyInfo = Console.ReadKey(true);
+
+                            switch (keyInfo.Key)
+                            {
+                                case ConsoleKey.UpArrow:
+                                    if (currentOption > 0) currentOption--;
+                                    break;
+                                case ConsoleKey.DownArrow:
+                                    if (currentOption < yesNoOptions.Length - 1) currentOption++;
+                                    break;
+                                case ConsoleKey.Enter:
+                                    if (yesNoOptions[currentOption] == "yes")
+                                    {
+                                        flights = FilterByDepartureTime(flights);
+                                    }
+                                    return flights; // return the filtered flights
+                            }
                         }
-                    }
-                    flights = flights.Where(f => f.Destination.ToLower() == destination).ToList();
-                    if (flights.Count == 0)
-                    {
-                        Console.WriteLine("No flights found that match the filter criteria.");
-                        return;
-                    }
-                    break;
                 }
             }
-            Console.Clear();
+        }
+        public static List<Flight> FilterByDestination(List<Flight> flights)
+        {
+            List<string> destinations = flights.Select(f => f.Destination).Distinct().ToList();
+            int currentOption = 0;
 
-            Console.WriteLine("Do you want to filter by departure time? (yes/no)");
-            while ((input = Console.ReadLine().ToLower()) != "no")
+            while (true)
             {
-                if (input != "yes")
+                Console.Clear();
+                for (int i = 0; i < destinations.Count; i++)
                 {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(destinations[i]);
+
+                    Console.ResetColor();
                 }
-                else
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
                 {
-                    Console.WriteLine("Enter the departure date you want to filter on (yyyy-MM-dd): ");
-                    DateTime departureDate;
-                    while (true)
-                    {
-                        if (DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out departureDate))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid date format. Please enter a valid date: ");
-                        }
-                    }
-                    flights = flights.Where(f => f.DepartureTime.Date == departureDate.Date).ToList();
-                    if (flights.Count == 0)
-                    {
-                        Console.WriteLine("No flights found that match the filter criteria.");
-                        return;
-                    }
-                    break;
+                    case ConsoleKey.UpArrow:
+                        if (currentOption > 0) currentOption--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (currentOption < destinations.Count - 1) currentOption++;
+                        break;
+                    case ConsoleKey.Enter:
+                        return flights.Where(f => f.Destination == destinations[currentOption]).ToList();
                 }
             }
-            Console.Clear();
+        }
+        public static List<Flight> FilterByDepartureTime(List<Flight> flights)
+        {
+            List<DateTime> departureDates = flights.Select(f => f.DepartureTime.Date).Distinct().ToList();
+            int currentOption = 0;
 
-            // Console.WriteLine("Do you want to filter by airline? (yes/no)");
-            // while ((input = Console.ReadLine().ToLower()) != "no")
-            // {
-            //     if (input != "yes")
-            //     {
-            //         Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-            //     }
-            //     else
-            //     {
-            //         Console.WriteLine("Enter the airline you want to filter on: ");
-            //         string airline;
-            //         while (true)
-            //         {
-            //             airline = Console.ReadLine().ToLower();
-            //             if (flights.Any(f => f.Airline.ToLower() == airline))
-            //             {
-            //                 break;
-            //             }
-            //             else
-            //             {
-            //                 Console.WriteLine("Invalid airline. Please enter a valid airline: ");
-            //             }
-            //         }
-            //         flights = flights.Where(f => f.Airline.ToLower() == airline).ToList();
-            //         if (flights.Count == 0)
-            //         {
-            //             Console.WriteLine("No flights found that match the filter criteria.");
-            //             return;
-            //         }
-            //     }
-            // }
-            // Console.Clear();
-
-            if (flights.Count == 0)
+            while (true)
             {
-                Console.WriteLine("No flights found with the given filters.");
-            }
-            else
-            {
-                foreach (Flight flight in flights)
+                Console.Clear();
+                for (int i = 0; i < departureDates.Count; i++)
                 {
-                    Console.WriteLine(flight);
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(departureDates[i].ToString("dd/MM/yyyy"));
+
+                    Console.ResetColor();
+                }
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (currentOption > 0) currentOption--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (currentOption < departureDates.Count - 1) currentOption++;
+                        break;
+                    case ConsoleKey.Enter:
+                        return flights.Where(f => f.DepartureTime.Date == departureDates[currentOption]).ToList();
                 }
             }
         }

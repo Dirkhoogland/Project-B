@@ -73,7 +73,7 @@ namespace Project_B
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
-                                    if ("" == "Admin")
+                                    if ("Admin" == "Admin")
                                     {
                                         menuItems = menuItemsAdmin;
                                     }
@@ -96,19 +96,94 @@ namespace Project_B
                                 Console.Clear();
                                 FlightsPresentation flightsPresentation = new FlightsPresentation();
                                 List<Flight> flights = flightsPresentation.ShowFlights();
-                                Flight selectedFlight = SelectFlight(flights);
-                                Console.Clear();
-                                Seat seat = new Seat();
-                                seat.lay_out();
-                                seat.ToonMenu();
-                                Console.ReadLine();
-                                break;
+
+                                int currentOption = 0;
+                                string filterFlightsText = " Filter Flights ";
+                                string removeFiltersText = " Remove Filters ";
+                                List<string> options = new List<string> { filterFlightsText };
+                                options.AddRange(flights.Select(f => f.ToString()));
+
+                                bool isFilterActive = false;
+
+                                while (true)
+                                {
+                                    Console.Clear();
+
+                                    for (int i = 0; i < options.Count; i++)
+                                    {
+                                        if (i == currentOption)
+                                        {
+                                            Console.BackgroundColor = ConsoleColor.Gray;
+                                            Console.ForegroundColor = ConsoleColor.Black;
+                                        }
+
+                                        if (i == 0) // Filter Flights
+                                        {
+                                            int padding = (Console.WindowWidth - filterFlightsText.Length) / 2;
+                                            Console.WriteLine(new string('-', padding) + filterFlightsText + new string('-', padding));
+                                        }
+                                        else if (i == 1 && isFilterActive) // Remove Filters
+                                        {
+                                            int padding = (Console.WindowWidth - removeFiltersText.Length) / 2;
+                                            Console.WriteLine(new string('-', padding) + removeFiltersText + new string('-', padding));
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine(options[i]);
+                                        }
+                                        Console.ResetColor();
+                                    }
+
+                                    ConsoleKeyInfo optionKeyInfo = Console.ReadKey(true);
+
+                                    switch (optionKeyInfo.Key)
+                                    {
+                                        case ConsoleKey.UpArrow:
+                                            if (currentOption > 0) currentOption--;
+                                            break;
+                                        case ConsoleKey.DownArrow:
+                                            if (currentOption < options.Count - 1) currentOption++;
+                                            break;
+                                        case ConsoleKey.Enter:
+                                            if (currentOption == 0) // Filter Flights
+                                            {
+                                                flights = Flight.FilterFlights();
+                                                isFilterActive = true;
+                                                options = new List<string> { filterFlightsText, removeFiltersText };
+                                                options.AddRange(flights.Select(f => f.ToString()));
+                                                currentOption = 0;
+                                            }
+                                            else if (currentOption == 1 && isFilterActive) // Remove Filters
+                                            {
+                                                flights = Flight.GetFlights(); // prints all flights (removes filter)
+                                                isFilterActive = false;
+                                                options = new List<string> { filterFlightsText };
+                                                options.AddRange(flights.Select(f => f.ToString()));
+                                                currentOption = 0;
+                                            }
+                                            else // Select Flight
+                                            {
+                                                Flight selectedFlight = flights[currentOption - (isFilterActive ? 2 : 1)];
+                                                Console.Clear();
+                                                Seat seat = new Seat();
+                                                seat.lay_out();
+                                                seat.ToonMenu();
+                                                Console.ReadLine();
+                                            }
+                                            break;
+                                    }
+                                }
                             case "Flight History":
                                 Console.Clear();
                                 // Call your method to view flight history
                                 break;
                             case "Update Flight":
                                 Console.Clear();
+                                List<Flight> adminFlights = Flight.GetFlightsAdmin();
+                                foreach (Flight flight in adminFlights)
+                                {
+                                    Console.WriteLine($"ID: {flight.FlightId}, Flight: {flight.ToString()}");
+                                }
                                 Flight.AdminUpdateFlight();
                                 break;
                             case "Add Flight":
