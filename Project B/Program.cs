@@ -1,6 +1,5 @@
 ﻿using Project_B.DataAcces;
 using Project_B.Presentation;
-using Project_B.DataAcess;
 using System.Drawing.Printing;
 using System.Xml.Linq;
 namespace Project_B
@@ -20,6 +19,14 @@ namespace Project_B
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
                 CurrentUser currentuser = null;
+                bool isFilterActive = false;
+                bool isBackSelected = false;
+                int currentOption = 0;
+                string filterFlightsText = " Filter Flights ";
+                string removeFiltersText = " Remove Filters ";
+                string backText = " Back ";
+                List<string> options = new List<string> { filterFlightsText };
+                List<string> adminNames = new List<string> { "Dirk", "Berat", "Mitchel", "Talha", "Badr" };
 
                 while (true)
                 {
@@ -74,7 +81,6 @@ namespace Project_B
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
-                                    List<string> adminNames = new List<string> { "Dirk", "Berat", "Mitchel", "Talha", "Badr" };
                                     if (adminNames.Contains(currentuser.Name))
                                     {
                                         menuItems = menuItemsAdmin;
@@ -95,19 +101,12 @@ namespace Project_B
                             case "Exit":
                                 return;
                             case "View Flights":
+                                isBackSelected = false;
                                 Console.Clear();
-                                FlightsPresentation flightsPresentation = new FlightsPresentation();
-                                List<Flight> flights = flightsPresentation.ShowFlights();
+                                List<Flight> flights = Flight.GetFlights(); // get the list of flights without any filters
+                                options = new List<string> { filterFlightsText, backText }; // reset the options
+                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
 
-                                int currentOption = 0;
-                                string filterFlightsText = " Filter Flights ";
-                                string removeFiltersText = " Remove Filters ";
-                                string backText = " Back ";
-                                List<string> options = new List<string> { filterFlightsText };
-                                options.AddRange(flights.Select(f => f.ToString()));
-
-                                bool isFilterActive = false;
-                                bool isBackSelected = false;
                                 while (true)
                                 {
                                     Console.Clear();
@@ -182,16 +181,18 @@ namespace Project_B
                                                 menuItems = menuItemsUser;
                                                 currentIndex = 0;
                                                 isBackSelected = true;
-                                                break; // Break out of the while loop to return to the main menu
                                             }
                                             else // Select Flight
                                             {
-                                                Flight selectedFlight = flights[currentOption - (isFilterActive ? 2 : 1)];
-                                                Console.Clear();
-                                                Seat seat = new Seat();
-                                                seat.lay_out();
-                                                seat.ToonMenu();
-                                                Console.ReadLine();
+                                                if (currentOption >= 2) // Check if 'currentOption' is within the bounds of the 'flights' list
+                                                {
+                                                    Flight selectedFlight = flights[currentOption - 2];
+                                                    Console.Clear();
+                                                    Seat seat = new Seat();
+                                                    seat.lay_out();
+                                                    seat.ToonMenu();
+                                                    Console.ReadLine();
+                                                }
                                             }
                                             break;
                                     }
@@ -201,6 +202,17 @@ namespace Project_B
                                         break; // Break out of the while loop
                                     }
                                 }
+
+                                // After the while loop, check if the user is an admin
+                                if (adminNames.Contains(currentuser.Name))
+                                {
+                                    menuItems = menuItemsAdmin;
+                                }
+                                else
+                                {
+                                    menuItems = menuItemsUser;
+                                }
+
                                 if (isBackSelected)
                                 {
                                     break; // Break out of the "View Flights" case
@@ -225,6 +237,9 @@ namespace Project_B
                             case "Add Flight":
                                 Console.Clear();
                                 Flight.AdminAddFlight();
+                                flights = Flight.GetFlights(); // Refresh the 'flights' list
+                                options = new List<string> { filterFlightsText, backText }; // reset the options
+                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
                                 break;
                         }
                     }

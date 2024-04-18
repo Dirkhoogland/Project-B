@@ -116,6 +116,7 @@ namespace Project_B.Presentation
             // Asks users email and password for registration, the strings are nullable so the function/responses will loop if not both filled in.
             while (check is false)
             {
+                Console.Clear();
                 Console.WriteLine("Please fill in your Email");
                 Email = Console.ReadLine();
                 Console.WriteLine("Please fill in your Password");
