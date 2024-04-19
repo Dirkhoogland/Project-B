@@ -110,7 +110,7 @@ namespace Project_Btest
         {
             // Act
             DeleteRow();
-            DataAccess.CreateFlightsTable();
+            DataAccess.Database();
 
             // Assert
             var tableExists = CheckIfTableExists();
@@ -136,7 +136,7 @@ namespace Project_Btest
         {
             // Arrange
             DeleteRow();
-            DataAccess.CreateFlightsTable();
+            DataAccess.Database();
             Flight.CreateTestFlights();
 
             // Act
@@ -152,7 +152,7 @@ namespace Project_Btest
         {
             // Arrange
             DeleteRow();
-            DataAccess.CreateFlightsTable();
+            DataAccess.Database();
             Flight.CreateTestFlights();
 
             // Act
@@ -169,7 +169,7 @@ namespace Project_Btest
         {
             // Arrange
             DeleteRow();
-            DataAccess.CreateFlightsTable();
+            DataAccess.Database();
             Flight.CreateSetFlight();
             var input = new StringReader("yes\nLondon\nyes\n2024-12-31\nyes\nNew South\n");
             Console.SetIn(input);
