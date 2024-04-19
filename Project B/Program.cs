@@ -227,11 +227,6 @@ namespace Project_B
                                 break;
                             case "Update Flight":
                                 Console.Clear();
-                                List<Flight> adminFlights = Flight.GetFlightsAdmin();
-                                foreach (Flight flight in adminFlights)
-                                {
-                                    Console.WriteLine($"ID: {flight.FlightId}, Flight: {flight.ToString()}");
-                                }
                                 Flight.AdminUpdateFlight();
                                 break;
                             case "Add Flight":
