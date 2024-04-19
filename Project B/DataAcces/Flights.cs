@@ -62,6 +62,7 @@ namespace Project_B.DataAcces
                 {
                     Flight flight = new Flight
                     {
+                        FlightId = int.Parse(sqlite_datareader["FlightId"].ToString()),  // Set the FlightId
                         DepartureTime = DateTime.Parse(sqlite_datareader["DepartureTime"].ToString()),
                         Terminal = sqlite_datareader["Terminal"].ToString(),
                         FlightNumber = sqlite_datareader["FlightNumber"].ToString(),
@@ -148,61 +149,76 @@ namespace Project_B.DataAcces
                 sqlite_conn.Close();
             }
         }
-        public static void UpdateFlight(Flight updatedFlight)
+        public static void UpdateFlight(Flight flightToUpdate)
         {
-            using (SQLiteConnection conn = CreateConnection())
+            // Get the connection string
+            string connectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
+            // Create a new connection
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                string sql = "UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Status = @Status, Gate = @Gate WHERE FlightID = @FlightID";
+                // Open the connection
+                connection.Open();
 
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                // Create a new command
+                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Status = @Status, Gate = @Gate WHERE FlightID = @FlightID", connection))
                 {
-                    cmd.Parameters.AddWithValue("@DepartureTime", updatedFlight.DepartureTime);
-                    cmd.Parameters.AddWithValue("@Terminal", updatedFlight.Terminal);
-                    cmd.Parameters.AddWithValue("@FlightNumber", updatedFlight.FlightNumber);
-                    cmd.Parameters.AddWithValue("@AircraftType", updatedFlight.AircraftType);
-                    cmd.Parameters.AddWithValue("@Seats", updatedFlight.Seats);
-                    cmd.Parameters.AddWithValue("@AvailableSeats", updatedFlight.AvailableSeats);
-                    cmd.Parameters.AddWithValue("@Destination", updatedFlight.Destination);
-                    cmd.Parameters.AddWithValue("@Origin", updatedFlight.Origin);
-                    cmd.Parameters.AddWithValue("@Airline", updatedFlight.Airline);
-                    cmd.Parameters.AddWithValue("@Status", updatedFlight.Status);
-                    cmd.Parameters.AddWithValue("@Gate", updatedFlight.Gate);
-                    cmd.Parameters.AddWithValue("@FlightID", updatedFlight.FlightID);
+                    // Add the parameters
+                    command.Parameters.AddWithValue("@DepartureTime", flightToUpdate.DepartureTime);
+                    command.Parameters.AddWithValue("@Terminal", flightToUpdate.Terminal);
+                    command.Parameters.AddWithValue("@FlightNumber", flightToUpdate.FlightNumber);
+                    command.Parameters.AddWithValue("@AircraftType", flightToUpdate.AircraftType);
+                    command.Parameters.AddWithValue("@Seats", flightToUpdate.Seats);
+                    command.Parameters.AddWithValue("@AvailableSeats", flightToUpdate.AvailableSeats);
+                    command.Parameters.AddWithValue("@Destination", flightToUpdate.Destination);
+                    command.Parameters.AddWithValue("@Origin", flightToUpdate.Origin);
+                    command.Parameters.AddWithValue("@Airline", flightToUpdate.Airline);
+                    command.Parameters.AddWithValue("@Status", flightToUpdate.Status);
+                    command.Parameters.AddWithValue("@Gate", flightToUpdate.Gate);
+                    command.Parameters.AddWithValue("@FlightID", flightToUpdate.FlightId);
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    // Execute the command
+                    command.ExecuteNonQuery();
                 }
             }
         }
         public static Flight GetFlightById(int flightId)
         {
-            Flight flight = new Flight();
-            using (SQLiteConnection conn = CreateConnection())
+            // Get the connection string
+            string connectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
+            // Create a new connection
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                string sql = "SELECT * FROM Flights WHERE FlightID = @FlightID";
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                // Open the connection
+                connection.Open();
+
+                // Create a new command
+                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Flights WHERE FlightId = @FlightId", connection))
                 {
-                    cmd.Parameters.AddWithValue("@FlightID", flightId);
-                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    // Add the parameter
+                    command.Parameters.AddWithValue("@FlightId", flightId);
+
+                    // Execute the command and get the result
+                    using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            flight.FlightID = int.Parse(reader["FlightID"].ToString());
-                            flight.DepartureTime = DateTime.Parse(reader["DepartureTime"].ToString());
-                            flight.Terminal = reader["Terminal"].ToString();
-                            flight.FlightNumber = reader["FlightNumber"].ToString();
-                            flight.AircraftType = reader["AircraftType"].ToString();
-                            flight.Seats = int.Parse(reader["Seats"].ToString());
-                            flight.AvailableSeats = int.Parse(reader["AvailableSeats"].ToString());
-                            flight.Destination = reader["Destination"].ToString();
-                            flight.Origin = reader["Origin"].ToString();
-                            flight.Airline = reader["Airline"].ToString();
-                            flight.Status = reader["Status"].ToString();
-                            flight.Gate = reader["Gate"].ToString();
+                            // Create a new flight and set its properties
+                            Flight flight = new Flight();
+                            flight.FlightId = reader.GetInt32(reader.GetOrdinal("FlightId"));
+                            // ... set the other properties ...
+
+                            return flight;
+                        }
+                        else
+                        {
+                            // No flight found with the given ID
+                            return null;
                         }
                     }
                 }
             }
-            return flight;
         }
         public static void DeleteRow()
         {
@@ -291,7 +307,7 @@ namespace Project_B.DataAcces
                 // Clear the console and display the flight information
                 Console.Clear();
                 Console.WriteLine(new string('-', Console.WindowWidth));
-                Console.WriteLine("Flight Selected".PadLeft(Console.WindowWidth / 2 + "Flight Selected".Length / 2));
+                Console.WriteLine($"Flight Selected: {flightToUpdate.FlightId})".PadLeft(Console.WindowWidth / 2 + $"Flight Selected (Flight ID: {flightToUpdate.FlightId})".Length / 2));
                 Console.WriteLine(new string('-', Console.WindowWidth));
                 Console.WriteLine(flightToUpdate.ToAdminString());
 
@@ -592,7 +608,6 @@ namespace Project_B.DataAcces
 
             if (confirmSaveOptions[confirmSaveIndex] == "Save changes")
             {
-                Console.WriteLine("Updating flight with ID: " + flightToUpdate.FlightID);
                 UpdateFlight(flightToUpdate);
                 Console.WriteLine("Flight updated successfully!");
                 System.Threading.Thread.Sleep(3000);
