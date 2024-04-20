@@ -1130,6 +1130,7 @@ namespace Project_B.DataAcces
             AddFlight(newFlight);
 
             Console.WriteLine("Flight added successfully!");
+            System.Threading.Thread.Sleep(3000);
         }
     }
 }

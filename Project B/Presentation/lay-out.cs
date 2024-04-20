@@ -124,6 +124,10 @@ namespace Project_B.Presentation
                 {
                     seats[i, j] = new Seat { Class = "Economy", Price = 100m, IsReserved = false };
                 }
+                 if (i == 15 || i == 16) 
+                {
+                    seats[i, j] = new Seat { Class = "Business", Price = 200m, IsReserved = false };
+                }
             }
         }
     }
