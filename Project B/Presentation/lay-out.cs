@@ -205,15 +205,20 @@ namespace Project_B.Presentation
     }
 
     public static void DisplaySeatLayout()
-{
+    {
     Console.ForegroundColor = ConsoleColor.Cyan;
 
     Console.WriteLine("Stoelindeling:");
     Console.WriteLine("Rij  Stoelen");
-    Console.WriteLine("     A B C  D E F");
+    Console.WriteLine("      A B C  D E F");
 
     for (int row = 0; row < 33; row++)
     {
+        if (row < 9) // First 9 rows (0-indexed)
+        {
+            Console.Write(" ");
+        }
+
         if (row == 15 || row == 16) 
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -250,6 +255,6 @@ namespace Project_B.Presentation
     }
 
     Console.ResetColor(); 
-}
-}
+    }
+    }
 }
