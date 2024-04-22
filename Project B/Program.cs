@@ -16,6 +16,7 @@ namespace Project_B
                 Console.WriteLine($"Name: {currentuser.Name} Logged in: {currentuser.LoggedIn}");
             }
             catch(Exception ex) { }
+            Userhistory.presentuserhistory(currentuser);
             Seat seat = new Seat();
             seat.lay_out();
             seat.ToonMenu();
