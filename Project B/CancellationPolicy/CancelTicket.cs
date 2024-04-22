@@ -13,6 +13,9 @@ class TicketManager{
                 using (SQLiteCommand command = new SQLiteCommand(sql, conn)){
                     command.Parameters.AddWithValue("@Email", email);
                     command.Parameters.AddWithValue("@PurchaseTime", time);
+                    // Seat information toevoegen
+                    // extra notes van passenger toevoegen (allergien, disabled, etc.) (Max 155 characters)
+                    // 
                     command.ExecuteNonQuery();
                 }
             }
