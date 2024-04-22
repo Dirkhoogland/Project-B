@@ -209,12 +209,12 @@ namespace Project_B.Presentation
     Console.ForegroundColor = ConsoleColor.Cyan;
 
     Console.WriteLine("Stoelindeling:");
-    Console.WriteLine("Rij  Stoelen");
+    Console.WriteLine("Rij   Stoelen");
     Console.WriteLine("      A B C  D E F");
 
     for (int row = 0; row < 33; row++)
     {
-        if (row < 9) // First 9 rows (0-indexed)
+        if (row < 9) 
         {
             Console.Write(" ");
         }
