@@ -9,33 +9,32 @@ namespace Project_B
     {
         static void Main()
         {
-
             DataAccess.Database();
-            Login();
-            lay_out lay_out = new lay_out();
-            lay_out.ToonMenu();
-            DataAccess.CreateFlightsTable();
-            Flight.CreateFlights();
+            CurrentUser currentuser = Login();
+            try
+            {
+                Console.WriteLine($"Name: {currentuser.Name} Logged in: {currentuser.LoggedIn}");
+            }
+            catch(Exception ex) { }
+            Seat seat = new Seat();
+            seat.lay_out();
+            seat.ToonMenu();
+            //lay_out lay_out = new lay_out();
+            //lay_out.ToonMenu();
+
+            Flight.CreateTestFlights();
             Flight.AdminUpdateFlight();
-            FlightInformation();
+            Flight.FlightInformation();
             Flight.FilterFlights();
             Console.ReadLine();
 
         }
         // log in function to connect it with the login/registrations page. 
-        private static void Login()
+        private static CurrentUser Login()
         {
-            LoginRegistrations.LoginScreen();
+            CurrentUser currentuser = null;
+            return currentuser = LoginRegistrations.LoginScreen();
         }
         
-        // functie om de vlucht informatie te laten zien
-        private static void FlightInformation()
-        {
-            var flights = Flight.GetFlights();
-            foreach (var flight in flights)
-            {
-                Console.WriteLine(flight);
-            }
-        }
     }
 }

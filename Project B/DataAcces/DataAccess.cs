@@ -1,4 +1,5 @@
 ﻿using System.Data.SQLite;
+
 namespace Project_B.DataAcces
 {
     public class DataAccess
@@ -8,7 +9,7 @@ namespace Project_B.DataAcces
         {
             CreateTable();
             InsertData();
-            ReadData();
+            //ReadData();
         }
         // this function gets the path to the database for use in this application
 
@@ -19,12 +20,14 @@ namespace Project_B.DataAcces
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
          }
+
         static void CreateTable()
         {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
             // creates the user table with a ID, Email Name And Password, the ID is with an Primary key and Autoincrement.
             try
             {
-                string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
                 string sql = "CREATE TABLE Users(" +
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "Email VARCHAR(255)," +
@@ -39,32 +42,20 @@ namespace Project_B.DataAcces
                         cmd.ExecuteNonQuery();
                     }
                 }
-
-            }
-            catch (Exception ex) { }
-
-        }
-
-        public static void CreateFlightsTable()
-        {
-
-        try
-           {
-            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sqlCommands =
-                "CREATE TABLE IF NOT EXISTS Flights(" +
-                "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "FlightNumber VARCHAR(255)," +
-                "Destination VARCHAR(255)," +
-                "Origin VARCHAR(255)," +
-                "DepartureTime DATETIME," +
-                "Status VARCHAR(255)," +
-                "Terminal VARCHAR(255)," +
-                "AircraftType VARCHAR(255)," +
-                "Gate VARCHAR(255)," +
-                "Seats INTEGER," +
-                "AvailableSeats INTEGER," +
-                "Airline VARCHAR(255))";
+                string sqlCommands =
+               "CREATE TABLE IF NOT EXISTS Flights(" +
+               "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
+               "FlightNumber VARCHAR(255)," +
+               "Destination VARCHAR(255)," +
+               "Origin VARCHAR(255)," +
+               "DepartureTime DATETIME," +
+               "Status VARCHAR(255)," +
+               "Terminal VARCHAR(255)," +
+               "AircraftType VARCHAR(255)," +
+               "Gate VARCHAR(255)," +
+               "Seats INTEGER," +
+               "AvailableSeats INTEGER," +
+               "Airline VARCHAR(255))";
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
                     c.Open();
@@ -73,11 +64,31 @@ namespace Project_B.DataAcces
                         cmd.ExecuteNonQuery();
                     }
 
+                }
+                string sql_tickets = "CREATE TABLE Tickets(" +
+                "TicketID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "Email VARCHAR(255)," +
+                "PurchaseTime DATETIME," +
+                "Name VARCHAR(255)," +
+                "FlightID INTEGER," +
+                "UserID INTEGER," +
+                "FOREIGN KEY(FlightID) REFERENCES Flights(FlightID)" +
+                "FOREIGN KEY(UserID) REFERENCES Users(ID))";
+                // using statements are used to confine the use of the connection to only this function, so the database remains useable outside of it since its automatially closed and does not remain open on a function when it shouldnt be
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql_tickets, c))
+                    {
+                        cmd.ExecuteNonQuery();
                     }
                 }
-                catch (Exception ex) { }
+
+            }
+            catch (Exception ex) { }
 
         }
+
         // the insert data function is a temple for inserting data into the sqlite DB, using the current Users database.
         // the connectionstring will need a reference to the DataAccess file if used outside of it.
         static void InsertData()
@@ -117,7 +128,47 @@ namespace Project_B.DataAcces
                             {
                                     cmd3.ExecuteNonQuery();
                             }
+                            DateTime time = DateTime.Now;
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,FlightID, UserID ) VALUES('Email','{time}', 'Dirk', 1, 1);";
+
+                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                            {
+                                cmd1.ExecuteNonQuery();
                             }
+
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,FlightID, UserID ) VALUES('Email1','{time}', 'Berat', 1, 2);";
+
+                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                            {
+                                cmd1.ExecuteNonQuery();
+                            }
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,FlightID, UserID ) VALUES('Email','{time}', 'Dirk', 1, 1);";
+
+                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                            {
+                                cmd1.ExecuteNonQuery();
+                            }
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,FlightID, UserID ) VALUES('Email','{time}', 'Dirk', 1, 1);";
+
+                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                            {
+                                cmd1.ExecuteNonQuery();
+                            }
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,FlightID, UserID ) VALUES('Email','{time}', 'Dirk', 1, 1);";
+
+                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                            {
+                                cmd1.ExecuteNonQuery();
+                            }
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,FlightID, UserID ) VALUES('Email','{time}', 'Dirk', 1, 1);";
+
+                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                            {
+                                cmd1.ExecuteNonQuery();
+                            }
+
+                            Flight.CreateFlightBoeing737();
+                        }
                         }
                     }
                 }

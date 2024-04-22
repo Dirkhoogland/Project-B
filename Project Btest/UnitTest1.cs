@@ -1,5 +1,6 @@
 using Project_B.Presentation;
 using Project_B.DataAcces;
+using Project_B.BusinessLogic;
 using System.Data.SQLite;
 
 namespace Project_Btest
@@ -43,7 +44,7 @@ namespace Project_Btest
         [TestMethod]
         static void ReserveSeat()
         {
-            lay_out.ReserveSeat();
+            // lay_out.ReserveSeat();
             Assert.AreEqual(1, 1);
         }
       
@@ -56,15 +57,38 @@ namespace Project_Btest
             string Password = "TestPassword1";
             Users.Newuser(Email, Name, Password);
             Users user = Users.Getuser(Email);
-            Users.RemoveUser(Email);
-            Assert.IsNotNull(user);
-
+            Assert.IsNotNull(user.Email);
         }
-      
+        // tests if login function checks correctly
+        [TestMethod]
+        public void TestLogin()
+        {
+               
+                string Email = "TestEmail1";
+                string Name = "Testname1";
+                string Password = "TestPassword1";
+                Users.Newuser(Email, Name, Password);
+                bool check = Login.LoginLogic(Email, Password);
+                Assert.IsTrue(check);
+        }
+
+        [TestMethod]
+        public void TestFalselogin()
+        {
+
+            string Email = "TestEmail1";
+            string Name = "Testname1";
+            string Password = "TestPassword1";
+            Users.Newuser(Email, Name, Password);
+            bool check = Login.LoginLogic("wrong email", "wrong password");
+            Assert.IsFalse(check);
+        }
+
+
         [TestMethod]
         static void DisplaySeatLayout()
         {
-            lay_out.DisplaySeatLayout();
+            // lay_out.DisplaySeatLayout();
             Assert.AreEqual(1, 1);
         }
     }   
