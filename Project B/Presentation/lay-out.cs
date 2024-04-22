@@ -206,55 +206,55 @@ namespace Project_B.Presentation
 
     public static void DisplaySeatLayout()
     {
-    Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.ForegroundColor = ConsoleColor.Cyan;
 
-    Console.WriteLine("Stoelindeling:");
-    Console.WriteLine("Rij   Stoelen");
-    Console.WriteLine("      A B C  D E F");
+        Console.WriteLine("Stoelindeling:");
+        Console.WriteLine("Rij   Stoelen");
+        Console.WriteLine("      A B C  D E F");
 
-    for (int row = 0; row < 33; row++)
-    {
-        if (row < 9) 
+        for (int row = 0; row < 33; row++)
         {
-            Console.Write(" ");
-        }
-
-        if (row == 15 || row == 16) 
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-        }
-
-        Console.Write($"{row + 1}    ");
-
-        for (int seat = 0; seat < 6; seat++)
-        {
-            if (seats[row, seat].IsReserved)
-            {
-                Console.Write("X");
-            }
-            else
-            {
-                Console.Write("O");
-            }
-
-            if (seat == 2)
-            {
-                Console.Write("  ");
-            }
-            else
+            if (row < 9) 
             {
                 Console.Write(" ");
             }
+
+            if (row == 15 || row == 16) 
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+            }
+
+            Console.Write($"{row + 1}    ");
+
+            for (int seat = 0; seat < 6; seat++)
+            {
+                if (seats[row, seat].IsReserved)
+                {
+                    Console.Write("X");
+                }
+                else
+                {
+                    Console.Write("O");
+                }
+
+                if (seat == 2)
+                {
+                    Console.Write("  ");
+                }
+                else
+                {
+                    Console.Write(" ");
+                }
+            }
+
+            Console.WriteLine();
         }
 
-        Console.WriteLine();
-    }
-
-    Console.ResetColor(); 
-    }
+        Console.ResetColor(); 
+        }
     }
 }
