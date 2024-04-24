@@ -31,7 +31,59 @@ namespace Project_B
                 while (true)
                 {
                     Console.Clear();
-                    
+string[] image1 = new string[]
+{
+    "                      ___",
+    "                      \\\\ \\",
+    "                       \\\\ `\\",
+    "    ___                 \\\\  \\",
+    "   |    \\                \\\\  `\\",
+    "   |____\\                \\    \\",
+    "   |______\\                \\    `\\",
+    "   |       \\                \\     \\",
+    "   |      __\\__---------------------------------._.",
+    " __|---~~~__o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_[]\\",
+    "|___                         /~      )  New South     \\__",
+    "    ~~~---..._______________/      ,/_________________/",
+    "                           /      /",
+    "                          /     ,/",
+    "                         /     /",
+    "                        /    ,/",
+    "                       /    /",
+    "                      //  ,/",
+    "                     //  /",
+    "                    // ,/",
+    "                   //_/"
+};
+
+string[] image2 = new string[]
+{
+    "",
+    "",
+    "",
+    "",
+    "__|__",
+    "\\___/",
+    " | |",
+    " | |",
+    "_|_|______________",
+    "        /|\\",
+    "      */ | \\*",
+    "      / -+- \\",
+    "---o--(_)--o---",
+    "    /  0 \" 0  \\",
+    "  */     |     \\*",
+    "  /      |      \\",
+    "*/       |       \\*"
+};
+
+for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
+{
+    string line1 = i < image1.Length ? image1[i] : new string(' ', image1.Max(s => s.Length));
+    string line2 = i < image2.Length ? image2[i] : "";
+
+    Console.WriteLine(line1.PadRight(image1.Max(s => s.Length)) + "    " + line2);
+}
 
                     if (currentuser != null)
                     {
