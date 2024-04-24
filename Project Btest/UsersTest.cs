@@ -6,7 +6,7 @@ using System.Data.SQLite;
 namespace Project_Btest
 {
     [TestClass]
-    public class UnitTest1
+    public class UsersTest
     {
         public static string databasePath
         {
@@ -64,16 +64,13 @@ namespace Project_Btest
         [TestMethod]
         public void TestLogin()
         {
-            CreateTable();
-                string Email = "TestEmail1";
-                string Name = "Testname1";
-                string Password = "TestPassword1";
-                Users.Newuser(Email, Name, Password);
+                DataAccess.Database();
+                string Email = "Email";
+                string Password = "Password";
                 bool check = Login.LoginLogic(Email, Password);
-                Users.RemoveUser(Email);
                 Assert.IsTrue(check);
         }
-
+        // checks if the user can fail to log in
         [TestMethod]
         public void TestFalselogin()
         {
@@ -85,6 +82,15 @@ namespace Project_Btest
             bool check = Login.LoginLogic("wrong email", "wrong password");
             Users.RemoveUser(Email);
             Assert.IsFalse(check);
+        }
+        // tests if the history exists
+        [TestMethod]
+        public void TestHistory()
+        {
+            DataAccess.Database();
+            List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(1);
+            int lenght = userhistory.Count;
+            Assert.AreEqual(5, lenght);    
         }
 
 
