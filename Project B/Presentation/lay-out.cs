@@ -31,10 +31,6 @@ namespace Project_B.Presentation
     }
 public static void DisplaySeatLayout(int currentRow, int currentSeat)
 {
-    Console.WriteLine("Seat layout:");
-    Console.WriteLine("Row  Seats");
-    Console.WriteLine("     A B C  D E F");
-
     for (int i = 0; i < 33; i++)
     {
         // Add an extra space at the start of the first 9 rows
@@ -136,9 +132,25 @@ public static void ReserveSeat()
     while (true)
     {
         Console.SetCursorPosition(0, 0);
+
+        // Clear the lines that display the seat layout
+        for (int i = 0; i < 36; i++)
+        {
+            Console.Write(new string(' ', Console.WindowWidth));
+        }
+
+        Console.SetCursorPosition(0, 0);
+
+        // Print the first few lines
+        Console.WriteLine("Seat layout:");
+        Console.WriteLine("Row  Seats");
+        Console.WriteLine("     A B C  D E F");
+
         DisplaySeatLayout(currentRow, currentSeat);
 
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+
 
         switch (keyInfo.Key)
         {
@@ -159,6 +171,7 @@ public static void ReserveSeat()
                 if (chosenSeat.IsReserved)
                 {
                     Console.WriteLine("Deze stoel is al gereserveerd. Kies een andere stoel.");
+                    Console.ReadLine();
                     continue;
                 }
 
@@ -198,6 +211,7 @@ public static void ReserveSeat()
                             {
                                 chosenSeat.IsReserved = true;
                                 Console.WriteLine("Stoel succesvol gereserveerd!");
+                                Console.ReadLine();
                             }
                             return;
                     }
