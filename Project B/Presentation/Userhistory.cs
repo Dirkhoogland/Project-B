@@ -8,7 +8,7 @@ using Project_B.DataAcces;
 namespace Project_B.Presentation
 {
     public class Userhistory
-    {
+    {   // pastes the information with user information
         public static void presentuserhistory(Users user)
         {
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(user.Id);

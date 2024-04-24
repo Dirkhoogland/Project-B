@@ -65,6 +65,7 @@ namespace Project_B.DataAcces
             
          return true;
         }
+        // gets users out of the database
         public static Users Getuser(string Email)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -99,10 +100,9 @@ namespace Project_B.DataAcces
             catch(Exception ex) { return null; }
             
 
-        }
+        } // removes users from the database with email
         public static bool RemoveUser(string Email)
         {
-            //"Data Source=C:\\Users\\Eigenaar\\source\\Project B\\Project-B\\Project B\\DataSource\\database.db; Version = 3; New = True; Compress = True; "
             try
             {
                 string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -121,6 +121,7 @@ namespace Project_B.DataAcces
             catch(Exception ex) { }
             return false;
         }
+        // removes users from database by ID
         public static bool RemoveUser(int Id)
         {
             try

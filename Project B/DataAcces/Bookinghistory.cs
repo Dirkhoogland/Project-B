@@ -52,6 +52,7 @@ namespace Project_B.DataAcces
             this.Destination = destination;
             this.extranotes = extranotes;
         }
+        // gets user history by their ID 
         public static List<Bookinghistory> GetUserHistory(int userid)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -80,7 +81,7 @@ namespace Project_B.DataAcces
                             string Origin = rdr.GetString(10);
                             string Destination = rdr.GetString(11);
                             string Extranotes = rdr.GetString(12);
-                            
+                            // puts it into the list to then post to the logical side
                             Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate,Departuretime, Origin, Destination, Extranotes);
                             Userhistory.Add(history);
                         }

@@ -57,30 +57,33 @@ namespace Project_Btest
             string Password = "TestPassword1";
             Users.Newuser(Email, Name, Password);
             Users user = Users.Getuser(Email);
+            Users.RemoveUser(Email);
             Assert.IsNotNull(user.Email);
         }
         // tests if login function checks correctly
         [TestMethod]
         public void TestLogin()
         {
-               
+            CreateTable();
                 string Email = "TestEmail1";
                 string Name = "Testname1";
                 string Password = "TestPassword1";
                 Users.Newuser(Email, Name, Password);
                 bool check = Login.LoginLogic(Email, Password);
+                Users.RemoveUser(Email);
                 Assert.IsTrue(check);
         }
 
         [TestMethod]
         public void TestFalselogin()
         {
-
+            CreateTable();
             string Email = "TestEmail1";
             string Name = "Testname1";
             string Password = "TestPassword1";
             Users.Newuser(Email, Name, Password);
             bool check = Login.LoginLogic("wrong email", "wrong password");
+            Users.RemoveUser(Email);
             Assert.IsFalse(check);
         }
 
