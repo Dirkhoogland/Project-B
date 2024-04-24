@@ -31,6 +31,7 @@ namespace Project_B
                 while (true)
                 {
                     Console.Clear();
+                    
 
                     if (currentuser != null)
                     {

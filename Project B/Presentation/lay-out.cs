@@ -74,7 +74,7 @@ namespace Project_B.Presentation
                 ChooseSeatWithArrowKeys();
                 break;
             case 1:
-                DisplaySeatLayout();
+                DisplaySeatLayoutBoeing737();
                 break;
             case 2:
                 Console.WriteLine("Bedankt voor het gebruik van het stoelreserveringssysteem. Tot ziens!");
@@ -95,7 +95,7 @@ namespace Project_B.Presentation
             do
             {
                 Console.SetCursorPosition(0,0);
-                DisplaySeatLayout(row, seat);
+                DisplaySeatLayoutBoeing737(row, seat);
 
                 key = Console.ReadKey(true);
 
@@ -180,7 +180,7 @@ namespace Project_B.Presentation
             }
         }
 
-        public static void DisplaySeatLayout(int selectedRow = -1, int selectedSeat = -1)
+        public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
 
