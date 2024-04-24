@@ -1,105 +1,3 @@
-// namespace Project_B.Presentation
-// {
-//     public class lay_out
-//     {
-//         static bool[,] seats = new bool[33, 6];
-//         public void ToonMenu()
-//         {
-//             Console.WriteLine("Welkom bij het stoelreserveringssysteem voor het vliegtuig!");
-//             Console.WriteLine("Beschikbare opties:");
-//             Console.WriteLine("1. Reserveer een stoel");
-//             Console.WriteLine("2. Bekijk de stoelindeling");
-//             Console.WriteLine("3. Verlaat het programma");
-
-//             Console.Write("Voer uw keuze in (1-3): ");
-//             int choice = Convert.ToInt32(Console.ReadLine());
-
-//             switch (choice)
-//             {
-//                 case 1:
-//                     ReserveSeat();
-//                     break;
-//                 case 2:
-//                     DisplaySeatLayout();
-//                     break;
-//                 case 3:
-//                     Console.WriteLine("Bedankt voor het gebruik van het stoelreserveringssysteem. Tot ziens!");
-//                     return;
-//                 default:
-//                     Console.WriteLine("Ongeldige keuze. Probeer het opnieuw.");
-//                     break;
-//             }
-
-//             Console.WriteLine();
-//         }
-    
-//         public static void ReserveSeat()
-//         {
-//             Console.WriteLine("Beschikbare stoelen:");
-//             DisplaySeatLayout();
-
-//             Console.Write("Voer de rijnummer in (1-33): ");
-//             int row = Convert.ToInt32(Console.ReadLine());
-
-//             Console.Write("Voer de stoelnummer in (A-F): ");
-//             char seat = Convert.ToChar(Console.ReadLine().ToUpper());
-
-//             int rowIndex = row - 1;
-//             int seatIndex = seat - 'A';
-
-//             if (rowIndex < 0 || rowIndex >= 33 || seatIndex < 0 || seatIndex >= 6)
-//             {
-//                 Console.WriteLine("Ongeldige stoel. Probeer het opnieuw.");
-//                 return;
-//             }
-
-//             if (seats[rowIndex, seatIndex])
-//             {
-//                 Console.WriteLine("Deze stoel is al gereserveerd. Kies een andere stoel.");
-//                 return;
-//             }
-
-//             seats[rowIndex, seatIndex] = true;
-//             Console.WriteLine("Stoel succesvol gereserveerd!");
-//         }
-
-//         public static void DisplaySeatLayout()
-//         {
-//             Console.WriteLine("Stoelindeling:");
-//             Console.WriteLine("Rij  Stoelen");
-//             Console.WriteLine("     A B C  D E F");
-
-//             for (int row = 0; row < 33; row++)
-//             {
-//                 Console.Write($"{row + 1}    ");
-
-//                 for (int seat = 0; seat < 6; seat++)
-//                 {
-//                     if (seats[row, seat])
-//                     {
-//                         Console.Write("X");
-//                     }
-//                     else
-//                     {
-//                         Console.Write("O");
-//                     }
-
-//                     if (seat == 2) 
-//                     {
-//                         Console.Write("  "); 
-//                     }
-//                     else
-//                     {
-//                         Console.Write(" ");
-//                     }
-//                 }
-
-//                 Console.WriteLine();
-//             }
-//         }
-//     }
-// }
-
 namespace Project_B.Presentation
 {
     public class Seat
@@ -131,107 +29,26 @@ namespace Project_B.Presentation
             }
         }
     }
-
-    public void ToonMenu()
-    {
-        Console.WriteLine("Welkom bij het stoelreserveringssysteem voor het vliegtuig!");
-        Console.WriteLine("Beschikbare opties:");
-        Console.WriteLine("1. Reserveer een stoel");
-        Console.WriteLine("2. Bekijk de stoelindeling");
-        Console.WriteLine("3. Verlaat het programma");
-
-        Console.Write("Voer uw keuze in (1-3): ");
-        int choice = Convert.ToInt32(Console.ReadLine());
-
-        switch (choice)
-        {
-            case 1:
-                ReserveSeat();
-                break;
-            case 2:
-                DisplaySeatLayout();
-                break;
-            case 3:
-                Console.WriteLine("Bedankt voor het gebruik van het stoelreserveringssysteem. Tot ziens!");
-                return;
-            default:
-                Console.WriteLine("Ongeldige keuze. Probeer het opnieuw.");
-                break;
-        }
-
-        Console.WriteLine();
-    }
-
-    public static void ReserveSeat()
-    {
-        Console.WriteLine("Beschikbare stoelen:");
-        DisplaySeatLayout();
-
-        Console.Write("Voer de rijnummer in (1-33): ");
-        int row = Convert.ToInt32(Console.ReadLine());
-
-        Console.Write("Voer de stoelnummer in (A-F): ");
-        char seat = Convert.ToChar(Console.ReadLine().ToUpper());
-
-        int rowIndex = row - 1;
-        int seatIndex = seat - 'A';
-
-        if (rowIndex < 0 || rowIndex >= 33 || seatIndex < 0 || seatIndex >= 6)
-        {
-            Console.WriteLine("Ongeldige stoel. Probeer het opnieuw.");
-            return;
-        }
-
-        Seat chosenSeat = seats[rowIndex, seatIndex];
-        if (chosenSeat.IsReserved)
-        {
-            Console.WriteLine("Deze stoel is al gereserveerd. Kies een andere stoel.");
-            return;
-        }
-
-        Console.WriteLine($"Je hebt deze stoel gekozen: {row}{seat}. Klasse: {chosenSeat.Class}, Prijs: {chosenSeat.Price}");
-        Console.Write("Wil je deze stoel selecteren? (Ja/Nee): ");
-        string confirmation = Console.ReadLine().ToLower();
-
-        if (confirmation == "ja")
-        {
-            chosenSeat.IsReserved = true;
-            Console.WriteLine("Stoel succesvol gereserveerd!");
-        }
-        else
-        {
-            Console.WriteLine("je hebt je stoel gecanceled.");
-        }
-    }
-
-    public static void DisplaySeatLayout()
+public static void DisplaySeatLayout(int currentRow, int currentSeat)
 {
-    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine("Seat layout:");
+    Console.WriteLine("Row  Seats");
+    Console.WriteLine("     A B C  D E F");
 
-    Console.WriteLine("Stoelindeling:");
-    Console.WriteLine("Rij   Stoelen");
-    Console.WriteLine("      A B C  D E F");
-
-    for (int row = 0; row < 33; row++)
+    for (int i = 0; i < 33; i++)
     {
-        if (row < 9)
-        {
-            Console.Write(" ");
-        }
-        if (row == 15 || row == 16) 
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-        }
-
-        Console.Write($"{row + 1}    ");
+        // Add an extra space at the start of the first 9 rows
+        Console.Write(i < 9 ? $" {i + 1}   " : $"{i + 1}   ");
 
         for (int seat = 0; seat < 6; seat++)
         {
-            if (seats[row, seat].IsReserved)
+            if (i == currentRow && seat == currentSeat)
+            {
+                Console.BackgroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
+
+            if (seats[i, seat].IsReserved)
             {
                 Console.Write("X");
             }
@@ -239,6 +56,8 @@ namespace Project_B.Presentation
             {
                 Console.Write("O");
             }
+
+            Console.ResetColor();
 
             if (seat == 2)
             {
@@ -253,7 +72,140 @@ namespace Project_B.Presentation
         Console.WriteLine();
     }
 
-    Console.ResetColor(); 
+    Console.ResetColor();
 }
+public void ToonMenu()
+{
+    string[] menuOptions = { "Reserveer een stoel", "Bekijk de stoelindeling", "Verlaat het programma" };
+    int currentOption = 0;
+
+    while (true)
+    {
+        Console.Clear();
+        Console.WriteLine("Welkom bij het stoelreserveringssysteem voor het vliegtuig!");
+        Console.WriteLine("Beschikbare opties:");
+
+        for (int i = 0; i < menuOptions.Length; i++)
+        {
+            if (i == currentOption)
+            {
+                Console.BackgroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
+
+            Console.WriteLine($"{i + 1}. {menuOptions[i]}");
+
+            Console.ResetColor();
+        }
+
+        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+        switch (keyInfo.Key)
+        {
+            case ConsoleKey.UpArrow:
+                if (currentOption > 0) currentOption--;
+                break;
+            case ConsoleKey.DownArrow:
+                if (currentOption < menuOptions.Length - 1) currentOption++;
+                break;
+            case ConsoleKey.Enter:
+                switch (currentOption)
+                {
+                    case 0:
+                        ReserveSeat();
+                        break;
+                    case 1:
+                        DisplaySeatLayout(0,0);
+                        break;
+                    case 2:
+                        Console.WriteLine("Bedankt voor het gebruik van het stoelreserveringssysteem. Tot ziens!");
+                        return;
+                }
+                break;
+        }
+
+        Console.WriteLine();
+    }
 }
+
+public static void ReserveSeat()
+{
+    int currentRow = 0;
+    int currentSeat = 0;
+
+    while (true)
+    {
+        Console.SetCursorPosition(0, 0);
+        DisplaySeatLayout(currentRow, currentSeat);
+
+        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+        switch (keyInfo.Key)
+        {
+            case ConsoleKey.UpArrow:
+                if (currentRow > 0) currentRow--;
+                break;
+            case ConsoleKey.DownArrow:
+                if (currentRow < 32) currentRow++;
+                break;
+            case ConsoleKey.LeftArrow:
+                if (currentSeat > 0) currentSeat--;
+                break;
+            case ConsoleKey.RightArrow:
+                if (currentSeat < 5) currentSeat++;
+                break;
+            case ConsoleKey.Enter:
+                Seat chosenSeat = seats[currentRow, currentSeat];
+                if (chosenSeat.IsReserved)
+                {
+                    Console.WriteLine("Deze stoel is al gereserveerd. Kies een andere stoel.");
+                    continue;
+                }
+
+                Console.WriteLine($"Je hebt deze stoel gekozen: {currentRow + 1}{(char)('A' + currentSeat)}. Klasse: {chosenSeat.Class}, Prijs: {chosenSeat.Price}");
+
+                string[] confirmationOptions = { "Ja", "Nee" };
+                int currentOption = 0;
+
+                while (true)
+                {
+                    Console.WriteLine("Wil je deze stoel selecteren?");
+                    for (int i = 0; i < confirmationOptions.Length; i++)
+                    {
+                        if (i == currentOption)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(confirmationOptions[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    keyInfo = Console.ReadKey(true);
+
+                    switch (keyInfo.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            if (currentOption > 0) currentOption--;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            if (currentOption < confirmationOptions.Length - 1) currentOption++;
+                            break;
+                        case ConsoleKey.Enter:
+                            if (confirmationOptions[currentOption] == "Ja")
+                            {
+                                chosenSeat.IsReserved = true;
+                                Console.WriteLine("Stoel succesvol gereserveerd!");
+                            }
+                            return;
+                    }
+
+                    Console.WriteLine();
+                }
+        }
+    }
+}
+    }
 }
