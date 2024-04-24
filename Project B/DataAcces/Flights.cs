@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
+using Project_B.Presentation;
 namespace Project_B.DataAcces
 {
     public class Flight
@@ -22,6 +24,8 @@ namespace Project_B.DataAcces
         public string Status { get; set; }
         public string Gate { get; set; }
         public int FlightID { get; set; }
+        public Seat? PlaneLayout { get; set; }
+        public int FlightId { get; set; }
 
         private static string databasePath
         {
@@ -58,6 +62,7 @@ namespace Project_B.DataAcces
                 {
                     Flight flight = new Flight
                     {
+                        FlightId = int.Parse(sqlite_datareader["FlightId"].ToString()),
                         DepartureTime = DateTime.Parse(sqlite_datareader["DepartureTime"].ToString()),
                         Terminal = sqlite_datareader["Terminal"].ToString(),
                         FlightNumber = sqlite_datareader["FlightNumber"].ToString(),
@@ -80,10 +85,47 @@ namespace Project_B.DataAcces
             sqlite_conn.Close();
             return flights;
         }
+        public static List<Flight> GetFlightsAdmin()
+        {
+            List<Flight> flights = new List<Flight>();
+            SQLiteConnection sqlite_conn = CreateConnection();
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd.CommandText = "SELECT * FROM Flights";
+            SQLiteDataReader sqlite_datareader = sqlite_cmd.ExecuteReader();
+            while (sqlite_datareader.Read())
+            {
+                try
+                {
+                    Flight flight = new Flight
+                    {
+                        FlightId = int.Parse(sqlite_datareader["FlightId"].ToString()),
+                        DepartureTime = DateTime.Parse(sqlite_datareader["DepartureTime"].ToString()),
+                        Terminal = sqlite_datareader["Terminal"].ToString(),
+                        FlightNumber = sqlite_datareader["FlightNumber"].ToString(),
+                        AircraftType = sqlite_datareader["AircraftType"].ToString(),
+                        Seats = int.Parse(sqlite_datareader["Seats"].ToString()),
+                        AvailableSeats = int.Parse(sqlite_datareader["AvailableSeats"].ToString()),
+                        Destination = sqlite_datareader["Destination"].ToString(),
+                        Origin = sqlite_datareader["Origin"].ToString(),
+                        Airline = sqlite_datareader["Airline"].ToString(),
+                        Status = sqlite_datareader["Status"].ToString(),
+                        Gate = sqlite_datareader["Gate"].ToString()
+                    };
+                    flights.Add(flight);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to parse flight data: {ex.Message}");
+                }
+            }
+            sqlite_conn.Close();
+            return flights;
+        }
         
         public override string ToString()
         {
-            return $"Time: {DepartureTime}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Status: {Status}, Terminal: {Terminal}";
+            return $"Time: {DepartureTime:HH:mm}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Status: {Status}, Terminal: {Terminal}";
         }
         public static void AddFlight(Flight flight)
         {
@@ -107,65 +149,76 @@ namespace Project_B.DataAcces
                 sqlite_conn.Close();
             }
         }
-        public static void UpdateFlight(Flight updatedFlight)
+        public static void UpdateFlight(Flight flightToUpdate)
         {
-            using (SQLiteConnection conn = CreateConnection())
+            // Get the connection string
+            string connectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
+            // Create a new connection
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                string sql = "UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Status = @Status, Gate = @Gate WHERE FlightID = @FlightID";
+                // Open the connection
+                connection.Open();
 
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                // Create a new command
+                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Status = @Status, Gate = @Gate WHERE FlightID = @FlightID", connection))
                 {
-                    cmd.Parameters.AddWithValue("@DepartureTime", updatedFlight.DepartureTime);
-                    cmd.Parameters.AddWithValue("@Terminal", updatedFlight.Terminal);
-                    cmd.Parameters.AddWithValue("@FlightNumber", updatedFlight.FlightNumber);
-                    cmd.Parameters.AddWithValue("@AircraftType", updatedFlight.AircraftType);
-                    cmd.Parameters.AddWithValue("@Seats", updatedFlight.Seats);
-                    cmd.Parameters.AddWithValue("@AvailableSeats", updatedFlight.AvailableSeats);
-                    cmd.Parameters.AddWithValue("@Destination", updatedFlight.Destination);
-                    cmd.Parameters.AddWithValue("@Origin", updatedFlight.Origin);
-                    cmd.Parameters.AddWithValue("@Airline", updatedFlight.Airline);
-                    cmd.Parameters.AddWithValue("@Status", updatedFlight.Status);
-                    cmd.Parameters.AddWithValue("@Gate", updatedFlight.Gate);
-                    cmd.Parameters.AddWithValue("@FlightID", updatedFlight.FlightID);
+                    // Add the parameters
+                    command.Parameters.AddWithValue("@DepartureTime", flightToUpdate.DepartureTime);
+                    command.Parameters.AddWithValue("@Terminal", flightToUpdate.Terminal);
+                    command.Parameters.AddWithValue("@FlightNumber", flightToUpdate.FlightNumber);
+                    command.Parameters.AddWithValue("@AircraftType", flightToUpdate.AircraftType);
+                    command.Parameters.AddWithValue("@Seats", flightToUpdate.Seats);
+                    command.Parameters.AddWithValue("@AvailableSeats", flightToUpdate.AvailableSeats);
+                    command.Parameters.AddWithValue("@Destination", flightToUpdate.Destination);
+                    command.Parameters.AddWithValue("@Origin", flightToUpdate.Origin);
+                    command.Parameters.AddWithValue("@Airline", flightToUpdate.Airline);
+                    command.Parameters.AddWithValue("@Status", flightToUpdate.Status);
+                    command.Parameters.AddWithValue("@Gate", flightToUpdate.Gate);
+                    command.Parameters.AddWithValue("@FlightID", flightToUpdate.FlightId);
 
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected == 0)
-                    {
-                        Console.WriteLine("No flight found with the given FlightID.");
-                    }
+                    // Execute the command
+                    command.ExecuteNonQuery();
                 }
             }
         }
         public static Flight GetFlightById(int flightId)
         {
-            Flight flight = new Flight();
-            using (SQLiteConnection conn = CreateConnection())
+            // Get the connection string
+            string connectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
+            // Create a new connection
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                string sql = "SELECT * FROM Flights WHERE FlightID = @FlightID";
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                // Open the connection
+                connection.Open();
+
+                // Create a new command
+                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Flights WHERE FlightId = @FlightId", connection))
                 {
-                    cmd.Parameters.AddWithValue("@FlightID", flightId);
-                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    // Add the parameter
+                    command.Parameters.AddWithValue("@FlightId", flightId);
+
+                    // Execute the command and get the result
+                    using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            flight.FlightID = int.Parse(reader["FlightID"].ToString());
-                            flight.DepartureTime = DateTime.Parse(reader["DepartureTime"].ToString());
-                            flight.Terminal = reader["Terminal"].ToString();
-                            flight.FlightNumber = reader["FlightNumber"].ToString();
-                            flight.AircraftType = reader["AircraftType"].ToString();
-                            flight.Seats = int.Parse(reader["Seats"].ToString());
-                            flight.AvailableSeats = int.Parse(reader["AvailableSeats"].ToString());
-                            flight.Destination = reader["Destination"].ToString();
-                            flight.Origin = reader["Origin"].ToString();
-                            flight.Airline = reader["Airline"].ToString();
-                            flight.Status = reader["Status"].ToString();
-                            flight.Gate = reader["Gate"].ToString();
+                            // Create a new flight and set its properties
+                            Flight flight = new Flight();
+                            flight.FlightId = reader.GetInt32(reader.GetOrdinal("FlightId"));
+                            // ... set the other properties ...
+
+                            return flight;
+                        }
+                        else
+                        {
+                            // No flight found with the given ID
+                            return null;
                         }
                     }
                 }
             }
-            return flight;
         }
         public static void DeleteRow()
         {
@@ -186,86 +239,383 @@ namespace Project_B.DataAcces
                 Console.WriteLine($"Failed to delete rows: {ex.Message}");
             }
         }
+        public string ToAdminString()
+        {
+            return $"Flight Number: {FlightNumber}, Destination: {Destination}, Origin: {Origin}, Departure Time: {DepartureTime}, Status: {Status}, Terminal: {Terminal}, Gate: {Gate}, Aircraft Type: {AircraftType}, Airline: {Airline}";
+        }
         public static void AdminUpdateFlight()
         {
-            Console.WriteLine("Enter the FlightID of the flight you want to update: ");
-            Console.WriteLine("If you don't want to update anything, type '0'");
+            List<Flight> flights = GetFlights();
+            int flightIndex = 0;
 
-            int flightId;
-            while (!int.TryParse(Console.ReadLine(), out flightId))
+            // Display the title
+            Console.WriteLine(new string('-', Console.WindowWidth));
+            Console.WriteLine("Update Flight".PadLeft(Console.WindowWidth / 2 + "Update Flight".Length / 2));
+            Console.WriteLine(new string('-', Console.WindowWidth));
+
+            Console.WriteLine("Select a flight to update (use arrow keys to navigate, press Enter to select):");
+            foreach (Flight flight in flights)
             {
-                Console.WriteLine("\nInvalid input. Please enter a number.");
-                Console.WriteLine("Enter the FlightID of the flight you want to update: ");
-                Console.WriteLine("If you don't want to update anything, type '0'");
+                Console.WriteLine(flight.ToString());
             }
 
-            if (flightId == 0) 
+            while (true)
             {
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow)
+                {
+                    flightIndex = (flightIndex - 1 + flights.Count) % flights.Count;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    flightIndex = (flightIndex + 1) % flights.Count;
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+
+                Console.CursorTop = Console.CursorTop - flights.Count;
+                for (int i = 0; i < flights.Count; i++)
+                {
+                    if (i == flightIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(flights[i].ToString());
+
+                    Console.ResetColor();
+                }
+            }
+            Console.WriteLine("Selected flight with ID: " + flights[flightIndex].FlightId);
+
+            Flight flightToUpdate = flights[flightIndex];
+            flightToUpdate.FlightId = flights[flightIndex].FlightId;
+
+            // Store the original flight information
+            string originalFlightInfo = flightToUpdate.ToAdminString();
+
+            // List of properties to update
+            string[] properties = { "Flight Number", "Destination", "Origin", "Departure Time", "Status", "Terminal", "Gate", "Aircraft Type", "Airline" };
+            foreach (string property in properties)
+            {
+                string[] updateOptions = { "Yes", "No" };
+                    int updateIndex = 0;
+
+                // Clear the console and display the flight information
                 Console.Clear();
-                return; 
+                Console.WriteLine(new string('-', Console.WindowWidth));
+                Console.WriteLine($"Flight Selected: {flightToUpdate.FlightId})".PadLeft(Console.WindowWidth / 2 + $"Flight Selected (Flight ID: {flightToUpdate.FlightId})".Length / 2));
+                Console.WriteLine(new string('-', Console.WindowWidth));
+                Console.WriteLine(flightToUpdate.ToAdminString());
+
+                Console.WriteLine($"Do you want to update the {property}? (use arrow keys to navigate, press Enter to select): ");
+
+                foreach (var option in updateOptions)
+                {
+                    Console.WriteLine(option);
+                }
+
+                while (true)
+                {
+                    var key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.UpArrow)
+                    {
+                        updateIndex = (updateIndex - 1 + updateOptions.Length) % updateOptions.Length;
+                    }
+                    else if (key == ConsoleKey.DownArrow)
+                    {
+                        updateIndex = (updateIndex + 1) % updateOptions.Length;
+                    }
+                    else if (key == ConsoleKey.Enter)
+                    {
+                        break;
+                    }
+
+                    Console.CursorTop = Console.CursorTop - updateOptions.Length;
+                    for (int i = 0; i < updateOptions.Length; i++)
+                    {
+                        if (i == updateIndex)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(updateOptions[i]);
+
+                        Console.ResetColor();
+                    }
+                }
+
+                if (updateOptions[updateIndex] == "Yes")
+                {
+                    // Update the property
+                    switch (property)
+                    {
+                        case "Flight Number":
+                            // Update flight number
+                            Console.Write("Enter new flight number (1000-9999): ");
+                            string flightNumberString = Console.ReadLine();
+                            if (flightNumberString?.ToLower() == "exit") return;
+                            int flightNumber;
+                            while (!int.TryParse(flightNumberString, out flightNumber) || flightNumber < 1000 || flightNumber > 9999)
+                            {
+                                Console.Write("Invalid input. Please enter a number between 1000 and 9999: ");
+                                flightNumberString = Console.ReadLine();
+                                if (flightNumberString?.ToLower() == "exit") return;
+                            }
+                            flightToUpdate.FlightNumber = flightNumber.ToString();
+                            break;
+
+                        case "Destination":
+                            // Update destination
+                            Console.Write("Enter new destination: ");
+                            string destination = Console.ReadLine();
+                            if (destination?.ToLower() == "exit") return;
+                            flightToUpdate.Destination = destination;
+                            break;
+
+                        case "Origin":
+                            // Update origin
+                            string[] originOptions = { "Amsterdam", "Exit" };
+                            int originIndex = 0;
+                            Console.WriteLine("Select new origin: ");
+                            foreach (var option in originOptions)
+                            {
+                                Console.WriteLine(option);
+                            }
+                            while (true)
+                            {
+                                var key = Console.ReadKey(true).Key;
+                                if (key == ConsoleKey.UpArrow)
+                                {
+                                    originIndex = (originIndex - 1 + originOptions.Length) % originOptions.Length;
+                                }
+                                else if (key == ConsoleKey.DownArrow)
+                                {
+                                    originIndex = (originIndex + 1) % originOptions.Length;
+                                }
+                                else if (key == ConsoleKey.Enter)
+                                {
+                                    if (originOptions[originIndex] == "Exit")
+                                    {
+                                        return;
+                                    }
+                                    break;
+                                }
+                                Console.CursorTop = Console.CursorTop - originOptions.Length;
+                                for (int i = 0; i < originOptions.Length; i++)
+                                {
+                                    if (i == originIndex)
+                                    {
+                                        Console.BackgroundColor = ConsoleColor.Gray;
+                                        Console.ForegroundColor = ConsoleColor.Black;
+                                    }
+                                    Console.WriteLine(originOptions[i]);
+                                    Console.ResetColor();
+                                }
+                            }
+                            flightToUpdate.Origin = originOptions[originIndex];
+                            break;
+
+                        case "Departure Time":
+                            // Update departure time
+                            Console.Write("Enter new departure time (dd/MM/yyyy HH:mm): ");
+                            DateTime departureTime;
+                            while (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out departureTime))
+                            {
+                                Console.Write("Invalid input. Please enter a date and time in the format dd/MM/yyyy HH:mm: ");
+                            }
+                            flightToUpdate.DepartureTime = departureTime;
+                            break;
+                        case "Status":
+                            // Update status
+                            string[] statusOptions = { "Scheduled", "OutGate", "InAir", "Landed", "InGate", "Cancelled", "Delayed", "Exit" };
+                            int statusIndex = 0;
+                            Console.WriteLine("Select new status: ");
+                            foreach (var option in statusOptions)
+                            {
+                                Console.WriteLine(option);
+                            }
+                            while (true)
+                            {
+                                var key = Console.ReadKey(true).Key;
+                                if (key == ConsoleKey.UpArrow)
+                                {
+                                    statusIndex = (statusIndex - 1 + statusOptions.Length) % statusOptions.Length;
+                                }
+                                else if (key == ConsoleKey.DownArrow)
+                                {
+                                    statusIndex = (statusIndex + 1) % statusOptions.Length;
+                                }
+                                else if (key == ConsoleKey.Enter)
+                                {
+                                    if (statusOptions[statusIndex] == "Exit")
+                                    {
+                                        return;
+                                    }
+                                    break;
+                                }
+                                Console.CursorTop = Console.CursorTop - statusOptions.Length;
+                                for (int i = 0; i < statusOptions.Length; i++)
+                                {
+                                    if (i == statusIndex)
+                                    {
+                                        Console.BackgroundColor = ConsoleColor.Gray;
+                                        Console.ForegroundColor = ConsoleColor.Black;
+                                    }
+                                    Console.WriteLine(statusOptions[i]);
+                                    Console.ResetColor();
+                                }
+                            }
+                            flightToUpdate.Status = statusOptions[statusIndex];
+                            break;
+
+                        case "Terminal":
+                            // Update terminal
+                            Console.Write("Enter new terminal (1-4): ");
+                            string terminalString = Console.ReadLine();
+                            if (terminalString?.ToLower() == "exit") return;
+                            int terminal;
+                            while (!int.TryParse(terminalString, out terminal) || terminal < 1 || terminal > 4)
+                            {
+                                Console.Write("Invalid input. Please enter a number between 1 and 4: ");
+                                terminalString = Console.ReadLine();
+                                if (terminalString?.ToLower() == "exit") return;
+                            }
+                            flightToUpdate.Terminal = terminal.ToString();
+                            break;
+
+                        case "Gate":
+                            // Update gate
+                            Console.Write("Enter new gate (1-24): ");
+                            string gateString = Console.ReadLine();
+                            if (gateString?.ToLower() == "exit") return;
+                            int gate;
+                            while (!int.TryParse(gateString, out gate) || gate < 1 || gate > 24)
+                            {
+                                Console.Write("Invalid input. Please enter a number between 1 and 24: ");
+                                gateString = Console.ReadLine();
+                                if (gateString?.ToLower() == "exit") return;
+                            }
+                            flightToUpdate.Gate = gate.ToString();
+                            break;
+
+                        case "Aircraft Type":
+                            // Update aircraft type
+                            string[] aircraftTypeOptions = { "Boeing 787", "Boeing 737", "Airbus 330", "Exit" };
+                            int aircraftTypeIndex = 0;
+                            Console.WriteLine("Enter new aircraft type (use arrow keys to navigate, press Enter to select): ");
+                            foreach (var option in aircraftTypeOptions)
+                            {
+                                Console.WriteLine(option);
+                            }
+                            while (true)
+                            {
+                                var key = Console.ReadKey(true).Key;
+                                if (key == ConsoleKey.UpArrow)
+                                {
+                                    aircraftTypeIndex = (aircraftTypeIndex - 1 + aircraftTypeOptions.Length) % aircraftTypeOptions.Length;
+                                }
+                                else if (key == ConsoleKey.DownArrow)
+                                {
+                                    aircraftTypeIndex = (aircraftTypeIndex + 1) % aircraftTypeOptions.Length;
+                                }
+                                else if (key == ConsoleKey.Enter)
+                                {
+                                    if (aircraftTypeOptions[aircraftTypeIndex] == "Exit")
+                                    {
+                                        return;
+                                    }
+                                    break;
+                                }
+                                Console.CursorTop = Console.CursorTop - aircraftTypeOptions.Length;
+                                for (int i = 0; i < aircraftTypeOptions.Length; i++)
+                                {
+                                    if (i == aircraftTypeIndex)
+                                    {
+                                        Console.BackgroundColor = ConsoleColor.Gray;
+                                        Console.ForegroundColor = ConsoleColor.Black;
+                                    }
+                                    Console.WriteLine(aircraftTypeOptions[i]);
+                                    Console.ResetColor();
+                                }
+                            }
+                            flightToUpdate.AircraftType = aircraftTypeOptions[aircraftTypeIndex];
+                            break;
+
+                        case "Airline":
+                            // Update airline
+                            flightToUpdate.Airline = "New South";
+                            break;
+                    }
+                }
+            }
+            string updatedFlightInfo = flightToUpdate.ToAdminString();
+
+            // Ask the admin if they want to save the changes
+            string[] confirmSaveOptions = { "Save changes", "Exit without saving" };
+            int confirmSaveIndex = 0;
+
+            Console.Write("Original flight information: ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(originalFlightInfo);
+
+            Console.ResetColor();
+            Console.Write("Updated flight information: ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(updatedFlightInfo);
+
+            Console.ResetColor();
+            Console.WriteLine("Do you want to save the changes?:");
+            foreach (var option in confirmSaveOptions)
+            {
+                Console.WriteLine(option);
             }
 
-            Flight flightToUpdate = GetFlightById(flightId);
-
-            UpdateFlightProperty<Flight, DateTime>(flightToUpdate, "\nDo you want to update the departure time? (yes/no): ", 
-                "Enter the new departure time (yyyy-MM-dd HH:mm:ss): ", 
-                DateTime.TryParse, 
-                (flight, value) => flight.DepartureTime = value);
-
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "\nDo you want to update the destination? (yes/no): ", 
-                "Enter the new destination: ", 
-                (string input, out string result) => { result = input; return true; }, 
-                (flight, value) => flight.Destination = value);
-
-            UpdateFlightProperty<Flight, int>(flightToUpdate, "\nDo you want to update the number of seats? (yes/no): ", 
-                "Enter the new number of seats: ", 
-                int.TryParse, 
-                (flight, value) => flight.Seats = value);
-
-            UpdateFlightProperty<Flight, int>(flightToUpdate, "\nDo you want to update the number of available seats? (yes/no): ", 
-                "Enter the new number of available seats: ", 
-                int.TryParse, 
-                (flight, value) => flight.AvailableSeats = value);
-
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "\nDo you want to update the gate? (yes/no): ", 
-                "Enter the new gate: (1-20) ", 
-                (string input, out string result) => { result = input; return true; }, 
-                (flight, value) => flight.Gate = value);
-
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "\nDo you want to update the terminal? (yes/no): ", 
-                "Enter the new terminal: (1-4) ", 
-                (string input, out string result) => { result = input; return true; }, 
-                (flight, value) => flight.Terminal = value);
-
-            UpdateFlightProperty<Flight, string>(flightToUpdate, "\nDo you want to update the airline? (yes/no): ", 
-                "Enter the new airline: ", 
-                (string input, out string result) => { result = input; return true; }, 
-                (flight, value) => flight.Airline = value);
-
-            UpdateFlight(flightToUpdate);
-            Console.WriteLine("\nFlight updated.");
-            System.Threading.Thread.Sleep(3000);
-            Console.Clear();
-        }
-
-        public delegate bool TryParseDelegate<T>(string input, out T result);
-
-        public static void UpdateFlightProperty<TFlight, TProperty>(TFlight flightToUpdate, string question, string prompt, TryParseDelegate<TProperty> parse, Action<TFlight, TProperty> update)
-            where TFlight : Flight
-        {
-            if (AskQuestion(question) == "yes")
+            while (true)
             {
-                Console.Write(prompt);
-                TProperty newValue;
-                if (parse(Console.ReadLine(), out newValue))
+                var key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow)
                 {
-                    update(flightToUpdate, newValue);
-                    Console.WriteLine("Property updated.");
+                    confirmSaveIndex = (confirmSaveIndex - 1 + confirmSaveOptions.Length) % confirmSaveOptions.Length;
                 }
-                else
+                else if (key == ConsoleKey.DownArrow)
                 {
-                    Console.WriteLine("Invalid input.");
+                    confirmSaveIndex = (confirmSaveIndex + 1) % confirmSaveOptions.Length;
                 }
+                else if (key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+
+                Console.CursorTop = Console.CursorTop - confirmSaveOptions.Length;
+                for (int i = 0; i < confirmSaveOptions.Length; i++)
+                {
+                    if (i == confirmSaveIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(confirmSaveOptions[i]);
+
+                    Console.ResetColor();
+                }
+            }
+
+            if (confirmSaveOptions[confirmSaveIndex] == "Save changes")
+            {
+                UpdateFlight(flightToUpdate);
+                Console.WriteLine("Flight updated successfully!");
+                System.Threading.Thread.Sleep(3000);
+            }
+            else
+            {
+                Console.WriteLine("Changes not saved.");
+                System.Threading.Thread.Sleep(3000);
             }
         }
         public static string AskQuestion(string question)
@@ -302,7 +652,7 @@ namespace Project_B.DataAcces
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Status = "On time",
-                Gate = random.Next(1, 20).ToString()
+                Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
         }
@@ -321,7 +671,7 @@ namespace Project_B.DataAcces
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Status = "On time",
-                Gate = random.Next(1, 20).ToString()
+                Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
         }
@@ -340,7 +690,7 @@ namespace Project_B.DataAcces
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Status = "On time",
-                Gate = random.Next(1, 20).ToString()
+                Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
         }
@@ -374,138 +724,413 @@ namespace Project_B.DataAcces
         // Implementeer een zoekfilter waarmee gebruikers vluchten naar een specifieke locatie kunnen vinden.
         // Implementeer functionaliteit om zoekopdrachten te filteren op bestemming, waardoor gebruikers alle beschikbare vluchten naar die specifieke locatie kunnen bekijken.
         // Ontwikkel filters voor onder andere vertrekdatum en luchtvaartmaatschappij om de zoekresultaten te verbeteren.
-        public static void FilterFlights()
+        public static List<Flight> FilterFlights()
         {
-            Console.ReadLine();
             Console.Clear();
             List<Flight> flights = GetFlights();
 
             if (flights == null)
             {
                 Console.WriteLine("Error: Failed to get flights.");
-                return;
+                return new List<Flight>(); // return an empty list if there's an error
             }
 
-            Console.WriteLine("Do you want to filter by destination? (yes/no)");
-            string input;
-            while ((input = Console.ReadLine().ToLower()) != "no")
-            {
-                if (input != "yes")
-                {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-                }
-                else
-                {
-                    Console.WriteLine("Enter the destination you want to filter on: ");
-                    string destination;
-                    while (true)
-                    {
-                        destination = Console.ReadLine().ToLower();
-                        if (flights.Any(f => f.Destination.ToLower() == destination))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid destination. Please enter a valid destination: ");
-                        }
-                    }
-                    flights = flights.Where(f => f.Destination.ToLower() == destination).ToList();
-                    if (flights.Count == 0)
-                    {
-                        Console.WriteLine("No flights found that match the filter criteria.");
-                        return;
-                    }
-                    break;
-                }
-            }
-            Console.Clear();
+            int currentOption = 0;
+            string[] yesNoOptions = new string[] { "yes", "no" };
 
-            Console.WriteLine("Do you want to filter by departure time? (yes/no)");
-            while ((input = Console.ReadLine().ToLower()) != "no")
+            while (true)
             {
-                if (input != "yes")
-                {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-                }
-                else
-                {
-                    Console.WriteLine("Enter the departure date you want to filter on (yyyy-MM-dd): ");
-                    DateTime departureDate;
-                    while (true)
-                    {
-                        if (DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out departureDate))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid date format. Please enter a valid date: ");
-                        }
-                    }
-                    flights = flights.Where(f => f.DepartureTime.Date == departureDate.Date).ToList();
-                    if (flights.Count == 0)
-                    {
-                        Console.WriteLine("No flights found that match the filter criteria.");
-                        return;
-                    }
-                    break;
-                }
-            }
-            Console.Clear();
+                Console.Clear();
+                Console.WriteLine("Do you want to filter by destination?");
 
-            // Console.WriteLine("Do you want to filter by airline? (yes/no)");
-            // while ((input = Console.ReadLine().ToLower()) != "no")
-            // {
-            //     if (input != "yes")
-            //     {
-            //         Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-            //     }
-            //     else
-            //     {
-            //         Console.WriteLine("Enter the airline you want to filter on: ");
-            //         string airline;
-            //         while (true)
-            //         {
-            //             airline = Console.ReadLine().ToLower();
-            //             if (flights.Any(f => f.Airline.ToLower() == airline))
-            //             {
-            //                 break;
-            //             }
-            //             else
-            //             {
-            //                 Console.WriteLine("Invalid airline. Please enter a valid airline: ");
-            //             }
-            //         }
-            //         flights = flights.Where(f => f.Airline.ToLower() == airline).ToList();
-            //         if (flights.Count == 0)
-            //         {
-            //             Console.WriteLine("No flights found that match the filter criteria.");
-            //             return;
-            //         }
-            //     }
-            // }
-            // Console.Clear();
-
-            if (flights.Count == 0)
-            {
-                Console.WriteLine("No flights found with the given filters.");
-            }
-            else
-            {
-                foreach (Flight flight in flights)
+                for (int i = 0; i < yesNoOptions.Length; i++)
                 {
-                    Console.WriteLine(flight);
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(yesNoOptions[i]);
+
+                    Console.ResetColor();
+                }
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (currentOption > 0) currentOption--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (currentOption < yesNoOptions.Length - 1) currentOption++;
+                        break;
+                    case ConsoleKey.Enter:
+                        if (yesNoOptions[currentOption] == "yes")
+                        {
+                            flights = FilterByDestination(flights);
+                        }
+                        // Continue with the next filter
+                        currentOption = 0; // reset the current option for the next question
+                        while (true)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Do you want to filter by departure time?");
+
+                            for (int i = 0; i < yesNoOptions.Length; i++)
+                            {
+                                if (i == currentOption)
+                                {
+                                    Console.BackgroundColor = ConsoleColor.Gray;
+                                    Console.ForegroundColor = ConsoleColor.Black;
+                                }
+
+                                Console.WriteLine(yesNoOptions[i]);
+
+                                Console.ResetColor();
+                            }
+
+                            keyInfo = Console.ReadKey(true);
+
+                            switch (keyInfo.Key)
+                            {
+                                case ConsoleKey.UpArrow:
+                                    if (currentOption > 0) currentOption--;
+                                    break;
+                                case ConsoleKey.DownArrow:
+                                    if (currentOption < yesNoOptions.Length - 1) currentOption++;
+                                    break;
+                                case ConsoleKey.Enter:
+                                    if (yesNoOptions[currentOption] == "yes")
+                                    {
+                                        flights = FilterByDepartureTime(flights);
+                                    }
+                                    return flights; // return the filtered flights
+                            }
+                        }
                 }
             }
         }
-        public static void FlightInformation()
+        public static List<Flight> FilterByDestination(List<Flight> flights)
+        {
+            List<string> destinations = flights.Select(f => f.Destination).Distinct().ToList();
+            int currentOption = 0;
+
+            while (true)
+            {
+                Console.Clear();
+                for (int i = 0; i < destinations.Count; i++)
+                {
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(destinations[i]);
+
+                    Console.ResetColor();
+                }
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (currentOption > 0) currentOption--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (currentOption < destinations.Count - 1) currentOption++;
+                        break;
+                    case ConsoleKey.Enter:
+                        return flights.Where(f => f.Destination == destinations[currentOption]).ToList();
+                }
+            }
+        }
+        public static List<Flight> FilterByDepartureTime(List<Flight> flights)
+        {
+            List<DateTime> departureDates = flights.Select(f => f.DepartureTime.Date).Distinct().ToList();
+            int currentOption = 0;
+
+            while (true)
+            {
+                Console.Clear();
+                for (int i = 0; i < departureDates.Count; i++)
+                {
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(departureDates[i].ToString("dd/MM/yyyy"));
+
+                    Console.ResetColor();
+                }
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (currentOption > 0) currentOption--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (currentOption < departureDates.Count - 1) currentOption++;
+                        break;
+                    case ConsoleKey.Enter:
+                        return flights.Where(f => f.DepartureTime.Date == departureDates[currentOption]).ToList();
+                }
+            }
+        }
+        public static List<Flight> FlightInformation()
         {
             var flights = Flight.GetFlights();
             foreach (var flight in flights)
             {
                 Console.WriteLine(flight);
             }
+            return flights;
+        }
+
+        public static void AdminAddFlight()
+        {
+            Console.Clear();
+            string title = "Add Flight";
+            int windowWidth = Console.WindowWidth;
+            int titlePadding = (windowWidth - title.Length) / 2;
+            string titleLine = new string('-', windowWidth);
+
+            Console.WriteLine(titleLine);
+            Console.WriteLine($"{new string(' ', titlePadding)}{title}");
+            Console.WriteLine(titleLine);
+            Console.WriteLine("Enter flight details (or type 'exit' to cancel):");
+
+            Console.Write("Enter flight number (1000-9999): ");
+            string flightNumberString = Console.ReadLine();
+            if (flightNumberString?.ToLower() == "exit") return;
+            int flightNumber;
+            while (!int.TryParse(flightNumberString, out flightNumber) || flightNumber < 1000 || flightNumber > 9999)
+            {
+                Console.Write("Invalid input. Please enter a number between 1000 and 9999: ");
+                flightNumberString = Console.ReadLine();
+                if (flightNumberString?.ToLower() == "exit") return;
+            }
+
+            Console.Write("Enter destination: ");
+            string destination = Console.ReadLine();
+            if (destination?.ToLower() == "exit") return;
+
+            string[] originOptions = { "Amsterdam", "Exit" };
+            int originIndex = 0;
+
+            Console.WriteLine("Select origin: ");
+
+            foreach (var option in originOptions)
+            {
+                Console.WriteLine(option);
+            }
+
+            while (true)
+            {
+                var key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.UpArrow)
+                {
+                    originIndex = (originIndex - 1 + originOptions.Length) % originOptions.Length;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    originIndex = (originIndex + 1) % originOptions.Length;
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    if (originOptions[originIndex] == "Exit")
+                    {
+                        return;
+                    }
+                    break;
+                }
+
+                Console.CursorTop = Console.CursorTop - originOptions.Length;
+                for (int i = 0; i < originOptions.Length; i++)
+                {
+                    if (i == originIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(originOptions[i]);
+
+                    Console.ResetColor();
+                }
+            }
+
+            string origin = originOptions[originIndex];
+
+            Console.Write("Enter departure time (dd/MM/yyyy HH:mm): ");
+            DateTime departureTime;
+            while (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out departureTime))
+            {
+                Console.Write("Invalid input. Please enter a date and time in the format dd/MM/yyyy HH:mm: ");
+            }
+
+            string[] statusOptions = { "Scheduled", "OutGate", "InAir", "Landed", "InGate", "Cancelled", "Delayed", "Exit" };
+            int statusIndex = 0;
+
+            Console.WriteLine("Select status: ");
+
+            foreach (var option in statusOptions)
+            {
+                Console.WriteLine(option);
+            }
+
+            while (true)
+            {
+                var key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.UpArrow)
+                {
+                    statusIndex = (statusIndex - 1 + statusOptions.Length) % statusOptions.Length;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    statusIndex = (statusIndex + 1) % statusOptions.Length;
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    if (statusOptions[statusIndex] == "Exit")
+                    {
+                        return;
+                    }
+                    break;
+                }
+
+                Console.CursorTop = Console.CursorTop - statusOptions.Length;
+                for (int i = 0; i < statusOptions.Length; i++)
+                {
+                    if (i == statusIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(statusOptions[i]);
+
+                    Console.ResetColor();
+                }
+            }
+
+            string status = statusOptions[statusIndex];
+
+
+            Console.Write("Enter terminal (1-4): ");
+            string terminalString = Console.ReadLine();
+            if (terminalString?.ToLower() == "exit") return;
+            int terminal;
+            while (!int.TryParse(terminalString, out terminal) || terminal < 1 || terminal > 4)
+            {
+                Console.Write("Invalid input. Please enter a number between 1 and 4: ");
+                terminalString = Console.ReadLine();
+                if (terminalString?.ToLower() == "exit") return;
+            }
+
+            Console.Write("Enter gate (1-24): ");
+            string gateString = Console.ReadLine();
+            if (gateString?.ToLower() == "exit") return;
+            int gate;
+            while (!int.TryParse(gateString, out gate) || gate < 1 || gate > 24)
+            {
+                Console.Write("Invalid input. Please enter a number between 1 and 24: ");
+                gateString = Console.ReadLine();
+                if (gateString?.ToLower() == "exit") return;
+            }
+
+            string[] aircraftTypeOptions = { "Boeing 787", "Boeing 737", "Airbus 330", "Exit" };
+            int aircraftTypeIndex = 0;
+
+            Console.WriteLine("Enter aircraft type (use arrow keys to navigate, press Enter to select): ");
+
+            foreach (var option in aircraftTypeOptions)
+            {
+                Console.WriteLine(option);
+            }
+
+            int seats = 0, availableSeats = 0;
+            string aircraftType = "";
+
+            while (true)
+            {
+                var key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.UpArrow)
+                {
+                    aircraftTypeIndex = (aircraftTypeIndex - 1 + aircraftTypeOptions.Length) % aircraftTypeOptions.Length;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    aircraftTypeIndex = (aircraftTypeIndex + 1) % aircraftTypeOptions.Length;
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    aircraftType = aircraftTypeOptions[aircraftTypeIndex];
+                    if (aircraftType == "Exit")
+                    {
+                        return;
+                    }
+                    else if (aircraftType == "Boeing 787")
+                    {
+                        seats = availableSeats = 219;
+                    }
+                    else if (aircraftType == "Boeing 737")
+                    {
+                        seats = availableSeats = 186;
+                    }
+                    else if (aircraftType == "Airbus 330")
+                    {
+                        seats = availableSeats = 345;
+                    }
+                    break;
+                }
+
+                Console.CursorTop = Console.CursorTop - aircraftTypeOptions.Length;
+                for (int i = 0; i < aircraftTypeOptions.Length; i++)
+                {
+                    if (i == aircraftTypeIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(aircraftTypeOptions[i]);
+
+                    Console.ResetColor();
+                }
+            }
+
+            string airline = "New South";
+
+            Flight newFlight = new Flight
+            {
+                FlightNumber = flightNumber.ToString(),
+                Destination = destination,
+                Origin = origin,
+                DepartureTime = departureTime,
+                Status = status,
+                Terminal = terminal.ToString(),
+                AircraftType = aircraftType,
+                Gate = gate.ToString(),
+                Seats = seats,
+                AvailableSeats = availableSeats,
+                Airline = airline
+            };
+
+            AddFlight(newFlight);
+
+            Console.WriteLine("Flight added successfully!");
+            System.Threading.Thread.Sleep(3000);
         }
     }
 }
