@@ -293,9 +293,12 @@ for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
                     }
                 }
             }
+
             public static Flight SelectFlight(List<Flight> flights)
             {
                 int currentIndex = 0;
+
+
 
                 while (true)
                 {

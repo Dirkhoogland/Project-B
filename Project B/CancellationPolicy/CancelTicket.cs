@@ -24,55 +24,81 @@ class TicketManager{
             Console.WriteLine("ERROR: Could not add ticket.");
         }
     }
+}
 
-    public static void CancelTicket(){
-        Console.WriteLine("Cancelling a ticket more than 3 hours after transaction will NOT result in a refund.");
-        Console.WriteLine("Enter the E-Mail used in purchase:");
-        string user_mail = Console.ReadLine();
+class CancelTicket{
 
+    private string SqlSelect = "SELECT FlightID, PurchaseTime FROM Tickets WHERE Email = @user_mail LIMIT 1";
+    private string SqlDelete = "DELETE FROM Tickets WHERE Email = @user_mail";
+    private int TicketID;
+    private DateTime PurchaseTime;
+    private DateTime CompareTime;
+
+    public CancelTicket(){
+        CompareTime = PurchaseTime.AddHours(3);
+    }
+
+    public bool CancelTicketAccess(string user_mail){
         string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
         // LIMIT 1 als tijdelijke 'fix' voor verwijderen van meerdere tickets. Hieraan nog werken
-        string sql_select = "SELECT FlightID, PurchaseTime FROM Tickets WHERE Email = @user_mail LIMIT 1";
-        string sql_delete = "DELETE FROM Tickets WHERE Email = @user_mail";
 
         using (SQLiteConnection conn = new SQLiteConnection(ConnectionString)){
             conn.Open();
-            using (SQLiteCommand command = new SQLiteCommand(sql_select, conn)){
+            using (SQLiteCommand command = new SQLiteCommand(SqlSelect, conn)){
                 command.Parameters.AddWithValue("@user_mail", user_mail);
                 using (SQLiteDataReader reader = command.ExecuteReader()){
                     if (reader.Read()){
-                        int ticket_id = reader.GetInt32(0);
-                        DateTime purchase_time = reader.GetDateTime(reader.GetOrdinal("PurchaseTime"));
-
-                        Console.WriteLine("A ticket has been found.");
-
-                        using (SQLiteCommand command_del = new SQLiteCommand(sql_delete, conn)){
-                            command_del.Parameters.AddWithValue("@user_mail", user_mail);
-
-                            int row_removed = command_del.ExecuteNonQuery();
-
-                            DateTime compare_time = purchase_time.AddHours(3);
-
-                            if (compare_time > DateTime.Now){
-                                Console.WriteLine("Your purchase has been cancelled and refunded. More info is sent to your E-Mail address.");
-                                AutoMail.SendMail(user_mail, "New South: Ticket Cancellation", EmailBody(true, ticket_id, purchase_time));
-                            }
-
-                            else{
-                                Console.WriteLine("Your purchase has been cancelled. More info is sent to your E-Mail address.");
-                                AutoMail.SendMail(user_mail, "New South: Ticket Cancellation", EmailBody(false, ticket_id, purchase_time));
-                            }
-                        }
+                        int TicketID = reader.GetInt32(0);
+                        DateTime PurchaseTime = reader.GetDateTime(reader.GetOrdinal("PurchaseTime"));
+                        return true;
                     }
-                    else{
-                        Console.WriteLine("No ticket has been found.");
-                    }
-                } 
+                }
+            }
+        }
+        return false;
+    }
+
+    public void CancelTicketLogic(string UserMail){
+        string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+        using (SQLiteConnection conn = new SQLiteConnection(ConnectionString)){
+            conn.Open();
+            using (SQLiteCommand command = new SQLiteCommand(SqlDelete, conn)){
+                command.Parameters.AddWithValue("@user_mail", UserMail);
+            }
+        
+        using (SQLiteCommand command_del = new SQLiteCommand(SqlDelete, conn)){
+            command_del.Parameters.AddWithValue("@user_mail", UserMail);
+
+            int row_removed = command_del.ExecuteNonQuery();
+
+            if (CompareTime > DateTime.Now){
+                Console.WriteLine("Your purchase has been cancelled and refunded. More info is sent to your E-Mail address.");
+                AutoMail.SendMail(UserMail, "New South: Ticket Cancellation", Email.EmailBody(true, TicketID, PurchaseTime));
+                }
+
+            else{
+                Console.WriteLine("Your purchase has been cancelled. More info is sent to your E-Mail address.");
+                AutoMail.SendMail(UserMail, "New South: Ticket Cancellation", Email.EmailBody(false, TicketID, PurchaseTime));
+                }
             }
         }
     }
 
+    public void CancelTicketUserAccess(){
+        Console.WriteLine("Cancelling a ticket more than 3 hours after transaction will NOT result in a refund.");
+        Console.WriteLine("Enter the E-Mail used in purchase:");
+        string user_mail = Console.ReadLine();
+        if(CancelTicketAccess(user_mail)){
+            CancelTicketAccess(user_mail);
+            CancelTicketLogic(user_mail);
+        }
+        else{
+            Console.WriteLine("Could not find a ticket.");
+        }
+    }
 
+
+class Email{
     public static string EmailBody(bool refund, long flight_id, DateTime purchase_time){
         if (refund == true){
             string body_true = $@"Dear [Customer Name],
@@ -119,3 +145,4 @@ New South";
         return "Invalid parameters.";
         }
     }
+}
