@@ -62,7 +62,7 @@ namespace Project_B.DataAcces
                 {
                     Flight flight = new Flight
                     {
-                        FlightId = int.Parse(sqlite_datareader["FlightId"].ToString()),  // Set the FlightId
+                        FlightId = int.Parse(sqlite_datareader["FlightId"].ToString()),
                         DepartureTime = DateTime.Parse(sqlite_datareader["DepartureTime"].ToString()),
                         Terminal = sqlite_datareader["Terminal"].ToString(),
                         FlightNumber = sqlite_datareader["FlightNumber"].ToString(),
