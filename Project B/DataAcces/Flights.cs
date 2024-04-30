@@ -125,7 +125,7 @@ namespace Project_B.DataAcces
         
         public override string ToString()
         {
-            return $"Time: {DepartureTime:HH:mm}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Status: {Status}, Terminal: {Terminal}";
+            return $"Time: {DepartureTime:dd/MM/yyyy HH:mm}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Status: {Status}, Terminal: {Terminal}";
         }
         public static void AddFlight(Flight flight)
         {
