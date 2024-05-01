@@ -241,9 +241,9 @@ for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
                                                 {
                                                     Flight selectedFlight = flights[currentOption - 2];
                                                     Console.Clear();
-                                                    Seat seat = new Seat();
-                                                    seat.lay_out();
-                                                    seat.ToonMenu();
+                                                    AirbusSeat airbusseat = new AirbusSeat(); // Instantiate an instance of the AirbusSeat class
+                                                    airbusseat.lay_out(); // Call the lay_out() method
+                                                    airbusseat.ToonMenu();
                                                     Console.ReadLine();
                                                 }
                                             }

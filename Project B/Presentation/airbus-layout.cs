@@ -1,30 +1,30 @@
 namespace Project_B.Presentation
 {
-    public class airbusSeat
+    public class AirbusSeat
     {
         public string Class { get; set; }
         public decimal Price { get; set; }
         public bool IsReserved { get; set; }
     
 
-    static Seat[,] seats = new Seat[50, 9]; 
+    static AirbusSeat [,] airbusseats = new AirbusSeat[50, 9]; 
     public void lay_out()
     {
-    for (int i = 0; i < 33; i++)
+    for (int i = 0; i < 50; i++)
         {
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < 9; j++)
             {
                 if (j == 0 || j == 5) 
                 {
-                    seats[i, j] = new Seat { Class = "Economy", Price = 125m, IsReserved = false };
+                    airbusseats[i, j] = new AirbusSeat { Class = "Economy", Price = 125m, IsReserved = false };
                 }
                 else
                 {
-                    seats[i, j] = new Seat { Class = "Economy", Price = 100m, IsReserved = false };
+                    airbusseats[i, j] = new AirbusSeat { Class = "Economy", Price = 100m, IsReserved = false };
                 }
                  if (i == 15 || i == 16) 
                 {
-                    seats[i, j] = new Seat { Class = "Business", Price = 200m, IsReserved = false };
+                    airbusseats[i, j] = new AirbusSeat { Class = "Business", Price = 200m, IsReserved = false };
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace Project_B.Presentation
                 ChooseSeatWithArrowKeys();
                 break;
             case 1:
-                DisplaySeatLayoutBoeing737();
+                DisplaySeatLayoutAirbus();
                 break;
             case 2:
                 Console.WriteLine("Bedankt voor het gebruik van het stoelreserveringssysteem. Tot ziens!");
@@ -95,7 +95,7 @@ namespace Project_B.Presentation
             do
             {
                 Console.SetCursorPosition(0,0);
-                DisplaySeatLayoutBoeing737(row, seat);
+                DisplaySeatLayoutAirbus(row, seat);
 
                 key = Console.ReadKey(true);
 
@@ -122,7 +122,7 @@ namespace Project_B.Presentation
 
         public static void ReserveSeat(int row, int seat)
         {
-            Seat chosenSeat = seats[row, seat];
+            AirbusSeat chosenSeat = airbusseats[row, seat];
             if (chosenSeat.IsReserved)
             {
                 Console.WriteLine("Deze stoel is al gereserveerd. Kies een andere stoel.");
@@ -180,7 +180,7 @@ namespace Project_B.Presentation
             }
         }
 
-        public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
+        public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
 
@@ -224,7 +224,7 @@ namespace Project_B.Presentation
                         Console.ForegroundColor = ConsoleColor.Cyan;
                     }
 
-                    if (seats[row, seat].IsReserved)
+                    if (airbusseats[row, seat].IsReserved)
                     {
                         Console.Write("X");
                     }
