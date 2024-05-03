@@ -11,23 +11,31 @@ namespace Project_B.Presentation
     public void lay_out()
     {
     for (int i = 0; i < 50; i++)
+    {
+        for (int j = 0; j < 9; j++)
         {
-            for (int j = 0; j < 9; j++)
+            if (i < 2) // If the current row is one of the first two rows, set the class to "Club Class"
             {
-                if (j == 0 || j == 5) 
-                {
-                    airbusseats[i, j] = new AirbusSeat { Class = "Economy", Price = 125m, IsReserved = false };
-                }
-                else
-                {
-                    airbusseats[i, j] = new AirbusSeat { Class = "Economy", Price = 100m, IsReserved = false };
-                }
-                 if (i == 15 || i == 16) 
-                {
-                    airbusseats[i, j] = new AirbusSeat { Class = "Business", Price = 200m, IsReserved = false };
-                }
+                airbusseats[i, j] = new AirbusSeat { Class = "Club Class", Price = 200m, IsReserved = false };
+            }
+            else if (i == 3 || i == 13 || i == 35) // If the current row is the 4th, 14th, or 36th row, set the class to "Seat with Extra Space"
+            {
+                airbusseats[i, j] = new AirbusSeat { Class = "Seat with Extra Space", Price = 200m, IsReserved = false };
+            }
+            else if (i >= 4 && i <= 8) // If the current row is one of the rows 5-9, set the class to "Deluxe"
+            {
+                airbusseats[i, j] = new AirbusSeat { Class = "Deluxe", Price = 200m, IsReserved = false };
+            }
+            if (i >= 43 && i <= 48 && (j <= 1 || j >= 7)) // If the current row is one of the rows 44-49 and the seat is one of the left 2 or right 2, set the class to "Duo Combo Seat"
+            {
+                airbusseats[i, j] = new AirbusSeat { Class = "Duo Combo Seat", Price = 200m, IsReserved = false };
+            }
+            else
+            {
+                airbusseats[i, j] = new AirbusSeat { Class = "Business", Price = 200m, IsReserved = false };
             }
         }
+    }
     }
     public void ToonMenu()
     {
@@ -105,13 +113,13 @@ namespace Project_B.Presentation
                         row = Math.Max(0, row - 1);
                         break;
                     case ConsoleKey.DownArrow:
-                        row = Math.Min(32, row + 1);
+                        row = Math.Min(50, row + 1);
                         break;
                     case ConsoleKey.LeftArrow:
                         seat = Math.Max(0, seat - 1);
                         break;
                     case ConsoleKey.RightArrow:
-                        seat = Math.Min(5, seat + 1);
+                        seat = Math.Min(8, seat + 1);
                         break;
                     case ConsoleKey.Enter:
                         ReserveSeat(row, seat);
@@ -182,7 +190,7 @@ namespace Project_B.Presentation
 
         public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            
 
             Console.WriteLine("Stoelindeling:");
             Console.WriteLine("Rij   Stoelen");
@@ -195,15 +203,22 @@ namespace Project_B.Presentation
                     Console.Write(" ");
                 }
 
-                if (row == 15 || row == 16)
+                if (row < 2) // If the current row is one of the first two rows, change the color to gray
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
 
+                if (row == 3 || row == 13 || row == 35) // If the current row is the fourth row, change the color to magenta
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
+                
+
+                if (row >= 4 && row <= 8) // If the current row is one of the rows 5-9, change the color to dark magenta
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                }
+                
                 Console.Write($"{row + 1}    ");
 
                 if (row == 2 || row == 10 || row == 11 || row == 12 || row == 33 || row == 34) // If the current row is the third row, skip the iteration
@@ -233,6 +248,14 @@ namespace Project_B.Presentation
                         }
                     }
 
+                    if (row >= 43 && row <= 48) // If the current row is one of the rows 44-49
+                    {
+                        if (seat <= 1 || seat >= 7) // If the seat is one of the left 2 or right 2, change the color to blue
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                        }
+                    }
+
                     if (row == 49 && (seat < 3 || seat > 5)) // If the current row is the 50th row and the seat is one of the first 3 or last 3, skip the iteration
                     {
                         Console.Write("  ");
@@ -243,15 +266,6 @@ namespace Project_B.Presentation
                     {
                         Console.BackgroundColor = ConsoleColor.White;
                         Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    if (row == 15 || row == 16)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
                     }
 
                     if (airbusseats[row, seat].IsReserved)
