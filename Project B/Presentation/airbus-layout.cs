@@ -188,7 +188,7 @@ namespace Project_B.Presentation
             Console.WriteLine("Rij   Stoelen");
             Console.WriteLine("      A B  C D  E F");
 
-            for (int row = 0; row < 9; row++)
+            for (int row = 0; row < 50; row++)
             {
                 if (row < 9)
                 {
