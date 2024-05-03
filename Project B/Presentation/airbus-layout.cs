@@ -186,7 +186,7 @@ namespace Project_B.Presentation
 
             Console.WriteLine("Stoelindeling:");
             Console.WriteLine("Rij   Stoelen");
-            Console.WriteLine("      A B  C D  E F");
+            Console.WriteLine("      A B C  D E F  G H I");
 
             for (int row = 0; row < 50; row++)
             {
@@ -206,8 +206,39 @@ namespace Project_B.Presentation
 
                 Console.Write($"{row + 1}    ");
 
-                for (int seat = 0; seat < 6; seat++)
+                if (row == 2 || row == 10 || row == 11 || row == 12 || row == 33 || row == 34) // If the current row is the third row, skip the iteration
                 {
+                    Console.WriteLine();
+                    continue;
+                }
+
+                for (int seat = 0; seat < 9; seat++) // Adjusted to 9 seats
+                {
+                    if ((row >= 43 && row <= 48) && (seat == 2 || seat == 6)) // If the current row is one of the rows 44-48 and the seat is the 3rd or 7th, skip the iteration
+                    {
+                        Console.Write("  ");
+                        continue;
+                    }
+                    if (row < 2 && (seat == 0 || seat == 8)) // If the current row is one of the first two rows and the seat is the first or last, skip the iteration
+                    {
+                        Console.Write("  ");
+                        continue;
+                    }
+                    if (row == 9) // If the current row is the 10th row
+                    {
+                        if (seat < 3 || seat > 5) // If the seat is not one of the 4th, 5th, or 6th, skip the iteration
+                        {
+                            Console.Write("  ");
+                            continue;
+                        }
+                    }
+
+                    if (row == 49 && (seat < 3 || seat > 5)) // If the current row is the 50th row and the seat is one of the first 3 or last 3, skip the iteration
+                    {
+                        Console.Write("  ");
+                        continue;
+                    }
+
                     if (row == selectedRow && seat == selectedSeat)
                     {
                         Console.BackgroundColor = ConsoleColor.White;
@@ -232,7 +263,7 @@ namespace Project_B.Presentation
                         Console.Write("O");
                     }
 
-                    if (seat == 1 || seat == 3) // Add a space after the 2nd and 4th seats
+                    if (seat == 2 || seat == 5) // Add a space after the 3rd and 6th seats
                     {
                         Console.Write("  ");
                     }
