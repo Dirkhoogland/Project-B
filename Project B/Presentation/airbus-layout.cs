@@ -10,9 +10,9 @@ namespace Project_B.Presentation
     static AirbusSeat [,] airbusseats = new AirbusSeat[50, 9]; 
     public void lay_out()
     {
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 50; i++)
         {
-            for (int j = 0; j < 50; j++)
+            for (int j = 0; j < 9; j++)
             {
                 if (j == 0 || j == 5) 
                 {
@@ -186,7 +186,7 @@ namespace Project_B.Presentation
 
             Console.WriteLine("Stoelindeling:");
             Console.WriteLine("Rij   Stoelen");
-            Console.WriteLine("      A B C  D E F");
+            Console.WriteLine("      A B  C D  E F");
 
             for (int row = 0; row < 9; row++)
             {
@@ -203,18 +203,17 @@ namespace Project_B.Presentation
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
                 }
-            
 
                 Console.Write($"{row + 1}    ");
 
-                for (int seat = 0; seat < 50; seat++)
+                for (int seat = 0; seat < 6; seat++)
                 {
                     if (row == selectedRow && seat == selectedSeat)
                     {
                         Console.BackgroundColor = ConsoleColor.White;
                         Console.ForegroundColor = ConsoleColor.Black;
                     }
-                    
+
                     if (row == 15 || row == 16)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -233,7 +232,7 @@ namespace Project_B.Presentation
                         Console.Write("O");
                     }
 
-                    if (seat == 2)
+                    if (seat == 1 || seat == 3) // Add a space after the 2nd and 4th seats
                     {
                         Console.Write("  ");
                     }
