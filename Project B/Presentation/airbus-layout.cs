@@ -10,9 +10,9 @@ namespace Project_B.Presentation
     static AirbusSeat [,] airbusseats = new AirbusSeat[50, 9]; 
     public void lay_out()
     {
-    for (int i = 0; i < 50; i++)
+    for (int i = 0; i < 9; i++)
         {
-            for (int j = 0; j < 9; j++)
+            for (int j = 0; j < 50; j++)
             {
                 if (j == 0 || j == 5) 
                 {
@@ -188,7 +188,7 @@ namespace Project_B.Presentation
             Console.WriteLine("Rij   Stoelen");
             Console.WriteLine("      A B C  D E F");
 
-            for (int row = 0; row < 33; row++)
+            for (int row = 0; row < 9; row++)
             {
                 if (row < 9)
                 {
@@ -207,7 +207,7 @@ namespace Project_B.Presentation
 
                 Console.Write($"{row + 1}    ");
 
-                for (int seat = 0; seat < 6; seat++)
+                for (int seat = 0; seat < 50; seat++)
                 {
                     if (row == selectedRow && seat == selectedSeat)
                     {
