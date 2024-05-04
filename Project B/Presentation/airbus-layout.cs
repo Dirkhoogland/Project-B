@@ -30,10 +30,7 @@ namespace Project_B.Presentation
             {
                 airbusseats[i, j] = new AirbusSeat { Class = "Duo Combo Seat", Price = 200m, IsReserved = false };
             }
-            else
-            {
-                airbusseats[i, j] = new AirbusSeat { Class = "Business", Price = 200m, IsReserved = false };
-            }
+            
         }
     }
     }
@@ -254,6 +251,31 @@ namespace Project_B.Presentation
                         {
                             Console.ForegroundColor = ConsoleColor.Blue;
                         }
+                    }
+
+                    if (row == 3) // If the current row is the fourth row, change the color to magenta
+                    {
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                    }
+
+                    if (row == 13) // If the current row is the fourth row, change the color to magenta
+                    {
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                    }
+
+                    if (row == 35) // If the current row is the fourth row, change the color to magenta
+                    {
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                    }
+
+                    if (row >= 4 && row <= 8) // If the current row is between 5 and 9, change the color to dark magenta
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    }
+
+                    if (row < 2) // If the current row is either 1 or 2, change the color to gray
+                    {
+                        Console.ForegroundColor = ConsoleColor.Gray;
                     }
 
                     if (row == 49 && (seat < 3 || seat > 5)) // If the current row is the 50th row and the seat is one of the first 3 or last 3, skip the iteration
