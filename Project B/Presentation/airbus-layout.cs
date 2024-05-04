@@ -14,6 +14,8 @@ namespace Project_B.Presentation
     {
         for (int j = 0; j < 9; j++)
         {
+            airbusseats[i, j] = new AirbusSeat { Class = "Business", Price = 200m, IsReserved = false };
+            
             if (i < 2) // If the current row is one of the first two rows, set the class to "Club Class"
             {
                 airbusseats[i, j] = new AirbusSeat { Class = "Club Class", Price = 200m, IsReserved = false };
