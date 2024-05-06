@@ -78,8 +78,8 @@ namespace Project_B.DataAcces
                             int UserId = rdr.GetInt32(7);
                             string Gate = rdr.GetString(8);
                             string Departuretime = rdr.GetString(9);
-                            string Origin = rdr.GetString(10);
-                            string Destination = rdr.GetString(11);
+                            string Destination = rdr.GetString(10);
+                            string Origin = rdr.GetString(11);
                             string Extranotes = rdr.GetString(12);
                             // puts it into the list to then post to the logical side
                             Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate,Departuretime, Origin, Destination, Extranotes);
