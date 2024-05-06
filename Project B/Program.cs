@@ -12,7 +12,6 @@ namespace Project_B
             public static void Main(string[] args)
             {
                 DataAccess.Database();
-                DataAccess.DropStatusColumn();
                 string[] menuItemsGuest = { "Login/Register", "Exit" };
                 string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
                 string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Logout", "Exit" };

@@ -20,25 +20,6 @@ namespace Project_B.DataAcces
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
          }
-public static void DropStatusColumn()
-{
-    string sqlDropColumn = "ALTER TABLE Flights DROP COLUMN Status";
-    try
-    {
-        using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
-        {
-            c.Open();
-            using (SQLiteCommand cmd = new SQLiteCommand(sqlDropColumn, c))
-            {
-                cmd.ExecuteNonQuery();
-            }
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("An error occurred: " + ex.Message);
-    }
-}
         static void CreateTable()
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";

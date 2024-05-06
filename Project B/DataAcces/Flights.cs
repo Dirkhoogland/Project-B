@@ -592,9 +592,11 @@ namespace Project_B.DataAcces
         public static void CreateFlightBoeing737()
         {
             Random random = new Random();
+            DateTime now = DateTime.Now.AddHours(random.Next(1, 24));
+            DateTime departureTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             Flight flight = new Flight
             {
-                DepartureTime = DateTime.Now.AddHours(random.Next(1, 24)),
+                DepartureTime = departureTime,
                 Terminal = random.Next(1, 4).ToString(),
                 FlightNumber = random.Next(1000, 9999).ToString(),
                 AircraftType = "Boeing 737",
@@ -610,9 +612,11 @@ namespace Project_B.DataAcces
         public static void CreateFlightBoeing787()
         {
             Random random = new Random();
+            DateTime now = DateTime.Now.AddHours(random.Next(1, 24));
+            DateTime departureTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             Flight flight = new Flight
             {
-                DepartureTime = DateTime.Now.AddHours(random.Next(1, 24)),
+                DepartureTime = departureTime,
                 Terminal = random.Next(1, 4).ToString(),
                 FlightNumber = random.Next(1000, 9999).ToString(),
                 AircraftType = "Boeing 787",
@@ -628,9 +632,11 @@ namespace Project_B.DataAcces
         public static void CreateFlightAirbus330()
         {
             Random random = new Random();
+            DateTime now = DateTime.Now.AddHours(random.Next(1, 24));
+            DateTime departureTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
             Flight flight = new Flight
             {
-                DepartureTime = DateTime.Now.AddHours(random.Next(1, 24)),
+                DepartureTime = departureTime,
                 Terminal = random.Next(1, 4).ToString(),
                 FlightNumber = random.Next(1000, 9999).ToString(),
                 AircraftType = "Airbus 330",
