@@ -13,7 +13,7 @@ namespace Project_Btest
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
         }
-        public void CreateFlightsTable()
+        public static void CreateFlightsTable()
         {
             try
             {
@@ -50,6 +50,7 @@ namespace Project_Btest
         }
         public void DeleteRow()
         {
+            
             try
             {
                 string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -71,6 +72,7 @@ namespace Project_Btest
 
         public static bool CheckIfTableExists()
         {
+            CreateFlightsTable();
             string tablename = "";
             try
             {
@@ -110,7 +112,7 @@ namespace Project_Btest
         {
             // Act
             DeleteRow();
-            DataAccess.CreateFlightsTable();
+            CreateFlightsTable();
 
             // Assert
             var tableExists = CheckIfTableExists();
@@ -121,6 +123,7 @@ namespace Project_Btest
         [TestMethod]
         public void TestCreateFlights()
         {
+            CreateFlightsTable();
             // Act
             DeleteRow();
             Flight.CreateTestFlights();
@@ -136,7 +139,7 @@ namespace Project_Btest
         {
             // Arrange
             DeleteRow();
-            DataAccess.CreateFlightsTable();
+            CreateFlightsTable();
             Flight.CreateTestFlights();
 
             // Act
@@ -152,7 +155,7 @@ namespace Project_Btest
         {
             // Arrange
             DeleteRow();
-            DataAccess.CreateFlightsTable();
+            CreateFlightsTable();
             Flight.CreateTestFlights();
 
             // Act
@@ -169,7 +172,7 @@ namespace Project_Btest
         {
             // Arrange
             DeleteRow();
-            DataAccess.CreateFlightsTable();
+            CreateFlightsTable();
             Flight.CreateSetFlight();
             var input = new StringReader("yes\nLondon\nyes\n2024-12-31\nyes\nNew South\n");
             Console.SetIn(input);

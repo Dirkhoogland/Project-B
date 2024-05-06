@@ -3,13 +3,14 @@ namespace Project_B.DataAcces;
 
 public class FlightsPresentation
 {
-    public void ShowFlights()
+    public List<Flight> ShowFlights()
     {
         var flights = Flight.GetFlights();
         foreach (var flight in flights)
         {
             Console.WriteLine($"FlightNumber: {flight.FlightNumber}, DepartureTime: {flight.DepartureTime}, Destination: {flight.Destination}, Origin: {flight.Origin}");
         }
+        return flights;
     }
 
     public void CreateFlights()
