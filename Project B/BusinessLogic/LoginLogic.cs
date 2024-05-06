@@ -19,7 +19,7 @@ namespace Project_B.BusinessLogic
 
         public static CurrentUser Guestlogin(string Email)
         {
-            CurrentUser user = new(0, Email, "Guest", "Guest", true);
+            CurrentUser user = new(0, Email, "Guest", "Guest", 0, true);
             return user;
         }
     }

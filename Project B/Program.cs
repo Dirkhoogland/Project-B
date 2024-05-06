@@ -26,8 +26,7 @@ namespace Project_B
                 string removeFiltersText = " Remove Filters ";
                 string backText = " Back ";
                 List<string> options = new List<string> { filterFlightsText };
-                List<string> adminNames = new List<string> { "Dirk", "Berat", "Mitchel", "Talha", "Badr" };
-
+                
                 while (true)
                 {
                     Console.Clear();
@@ -85,7 +84,7 @@ namespace Project_B
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
-                                    if (adminNames.Contains(currentuser.Name))
+                                    if (currentuser.rank == 1)
                                     {
                                         menuItems = menuItemsAdmin;
                                     }
@@ -208,7 +207,7 @@ namespace Project_B
                                 }
 
                                 // After the while loop, check if the user is an admin
-                                if (adminNames.Contains(currentuser.Name))
+                                if (currentuser.rank == 1)
                                 {
                                     menuItems = menuItemsAdmin;
                                 }
