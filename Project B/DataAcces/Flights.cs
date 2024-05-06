@@ -21,7 +21,6 @@ namespace Project_B.DataAcces
         public string Destination { get; set; }
         public string Origin { get; set; }
         public string Airline { get; set; }
-        public string Status { get; set; }
         public string Gate { get; set; }
         public int FlightID { get; set; }
         public Seat? PlaneLayout { get; set; }
@@ -72,7 +71,6 @@ namespace Project_B.DataAcces
                         Destination = sqlite_datareader["Destination"].ToString(),
                         Origin = sqlite_datareader["Origin"].ToString(),
                         Airline = sqlite_datareader["Airline"].ToString(),
-                        Status = sqlite_datareader["Status"].ToString(),
                         Gate = sqlite_datareader["Gate"].ToString()
                     };
                     flights.Add(flight);
@@ -109,7 +107,6 @@ namespace Project_B.DataAcces
                         Destination = sqlite_datareader["Destination"].ToString(),
                         Origin = sqlite_datareader["Origin"].ToString(),
                         Airline = sqlite_datareader["Airline"].ToString(),
-                        Status = sqlite_datareader["Status"].ToString(),
                         Gate = sqlite_datareader["Gate"].ToString()
                     };
                     flights.Add(flight);
@@ -125,7 +122,7 @@ namespace Project_B.DataAcces
         
         public override string ToString()
         {
-            return $"Time: {DepartureTime:dd/MM/yyyy HH:mm}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Status: {Status}, Terminal: {Terminal}";
+            return $"Time: {DepartureTime:dd/MM/yyyy HH:mm}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Terminal: {Terminal}";
         }
         public static void AddFlight(Flight flight)
         {
@@ -133,7 +130,7 @@ namespace Project_B.DataAcces
             {
                 SQLiteCommand sqlite_cmd;
                 sqlite_cmd = sqlite_conn.CreateCommand();
-                sqlite_cmd.CommandText = "INSERT INTO Flights (DepartureTime, Terminal, FlightNumber, AircraftType, Seats, AvailableSeats, Destination, Origin, Airline, Status, Gate) VALUES (@DepartureTime, @Terminal, @FlightNumber, @AircraftType, @Seats, @AvailableSeats, @Destination, @Origin, @Airline, @Status, @Gate)";
+                sqlite_cmd.CommandText = "INSERT INTO Flights (DepartureTime, Terminal, FlightNumber, AircraftType, Seats, AvailableSeats, Destination, Origin, Airline, Gate) VALUES (@DepartureTime, @Terminal, @FlightNumber, @AircraftType, @Seats, @AvailableSeats, @Destination, @Origin, @Airline, @Gate)";
                 sqlite_cmd.Parameters.AddWithValue("@DepartureTime", flight.DepartureTime);
                 sqlite_cmd.Parameters.AddWithValue("@Terminal", flight.Terminal);
                 sqlite_cmd.Parameters.AddWithValue("@FlightNumber", flight.FlightNumber);
@@ -143,7 +140,6 @@ namespace Project_B.DataAcces
                 sqlite_cmd.Parameters.AddWithValue("@Destination", flight.Destination);
                 sqlite_cmd.Parameters.AddWithValue("@Origin", flight.Origin);
                 sqlite_cmd.Parameters.AddWithValue("@Airline", flight.Airline);
-                sqlite_cmd.Parameters.AddWithValue("@Status", flight.Status);
                 sqlite_cmd.Parameters.AddWithValue("@Gate", flight.Gate);
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_conn.Close();
@@ -161,7 +157,7 @@ namespace Project_B.DataAcces
                 connection.Open();
 
                 // Create a new command
-                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Status = @Status, Gate = @Gate WHERE FlightID = @FlightID", connection))
+                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Gate = @Gate WHERE FlightID = @FlightID", connection))
                 {
                     // Add the parameters
                     command.Parameters.AddWithValue("@DepartureTime", flightToUpdate.DepartureTime);
@@ -173,7 +169,6 @@ namespace Project_B.DataAcces
                     command.Parameters.AddWithValue("@Destination", flightToUpdate.Destination);
                     command.Parameters.AddWithValue("@Origin", flightToUpdate.Origin);
                     command.Parameters.AddWithValue("@Airline", flightToUpdate.Airline);
-                    command.Parameters.AddWithValue("@Status", flightToUpdate.Status);
                     command.Parameters.AddWithValue("@Gate", flightToUpdate.Gate);
                     command.Parameters.AddWithValue("@FlightID", flightToUpdate.FlightId);
 
@@ -241,7 +236,7 @@ namespace Project_B.DataAcces
         }
         public string ToAdminString()
         {
-            return $"Flight Number: {FlightNumber}, Destination: {Destination}, Origin: {Origin}, Departure Time: {DepartureTime}, Status: {Status}, Terminal: {Terminal}, Gate: {Gate}, Aircraft Type: {AircraftType}, Airline: {Airline}";
+            return $"Flight Number: {FlightNumber}, Destination: {Destination}, Origin: {Origin}, Departure Time: {DepartureTime}, Terminal: {Terminal}, Gate: {Gate}, Aircraft Type: {AircraftType}, Airline: {Airline}";
         }
         public static void AdminUpdateFlight()
         {
@@ -298,7 +293,7 @@ namespace Project_B.DataAcces
             string originalFlightInfo = flightToUpdate.ToAdminString();
 
             // List of properties to update
-            string[] properties = { "Flight Number", "Destination", "Origin", "Departure Time", "Status", "Terminal", "Gate", "Aircraft Type", "Airline" };
+            string[] properties = { "Flight Number", "Destination", "Origin", "Departure Time", "Terminal", "Gate", "Aircraft Type", "Airline" };
             foreach (string property in properties)
             {
                 string[] updateOptions = { "Yes", "No" };
@@ -430,49 +425,6 @@ namespace Project_B.DataAcces
                             }
                             flightToUpdate.DepartureTime = departureTime;
                             break;
-                        case "Status":
-                            // Update status
-                            string[] statusOptions = { "Scheduled", "OutGate", "InAir", "Landed", "InGate", "Cancelled", "Delayed", "Exit" };
-                            int statusIndex = 0;
-                            Console.WriteLine("Select new status: ");
-                            foreach (var option in statusOptions)
-                            {
-                                Console.WriteLine(option);
-                            }
-                            while (true)
-                            {
-                                var key = Console.ReadKey(true).Key;
-                                if (key == ConsoleKey.UpArrow)
-                                {
-                                    statusIndex = (statusIndex - 1 + statusOptions.Length) % statusOptions.Length;
-                                }
-                                else if (key == ConsoleKey.DownArrow)
-                                {
-                                    statusIndex = (statusIndex + 1) % statusOptions.Length;
-                                }
-                                else if (key == ConsoleKey.Enter)
-                                {
-                                    if (statusOptions[statusIndex] == "Exit")
-                                    {
-                                        return;
-                                    }
-                                    break;
-                                }
-                                Console.CursorTop = Console.CursorTop - statusOptions.Length;
-                                for (int i = 0; i < statusOptions.Length; i++)
-                                {
-                                    if (i == statusIndex)
-                                    {
-                                        Console.BackgroundColor = ConsoleColor.Gray;
-                                        Console.ForegroundColor = ConsoleColor.Black;
-                                    }
-                                    Console.WriteLine(statusOptions[i]);
-                                    Console.ResetColor();
-                                }
-                            }
-                            flightToUpdate.Status = statusOptions[statusIndex];
-                            break;
-
                         case "Terminal":
                             // Update terminal
                             Console.Write("Enter new terminal (1-4): ");
@@ -651,7 +603,6 @@ namespace Project_B.DataAcces
                 Destination = "Berlin",
                 Origin = "Amsterdam",
                 Airline = "New South",
-                Status = "On time",
                 Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
@@ -670,7 +621,6 @@ namespace Project_B.DataAcces
                 Destination = "Paris",
                 Origin = "Amsterdam",
                 Airline = "New South",
-                Status = "On time",
                 Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
@@ -689,7 +639,6 @@ namespace Project_B.DataAcces
                 Destination = "London",
                 Origin = "Amsterdam",
                 Airline = "New South",
-                Status = "On time",
                 Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
@@ -707,7 +656,6 @@ namespace Project_B.DataAcces
                 Destination = "London",
                 Origin = "Amsterdam",
                 Airline = "New South",
-                Status = "On time",
                 Gate = "1"
             };
             AddFlight(flight);
@@ -977,55 +925,6 @@ namespace Project_B.DataAcces
                 Console.Write("Invalid input. Please enter a date and time in the format dd/MM/yyyy HH:mm: ");
             }
 
-            string[] statusOptions = { "Scheduled", "OutGate", "InAir", "Landed", "InGate", "Cancelled", "Delayed", "Exit" };
-            int statusIndex = 0;
-
-            Console.WriteLine("Select status: ");
-
-            foreach (var option in statusOptions)
-            {
-                Console.WriteLine(option);
-            }
-
-            while (true)
-            {
-                var key = Console.ReadKey(true).Key;
-
-                if (key == ConsoleKey.UpArrow)
-                {
-                    statusIndex = (statusIndex - 1 + statusOptions.Length) % statusOptions.Length;
-                }
-                else if (key == ConsoleKey.DownArrow)
-                {
-                    statusIndex = (statusIndex + 1) % statusOptions.Length;
-                }
-                else if (key == ConsoleKey.Enter)
-                {
-                    if (statusOptions[statusIndex] == "Exit")
-                    {
-                        return;
-                    }
-                    break;
-                }
-
-                Console.CursorTop = Console.CursorTop - statusOptions.Length;
-                for (int i = 0; i < statusOptions.Length; i++)
-                {
-                    if (i == statusIndex)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine(statusOptions[i]);
-
-                    Console.ResetColor();
-                }
-            }
-
-            string status = statusOptions[statusIndex];
-
-
             Console.Write("Enter terminal (1-4): ");
             string terminalString = Console.ReadLine();
             if (terminalString?.ToLower() == "exit") return;
@@ -1118,7 +1017,6 @@ namespace Project_B.DataAcces
                 Destination = destination,
                 Origin = origin,
                 DepartureTime = departureTime,
-                Status = status,
                 Terminal = terminal.ToString(),
                 AircraftType = aircraftType,
                 Gate = gate.ToString(),
