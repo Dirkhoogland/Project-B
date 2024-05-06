@@ -276,7 +276,18 @@ for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
                                 }
                             case "Flight History":
                                 Console.Clear();
-                                // Call your method to view flight history
+                                // Check if a user is logged in
+                                if (currentuser != null)
+                                {
+                                    // Call the method with the current user
+                                    Userhistory.presentuserhistory(currentuser);
+                                    Console.ReadLine();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("No user is currently logged in.");
+                                    Console.ReadLine();
+                                }
                                 break;
                             case "Update Flight":
                                 Console.Clear();
