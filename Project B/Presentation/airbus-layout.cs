@@ -39,7 +39,7 @@ namespace Project_B.Presentation
     public void ToonMenu()
     {
         int currentOption = 0;
-        string[] menuOptions = new string[] { "Reserveer een stoel", "Bekijk de stoelindeling", "Verlaat het programma" };
+        string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart" };
 
         ConsoleKeyInfo key;
         Console.Clear();
@@ -47,8 +47,8 @@ namespace Project_B.Presentation
         do
         {
             Console.SetCursorPosition(0, 0);
-            Console.WriteLine("Welkom bij het stoelreserveringssysteem voor de airbus!");
-            Console.WriteLine("Beschikbare opties:");
+            Console.WriteLine("Welcome to the Airbus seat reservation system!");
+            Console.WriteLine("Available options:");
 
             for (int i = 0; i < menuOptions.Length; i++)
             {
@@ -84,7 +84,7 @@ namespace Project_B.Presentation
                 DisplaySeatLayoutAirbus();
                 break;
             case 2:
-                Console.WriteLine("Bedankt voor het gebruik van het stoelreserveringssysteem. Tot ziens!");
+                Console.WriteLine("Thank you for using the seat reservation system. Bye!");
                 return;
         }
 
@@ -132,16 +132,16 @@ namespace Project_B.Presentation
             AirbusSeat chosenSeat = airbusseats[row, seat];
             if (chosenSeat.IsReserved)
             {
-                Console.WriteLine("Deze stoel is al gereserveerd. Kies een andere stoel.");
+                Console.WriteLine("This seat has already been reserved. Choose another seat..");
                 return;
             }
 
-            Console.WriteLine($"Je hebt deze stoel gekozen: {row + 1}{(char)(seat + 'A')}. Klasse: {chosenSeat.Class}, Prijs: {chosenSeat.Price}");
+            Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. CLass: {chosenSeat.Class}, Price: {chosenSeat.Price}");
 
             int currentOption = 0;
-            string[] yesNoOptions = new string[] { "ja", "nee" };
+            string[] yesNoOptions = new string[] { "yes", "no" };
 
-            Console.WriteLine("Wil je deze stoel selecteren?");
+            Console.WriteLine("Do you want to select this seat?");
             Console.WriteLine();
             Console.WriteLine();
             ConsoleKeyInfo key;
@@ -179,11 +179,11 @@ namespace Project_B.Presentation
             if (currentOption == 0)
             {
                 chosenSeat.IsReserved = true;
-                Console.WriteLine("Stoel succesvol gereserveerd!");
+                Console.WriteLine("Seat succesfully reserved!");
             }
             else
             {
-                Console.WriteLine("je hebt je stoel gecanceled.");
+                Console.WriteLine("you have cancelled your seat.");
             }
         }
 
@@ -191,8 +191,8 @@ namespace Project_B.Presentation
         {
             
 
-            Console.WriteLine("Stoelindeling:");
-            Console.WriteLine("Rij   Stoelen");
+            Console.WriteLine("Seating plan:");
+            Console.WriteLine("Seats   Row");
             Console.WriteLine("      A B C  D E F  G H I");
 
             for (int row = 0; row < 50; row++)
