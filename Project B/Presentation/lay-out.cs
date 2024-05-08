@@ -173,8 +173,7 @@ namespace Project_B.Presentation
             {
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                Console.WriteLine("Stoel succesvol gereserveerd!");
-                Console.WriteLine("Do you have allergies?? (yes/no)");
+                Console.WriteLine("Do you have allergies? (yes/no)");
                 string? hasAllergies = Console.ReadLine();
 
                 if (hasAllergies?.ToLower() == "yes")

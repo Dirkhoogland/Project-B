@@ -206,6 +206,30 @@ namespace Project_B.DataAcces
                 Flight.CreateFlightAirbus330();
             }
         }
+        public static string GetAircraftType(int flightId)
+        {
+            string aircraftType = null;
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand("SELECT AircraftType FROM Flights WHERE FlightID = @FlightID", c))
+                {
+                    command.Parameters.AddWithValue("@FlightID", flightId);
+
+                    SQLiteDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        aircraftType = reader["AircraftType"].ToString();
+                    }
+                }
+            }
+
+            return aircraftType;
+        }
         // this function reads all data from the users table, its a template to use in other functions
         public static void ReadData()
         {
