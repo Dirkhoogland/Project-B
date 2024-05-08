@@ -233,7 +233,7 @@ namespace Project_B.Presentation
                         Console.Write("  ");
                         continue;
                     }
-                    if (row < 2 && (seat == 0 || seat == 8)) // If the current row is one of the first two rows and the seat is the first or last, skip the iteration
+                    if (row < 2 && (seat == 2 || seat == 7 || seat == 4)) // If the current row is one of the first two rows and the seat is the first or last, skip the iteration
                     {
                         Console.Write("  ");
                         continue;
@@ -270,11 +270,7 @@ namespace Project_B.Presentation
                         Console.ForegroundColor = ConsoleColor.Magenta;
                     }
 
-                    if (row >= 4 && row <= 8) // If the current row is between 5 and 9, change the color to dark magenta
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                    }
-
+                
                     if (row < 2) // If the current row is either 1 or 2, change the color to gray
                     {
                         Console.ForegroundColor = ConsoleColor.Gray;

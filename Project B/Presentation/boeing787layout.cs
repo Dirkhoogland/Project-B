@@ -14,25 +14,19 @@ namespace Project_B.Presentation
     {
         for (int j = 0; j < 9; j++)
         {
-            boeingseats[i, j] = new BoeingSeat { Class = "Business", Price = 200m, IsReserved = false };
-            
-            if (i < 2) // If the current row is one of the first two rows, set the class to "Club Class"
-            {
-                boeingseats[i, j] = new BoeingSeat { Class = "Club Class", Price = 200m, IsReserved = false };
-            }
-            else if (i == 3 || i == 13 || i == 35) // If the current row is the 4th, 14th, or 36th row, set the class to "Seat with Extra Space"
-            {
-                boeingseats[i, j] = new BoeingSeat { Class = "Seat with Extra Space", Price = 200m, IsReserved = false };
-            }
-            else if (i >= 4 && i <= 8) // If the current row is one of the rows 5-9, set the class to "Deluxe"
-            {
-                boeingseats[i, j] = new BoeingSeat { Class = "Deluxe", Price = 200m, IsReserved = false };
-            }
-            if (i >= 43 && i <= 48 && (j <= 1 || j >= 7)) // If the current row is one of the rows 44-49 and the seat is one of the left 2 or right 2, set the class to "Duo Combo Seat"
-            {
-                boeingseats[i, j] = new BoeingSeat { Class = "Duo Combo Seat", Price = 200m, IsReserved = false };
-            }
-            
+            if (j == 0 || j == 8) 
+                {
+                    boeingseats[i, j] = new BoeingSeat { Class = "Economy", Price = 125m, IsReserved = false };
+                }
+                else
+                {
+                    boeingseats[i, j] = new BoeingSeat { Class = "Economy", Price = 100m, IsReserved = false };
+                }
+                if (i < 6) 
+                {
+                    boeingseats[i, j] = new BoeingSeat { Class = "Business", Price = 200m, IsReserved = false };
+                }
+    
         }
     }
     }
@@ -188,82 +182,93 @@ namespace Project_B.Presentation
         }
 
         public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
+{
+    Console.WriteLine("Seating plan:");
+    Console.WriteLine("seats   rows");
+    Console.WriteLine("   A B C   D E F   G H I");
+
+    for (int row = 0; row < 38; row++)
+    {
+        if (row < 6) // If the current row is one of the first six rows, change the color to dark yellow
         {
-            
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        }
+        else if (row >= 15 && row < 22) // If the current row is between 16 and 22, change the color to blue
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+        }
 
-            Console.WriteLine("Seating plan:");
-            Console.WriteLine("seats   rows");
-            Console.WriteLine("     A B C  D E F  G H I");
+        if (row == 3 || row == 26)
+        {
+            Console.WriteLine("\n");
+        }
 
-            for (int row = 0; row < 38; row++)
+        Console.Write($"{row + 1,-3}"); // Adjusted to align the row numbers
+
+        for (int seat = 0; seat < 9; seat++)
+        {
+            if (row < 6) // If the current row is one of the first six rows, change the color to dark yellow
             {
-                
-                if (row == 3)
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+            }
+            else if (row >= 15 && row < 22) // If the current row is between 16 and 22, change the color to blue
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+            }
+            if (row == 22 && seat >= 3 && seat <= 5) 
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+            }
+            if (row == 26 && seat >= 1 && seat <= 7) 
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+            }
+            if (row == 36 || row == 37)
+            {
+                if (seat < 3 || seat > 5)
                 {
-                    Console.WriteLine("\n");
+                    Console.Write("   "); // Adjusted to align the seats
+                    continue;
                 }
+            }
 
-                if (row == 26)
-                {
-                    Console.WriteLine("\n");
-                }
-
-                if (row < 9)
-                {
-                    Console.Write(" ");
-                }
-
-                Console.Write($"{row + 1}   ");
-
-                for (int seat = 0; seat < 9; seat++) // Adjusted to 9 seats
-                {
-                    if (row == 36 || row == 37) // If the current row is the 10th row
-                    {
-                        if (seat < 3 || seat > 5) // If the seat is not one of the 4th, 5th, or 6th, skip the iteration
-                        {
-                            Console.Write("  ");
-                            continue;
-                        }
-                    }
-                    if (row >= 6 && row <= 14)
-                    {
-                        continue;
-                    }
-
-                    if (row == 25) // If the current row is 26, skip the iteration
-                    {
-                        continue;
-                    }
-
-                    if (row == selectedRow && seat == selectedSeat)
-                    {
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    if (boeingseats[row, seat].IsReserved)
-                    {
-                        Console.Write("X");
-                    }
-                    else
-                    {
-                        Console.Write("O");
-                    }
-
-                    if (seat == 2 || seat == 5) // Add a space after the 3rd and 6th seats
+             if (row < 6 && (seat == 0 || seat == 8 || seat == 4)) // If the current row is one of the first two rows and the seat is the first or last, skip the iteration
                     {
                         Console.Write("  ");
-                    }
-                    else
-                    {
-                        Console.Write(" ");
+                        continue;
                     }
 
-                    Console.ResetColor();
-                }
-
-                Console.WriteLine();
+            if (row >= 6 && row <= 14 || row == 25)
+            {
+                continue;
             }
+
+            if (row == selectedRow && seat == selectedSeat)
+            {
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
+
+            if (boeingseats[row, seat].IsReserved)
+            {
+                Console.Write("X ");
+            }
+            else
+            {
+                Console.Write("O ");
+            }
+
+            if (seat == 2 || seat == 5)
+            {
+                Console.Write("  ");
+            }
+
+            Console.ResetColor();
+        }
+        Console.ResetColor();
+        Console.WriteLine();
+    }
+
         }
     }
 }
