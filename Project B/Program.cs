@@ -252,13 +252,15 @@ namespace Project_B
                                 break;
                             case "Users":
                                 isBackSelected = false;
-                                Console.Clear();
+                                string userheader = $"Users";
+                                int userpadding = (Console.WindowWidth - userheader.Length) / 2;
                                 string[] userMenuItems = { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Present user with ID", "Back to previous menu" };
                                 int userMenuIndex = 0;
 
                                 while (!isBackSelected)
                                 {
                                     Console.Clear();
+                                    Console.WriteLine(new string('-', userpadding) + userheader + new string('-', userpadding));
 
                                     for (int i = 0; i < userMenuItems.Length; i++)
                                     {
