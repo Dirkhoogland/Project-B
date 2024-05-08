@@ -8,7 +8,7 @@ namespace Project_B.DataAcces
         public static void Database()
         {
             CreateTable();
-            InsertData();
+            //InsertData();
             //ReadData();
         }
         // this function gets the path to the database for use in this application
@@ -72,6 +72,7 @@ namespace Project_B.DataAcces
                 "Name VARCHAR(255)," +
                 "FlightID INTEGER," +
                 "UserID INTEGER," +
+                "BaggageWeight INTEGER," +
                 "FOREIGN KEY(FlightID) REFERENCES Flights(FlightID)" +
                 "FOREIGN KEY(UserID) REFERENCES Users(ID))";
                 // using statements are used to confine the use of the connection to only this function, so the database remains useable outside of it since its automatially closed and does not remain open on a function when it shouldnt be
