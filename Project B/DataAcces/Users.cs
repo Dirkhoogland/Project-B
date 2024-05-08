@@ -119,7 +119,7 @@ namespace Project_B.DataAcces
                 c.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
                 {
-                    cmd.Parameters.AddWithValue("$ID", id);
+                    cmd.Parameters.AddWithValue("$id", id);
                     using (SQLiteDataReader rdr = cmd.ExecuteReader())
                     {
                         while (rdr.Read())
