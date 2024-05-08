@@ -20,7 +20,6 @@ namespace Project_B.DataAcces
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
          }
-
         static void CreateTable()
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -50,7 +49,6 @@ namespace Project_B.DataAcces
                "Destination VARCHAR(255)," +
                "Origin VARCHAR(255)," +
                "DepartureTime DATETIME," +
-               "Status VARCHAR(255)," +
                "Terminal VARCHAR(255)," +
                "AircraftType VARCHAR(255)," +
                "Gate VARCHAR(255)," +
