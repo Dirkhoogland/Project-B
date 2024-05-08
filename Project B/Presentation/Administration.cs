@@ -29,6 +29,7 @@ namespace Project_B.Presentation
             string userid = Console.ReadLine();
             int Id = Int32.Parse(userid);
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(Id);
+            Console.WriteLine($"Tickets from user: {userid}");
             foreach (Bookinghistory history in userhistory)
             {
                 Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
@@ -40,7 +41,7 @@ namespace Project_B.Presentation
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory();
             foreach (Bookinghistory history in userhistory)
             {
-                Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
+                Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
             }
         }
         
@@ -49,9 +50,10 @@ namespace Project_B.Presentation
             Console.WriteLine("Which flight do you want the tickets of?");
             int flightid = Convert.ToInt32(Console.ReadLine());
             List<Bookinghistory> userhistory = Userhistorylogic.GetflightHistorybyflightid(flightid);
+            Console.WriteLine($"Tickets from flight: {flightid}");
             foreach (Bookinghistory history in userhistory)
             {
-                Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
+                Console.WriteLine($"Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
             }
         }
 
@@ -62,6 +64,7 @@ namespace Project_B.Presentation
             Users user = Adminlogic.getuserbyId(userid);
             string rank = "User";
             if (user.rank == 1) { rank = "Admin"; }
+            Console.WriteLine($"Information of user {userid}");
             Console.WriteLine($"Name: {user.Name}, Email: {user.Email}, Rank: {rank}  ");
         }
 
