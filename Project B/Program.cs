@@ -253,7 +253,7 @@ namespace Project_B
                             case "Users":
                                 isBackSelected = false;
                                 Console.Clear();
-                                string[] userMenuItems = { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Back to previous menu" };
+                                string[] userMenuItems = { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Present user with ID", "Back to previous menu" };
                                 int userMenuIndex = 0;
 
                                 while (!isBackSelected)
@@ -315,6 +315,11 @@ namespace Project_B
                                             case "Present all users from flight":
                                                 Console.Clear();
                                                 Administration.presentallticketsfromflight();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Present user with ID":
+                                                Console.Clear();
+                                                Administration.presentuserwithID();
                                                 Console.ReadKey();
                                                 break;
                                             case "Back to previous menu":
