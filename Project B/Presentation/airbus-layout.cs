@@ -268,6 +268,11 @@ namespace Project_B.Presentation
                         Console.ForegroundColor = ConsoleColor.Magenta;
                     }
 
+                    if (row >= 4 && row <= 8) // If the current row is between 5 and 9, change the color to dark magenta
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    }
+
                     if (row == 13) // If the current row is the fourth row, change the color to magenta
                     {
                         Console.ForegroundColor = ConsoleColor.Magenta;
