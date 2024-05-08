@@ -589,6 +589,12 @@ namespace Project_B.DataAcces
 
             return input;
         }
+        private static List<string> cities = new List<string>()
+        {
+            "London", "Paris", "Berlin", "Rome", "Madrid", "Barcelona", "Amsterdam", "Vienna", "Prague", "Dublin",
+            "Munich", "Venice", "Brussels", "Budapest", "Zurich", "Warsaw", "Copenhagen", "Athens", "Lisbon", "Istanbul"
+        };
+        private static int cityIndex = 0;
         public static void CreateFlightBoeing737()
         {
             Random random = new Random();
@@ -602,12 +608,13 @@ namespace Project_B.DataAcces
                 AircraftType = "Boeing 737",
                 Seats = 186,
                 AvailableSeats = 186,
-                Destination = "Berlin",
+                Destination = cities[cityIndex],
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
+            cityIndex = (cityIndex + 1) % cities.Count;
         }
         public static void CreateFlightBoeing787()
         {
@@ -622,12 +629,13 @@ namespace Project_B.DataAcces
                 AircraftType = "Boeing 787",
                 Seats = 219,
                 AvailableSeats = 219,
-                Destination = "Paris",
+                Destination = cities[cityIndex],
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
+            cityIndex = (cityIndex + 1) % cities.Count;
         }
         public static void CreateFlightAirbus330()
         {
@@ -642,12 +650,13 @@ namespace Project_B.DataAcces
                 AircraftType = "Airbus 330",
                 Seats = 345,
                 AvailableSeats = 345,
-                Destination = "London",
+                Destination = cities[cityIndex],
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = random.Next(1, 24).ToString()
             };
             AddFlight(flight);
+            cityIndex = (cityIndex + 1) % cities.Count;
         }
         public static void CreateSetFlight()
         {
