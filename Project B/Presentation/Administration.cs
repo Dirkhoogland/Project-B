@@ -55,6 +55,16 @@ namespace Project_B.Presentation
             }
         }
 
+        public static void presentuserwithID()
+        {
+            Console.WriteLine("Which user do you want the information of?");
+            int userid = Convert.ToInt32(Console.ReadLine());
+            Users user = Adminlogic.getuserbyId(userid);
+            string rank = "User";
+            if (user.rank == 1) { rank = "Admin"; }
+            Console.WriteLine($"Name: {user.Name}, Email: {user.Email}, Rank: {rank}  ");
+        }
+
 
 
     }

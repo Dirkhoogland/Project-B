@@ -104,7 +104,44 @@ namespace Project_B.DataAcces
             catch(Exception ex) { return null; }
             
 
-        } // removes users from the database with email
+        }
+        public static Users Getuser(int id)
+        {
+            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string sql = @"SELECT * FROM Users WHERE ID = $id LIMIT 1";
+            int Id = 0;
+            int Rank = 0;
+            string UserEmail = string.Empty;
+            string Name = string.Empty;
+            string Password = string.Empty;
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                {
+                    cmd.Parameters.AddWithValue("$ID", id);
+                    using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            Id = rdr.GetInt32(0);
+                            UserEmail = rdr.GetString(1);
+                            Name = rdr.GetString(2);
+                            Password = rdr.GetString(3);
+                            Rank = rdr.GetInt32(4);
+                        }
+                    }
+                }
+            }
+            try
+            {
+                Users user = new Users(Id, UserEmail, Name, Password, Rank);
+                return user;
+            }
+            catch (Exception ex) { return null; }
+
+
+        }// removes users from the database with email
         public static bool RemoveUser(string Email)
         {
             try
