@@ -7,14 +7,31 @@ namespace Project_Btest
 {
     [TestClass]
     public class UsersTest
-    {      
+    {
+        //admin functions
         [TestMethod]
-        static void ReserveSeat()
+        public void GetuserbyIdTest()
         {
-            // lay_out.ReserveSeat();
-            Assert.AreEqual(1, 1);
+            DataAccess.Database();
+
+            Users user = Users.GetuserbyId(1);
+            Assert.AreEqual("Dirk", user.Name);
         }
-      
+        [TestMethod]
+        public void Testrankadmin()
+        {
+            DataAccess.Database();
+            Users user = Users.Getuser("Email");
+            Assert.AreEqual(1, user.rank);
+        }
+        [TestMethod]
+        public void Testrankuser()
+        {
+            DataAccess.Database();
+            Users user = Users.Getuser("Email2");
+            Assert.AreEqual(0, user.rank);
+        }
+        // user functions
         [TestMethod]
         public void TestNewuser()
         {
@@ -59,25 +76,6 @@ namespace Project_Btest
             int lenght = userhistory.Count;
             Assert.AreEqual(5, lenght);    
         }
-        [TestMethod]
-        public void Testrankadmin()
-        {
-            DataAccess.Database();
-            Users user = Users.Getuser("Email");
-            Assert.AreEqual(1, user.rank);
-        }
-        [TestMethod]
-        public void Testrankuser()
-        {
-            DataAccess.Database();
-            Users user = Users.Getuser("Email2");
-            Assert.AreEqual(0, user.rank);
-        }
-        [TestMethod]
-        static void DisplaySeatLayout()
-        {
-            // lay_out.DisplaySeatLayout();
-            Assert.AreEqual(1, 1);
-        }
+
     }   
 }
