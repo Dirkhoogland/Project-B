@@ -218,7 +218,7 @@ namespace Project_B
 
                                 if (isBackSelected)
                                 {
-                                    break; // Break out of the "View Flights" case
+                                    break; // Break out of the case
                                 }
                                 else
                                 {
@@ -251,11 +251,12 @@ namespace Project_B
                                 options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
                                 break;
                             case "Users":
+                                isBackSelected = false;
                                 Console.Clear();
-                                string[] userMenuItems = { "Present all users", "Present all tickets from a user", "Present all tickets", "Back to previous menu" };
+                                string[] userMenuItems = { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Back to previous menu" };
                                 int userMenuIndex = 0;
 
-                                while (true)
+                                while (!isBackSelected)
                                 {
                                     Console.Clear();
 
@@ -297,22 +298,32 @@ namespace Project_B
                                         switch (userMenuItems[userMenuIndex])
                                         {
                                             case "Present all users":
+                                                Console.Clear();
                                                 Administration.presentallusers();
                                                 Console.ReadKey();
                                                 break;
                                             case "Present all tickets from a user":
+                                                Console.Clear();
                                                 Administration.presentallticketsfromuser();
                                                 Console.ReadKey();
                                                 break;
                                             case "Present all tickets":
+                                                Console.Clear();
                                                 Administration.presentalltickets();
                                                 Console.ReadKey();
                                                 break;
+                                            case "Present all users from flight":
+                                                Console.Clear();
+                                                Administration.presentallticketsfromflight();
+                                                Console.ReadKey();
+                                                break;
                                             case "Back to previous menu":
-                                                return;
+                                                isBackSelected = true;
+                                                break;
                                         }
                                     }
                                 }
+                                break;
                         }
                     }
                 }
