@@ -1,10 +1,5 @@
 ﻿using Project_B.BusinessLogic;
 using Project_B.DataAcces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project_B.Presentation
 {
@@ -22,7 +17,7 @@ namespace Project_B.Presentation
                 Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}, Rank: {rank}");
             }
         }
-
+        // gets all tickets from a user and the database and presents them to the screen
         public static void presentallticketsfromuser()
         {
             Console.WriteLine("Fill in user id");
@@ -35,7 +30,7 @@ namespace Project_B.Presentation
                 Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
             }
         }
-
+        // gets all tickets from the database and presents them
         public static void presentalltickets()
         {
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory();
@@ -44,7 +39,7 @@ namespace Project_B.Presentation
                 Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
             }
         }
-        
+        // gets all tickets from a specific flight
         public static void presentallticketsfromflight()
         {
             Console.WriteLine("Which flight do you want the tickets of?");
@@ -56,7 +51,7 @@ namespace Project_B.Presentation
                 Console.WriteLine($"Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
             }
         }
-
+        // gets the user information from one user
         public static void presentuserwithID()
         {
             Console.WriteLine("Which user do you want the information of?");
