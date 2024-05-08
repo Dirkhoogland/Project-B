@@ -81,6 +81,7 @@ namespace Project_B
                         {
                             case "Login/Register":
                                 Console.Clear();
+                                
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
