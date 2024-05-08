@@ -177,6 +177,7 @@ namespace Project_B.DataAcces
                             }
 
                             Flight.CreateFlightBoeing737();
+                            Flight.CreateTestFlights();
                         }
                         }
                     }
