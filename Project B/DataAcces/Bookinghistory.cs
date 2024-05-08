@@ -126,16 +126,17 @@ namespace Project_B.DataAcces
             }
             return Userhistory;
         }
-        public static List<Bookinghistory> GetUserHistory(int flightid)
+        public static List<Bookinghistory> GetflightHistorybyflightid(int flightid)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sql = "SELECT * FROM Tickets";
+            string sql = "SELECT * FROM Tickets WHERE FlightID = $FlightId";
             List<Bookinghistory> Userhistory = new List<Bookinghistory>();
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {   // opens the database connection
                 c.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
                 {
+                    cmd.Parameters.AddWithValue("$FlightId", flightid);
                     using (SQLiteDataReader rdr = cmd.ExecuteReader())
                     {   // this works as a for loop for each row in the database
                         while (rdr.Read())
