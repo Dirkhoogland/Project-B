@@ -192,9 +192,9 @@ namespace Project_B
                                                 {
                                                     Flight selectedFlight = flights[currentOption - 2];
                                                     Console.Clear();
-                                                    Seat seat = new Seat();
-                                                    seat.lay_out();
-                                                    seat.ToonMenu();
+                                                    BoeingSeat boeingseats = new BoeingSeat();
+                                                    boeingseats.lay_out();
+                                                    boeingseats.ToonMenu();
                                                     Console.ReadLine();
                                                 }
                                             }
