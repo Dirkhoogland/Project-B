@@ -14,7 +14,7 @@ namespace Project_B
                 DataAccess.Database();
                 string[] menuItemsGuest = { "Login/Register", "Exit" };
                 string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
-                string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Logout", "Exit" };
+                string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Users", "Logout", "Exit" };
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
@@ -250,6 +250,69 @@ namespace Project_B
                                 options = new List<string> { filterFlightsText, backText }; // reset the options
                                 options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
                                 break;
+                            case "Users":
+                                Console.Clear();
+                                string[] userMenuItems = { "Present all users", "Present all tickets from a user", "Present all tickets", "Back to previous menu" };
+                                int userMenuIndex = 0;
+
+                                while (true)
+                                {
+                                    Console.Clear();
+
+                                    for (int i = 0; i < userMenuItems.Length; i++)
+                                    {
+                                        if (i == userMenuIndex)
+                                        {
+                                            Console.BackgroundColor = ConsoleColor.Gray;
+                                            Console.ForegroundColor = ConsoleColor.Black;
+                                        }
+
+                                        Console.WriteLine(userMenuItems[i]);
+
+                                        Console.ResetColor();
+                                    }
+
+                                    ConsoleKeyInfo newKeyInfo;
+                                    do
+                                    {
+                                        newKeyInfo = Console.ReadKey(true);
+                                    } while (newKeyInfo.Key != ConsoleKey.UpArrow && newKeyInfo.Key != ConsoleKey.DownArrow && newKeyInfo.Key != ConsoleKey.Enter);
+
+                                    if (newKeyInfo.Key == ConsoleKey.UpArrow)
+                                    {
+                                        if (userMenuIndex > 0)
+                                        {
+                                            userMenuIndex--;
+                                        }
+                                    }
+                                    else if (newKeyInfo.Key == ConsoleKey.DownArrow)
+                                    {
+                                        if (userMenuIndex < userMenuItems.Length - 1)
+                                        {
+                                            userMenuIndex++;
+                                        }
+                                    }
+                                    else if (newKeyInfo.Key == ConsoleKey.Enter)
+                                    {
+                                        switch (userMenuItems[userMenuIndex])
+                                        {
+                                            case "Present all users":
+                                                Administration.presentallusers();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Present all tickets from a user":
+                                                Administration.presentallticketsfromuser();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Present all tickets":
+                                                Administration.presentalltickets();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Back to previous menu":
+                                                return;
+                                        }
+                                    }
+                                }
                         }
                     }
                 }
