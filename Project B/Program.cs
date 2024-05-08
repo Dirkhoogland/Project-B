@@ -14,7 +14,7 @@ namespace Project_B
                 DataAccess.Database();
                 string[] menuItemsGuest = { "Login/Register", "Exit" };
                 string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
-                string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Logout", "Exit" };
+                string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Users", "Logout", "Exit" };
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
@@ -26,8 +26,7 @@ namespace Project_B
                 string removeFiltersText = " Remove Filters ";
                 string backText = " Back ";
                 List<string> options = new List<string> { filterFlightsText };
-                List<string> adminNames = new List<string> { "Dirk", "Berat", "Mitchel", "Talha", "Badr" };
-
+                
                 while (true)
                 {
                     Console.Clear();
@@ -82,10 +81,11 @@ namespace Project_B
                         {
                             case "Login/Register":
                                 Console.Clear();
+                                
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
-                                    if (adminNames.Contains(currentuser.Name))
+                                    if (currentuser.rank == 1)
                                     {
                                         menuItems = menuItemsAdmin;
                                     }
@@ -208,7 +208,7 @@ namespace Project_B
                                 }
 
                                 // After the while loop, check if the user is an admin
-                                if (adminNames.Contains(currentuser.Name))
+                                if (currentuser.rank == 1)
                                 {
                                     menuItems = menuItemsAdmin;
                                 }
@@ -219,7 +219,7 @@ namespace Project_B
 
                                 if (isBackSelected)
                                 {
-                                    break; // Break out of the "View Flights" case
+                                    break; // Break out of the case
                                 }
                                 else
                                 {
@@ -250,6 +250,87 @@ namespace Project_B
                                 flights = Flight.GetFlights(); // Refresh the 'flights' list
                                 options = new List<string> { filterFlightsText, backText }; // reset the options
                                 options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
+                                break;
+                            case "Users":
+                                isBackSelected = false;
+                                string userheader = $"Users";
+                                int userpadding = (Console.WindowWidth - userheader.Length) / 2;
+                                string[] userMenuItems = { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Present user with ID", "Back to previous menu" };
+                                int userMenuIndex = 0;
+
+                                while (!isBackSelected)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine(new string('-', userpadding) + userheader + new string('-', userpadding));
+
+                                    for (int i = 0; i < userMenuItems.Length; i++)
+                                    {
+                                        if (i == userMenuIndex)
+                                        {
+                                            Console.BackgroundColor = ConsoleColor.Gray;
+                                            Console.ForegroundColor = ConsoleColor.Black;
+                                        }
+
+                                        Console.WriteLine(userMenuItems[i]);
+
+                                        Console.ResetColor();
+                                    }
+
+                                    ConsoleKeyInfo newKeyInfo;
+                                    do
+                                    {
+                                        newKeyInfo = Console.ReadKey(true);
+                                    } while (newKeyInfo.Key != ConsoleKey.UpArrow && newKeyInfo.Key != ConsoleKey.DownArrow && newKeyInfo.Key != ConsoleKey.Enter);
+
+                                    if (newKeyInfo.Key == ConsoleKey.UpArrow)
+                                    {
+                                        if (userMenuIndex > 0)
+                                        {
+                                            userMenuIndex--;
+                                        }
+                                    }
+                                    else if (newKeyInfo.Key == ConsoleKey.DownArrow)
+                                    {
+                                        if (userMenuIndex < userMenuItems.Length - 1)
+                                        {
+                                            userMenuIndex++;
+                                        }
+                                    }
+                                    else if (newKeyInfo.Key == ConsoleKey.Enter)
+                                    {
+                                        switch (userMenuItems[userMenuIndex])
+                                        {
+                                            case "Present all users":
+                                                Console.Clear();
+                                                Administration.presentallusers();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Present all tickets from a user":
+                                                Console.Clear();
+                                                Administration.presentallticketsfromuser();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Present all tickets":
+                                                Console.Clear();
+                                                Administration.presentalltickets();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Present all users from flight":
+                                                Console.Clear();
+                                                Administration.presentallticketsfromflight();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Present user with ID":
+                                                Console.Clear();
+                                                Administration.presentuserwithID();
+                                                Console.ReadKey();
+                                                break;
+                                            case "Back to previous menu":
+                                                isBackSelected = true;
+                                                break;
+                                        }
+                                    }
+                                }
                                 break;
                         }
                     }
