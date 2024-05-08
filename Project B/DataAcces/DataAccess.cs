@@ -32,7 +32,8 @@ namespace Project_B.DataAcces
                     "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "Email VARCHAR(255)," +
                     "Name VARCHAR(255)," +
-                    "Password VARCHAR(225))";
+                    "Password VARCHAR(225)," +
+                    "Rank INTEGER)";
                 // using statements are used to confine the use of the connection to only this function, so the database remains useable outside of it since its automatially closed and does not remain open on a function when it shouldnt be
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
@@ -116,14 +117,14 @@ namespace Project_B.DataAcces
 
 
                             // an sql query for inserting
-                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email','Dirk', 'Password');";
+                            sql = "INSERT INTO Users(Email, Name, Password, Rank) VALUES('Email','Dirk', 'Password', 1);";
 
                              using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                              {
                                     cmd1.ExecuteNonQuery();
                              }
                             
-                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email1','Berat', 'Password'); ";
+                            sql = "INSERT INTO Users(Email, Name, Password, Rank) VALUES('Email1','Berat', 'Password', 1); ";
 
 
                             using (SQLiteCommand cmd2 = new SQLiteCommand(sql, c))
@@ -131,7 +132,7 @@ namespace Project_B.DataAcces
                                     cmd2.ExecuteNonQuery();
                             }
                             
-                            sql = "INSERT INTO Users(Email, Name, Password) VALUES('Email2','Mitchel', 'Password'); ";
+                            sql = "INSERT INTO Users(Email, Name, Password, Rank) VALUES('Email2','Mitchel', 'Password', 0); ";
                             using (SQLiteCommand cmd3 = new SQLiteCommand(sql, c))
                             {
                                     cmd3.ExecuteNonQuery();
@@ -176,6 +177,7 @@ namespace Project_B.DataAcces
                             }
 
                             Flight.CreateFlightBoeing737();
+                            Flight.CreateTestFlights();
                         }
                         }
                     }
