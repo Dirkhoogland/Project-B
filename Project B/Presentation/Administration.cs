@@ -13,7 +13,7 @@ namespace Project_B.Presentation
 
 
         // prints all users to the console
-        public void presentallusers()
+        public static void presentallusers()
         {
             List<Users> userlist = Adminlogic.Getusersfromdb();
             foreach (Users user in userlist)
@@ -23,7 +23,7 @@ namespace Project_B.Presentation
             }
         }
 
-        public void presentallticketsfromuser()
+        public static void presentallticketsfromuser()
         {
             Console.WriteLine("Fill in user id");
             string userid = Console.ReadLine();
@@ -35,7 +35,7 @@ namespace Project_B.Presentation
             }
         }
 
-        public void presentalltickets()
+        public static void presentalltickets()
         {
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory();
             foreach (Bookinghistory history in userhistory)
