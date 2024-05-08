@@ -14,5 +14,11 @@ namespace Project_B.BusinessLogic
         { List<Users> users = Users.Getusers();
             return users;
         }
+
+        public static Users getuserbyId(int id)
+        {
+            Users user = Users.GetuserbyId(id);
+            return user;
+        }
     }
 }
