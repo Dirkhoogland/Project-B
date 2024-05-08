@@ -105,7 +105,7 @@ namespace Project_B.DataAcces
             
 
         }
-        public static Users Getuser(int id)
+        public static Users GetuserbyId(int id)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
             string sql = @"SELECT * FROM Users WHERE ID = $id LIMIT 1";
