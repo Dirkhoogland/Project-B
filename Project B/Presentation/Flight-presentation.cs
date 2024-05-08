@@ -15,7 +15,7 @@ public class FlightsPresentation
 
     public void CreateFlights()
     {
-        Flight.CreateTestFlights();
+        DataAccess.CreateTestFlights();
         Console.WriteLine("Flights created successfully.");
     }
 

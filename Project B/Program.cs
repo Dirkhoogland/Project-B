@@ -12,6 +12,7 @@ namespace Project_B
             public static void Main(string[] args)
             {
                 DataAccess.Database();
+                
                 string[] menuItemsGuest = { "Login/Register", "Exit" };
                 string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
                 string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Users", "Logout", "Exit" };
@@ -111,6 +112,9 @@ namespace Project_B
                                 options = new List<string> { filterFlightsText, backText }; // reset the options
                                 options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
 
+                                int pageSize = 20; // Number of flights to display at a time
+                                int pageNumber = 0; // Current page number
+
                                 while (true)
                                 {
                                     Console.Clear();
@@ -123,7 +127,10 @@ namespace Project_B
                                     {
                                         options[1] = backText;
                                     }
-                                    for (int i = 0; i < options.Count; i++)
+
+                                    var page = options.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+
+                                    for (int i = 0; i < page.Count; i++)
                                     {
                                         if (i == currentOption)
                                         {
@@ -148,10 +155,13 @@ namespace Project_B
                                         }
                                         else
                                         {
-                                            Console.WriteLine(options[i]);
+                                            Console.WriteLine(page[i]);
                                         }
                                         Console.ResetColor();
                                     }
+
+                                    Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, (options.Count + pageSize - 1) / pageSize);
+                                    Console.WriteLine("Press N for next page, P for previous page, or any other key to return.");
 
                                     ConsoleKeyInfo optionKeyInfo = Console.ReadKey(true);
 
@@ -162,6 +172,18 @@ namespace Project_B
                                             break;
                                         case ConsoleKey.DownArrow:
                                             if (currentOption < options.Count - 1) currentOption++;
+                                            break;
+                                        case ConsoleKey.N:
+                                            if (pageNumber < (options.Count + pageSize - 1) / pageSize - 1)
+                                            {
+                                                pageNumber++;
+                                            }
+                                            break;
+                                        case ConsoleKey.P:
+                                            if (pageNumber > 0)
+                                            {
+                                                pageNumber--;
+                                            }
                                             break;
                                         case ConsoleKey.Enter:
                                             if (currentOption == 0) // Filter Flights

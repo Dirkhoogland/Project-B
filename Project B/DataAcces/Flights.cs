@@ -675,14 +675,7 @@ namespace Project_B.DataAcces
             };
             AddFlight(flight);
         }
-        
-        // functie om een paar vluchten aan te maken voor test
-        public static void CreateTestFlights()
-        {
-            Flight.CreateFlightBoeing737();
-            Flight.CreateFlightBoeing787();
-            Flight.CreateFlightAirbus330();
-        }
+    
         // Filter-systeem:
         // Implementeer een zoekfilter waarmee gebruikers vluchten naar een specifieke locatie kunnen vinden.
         // Implementeer functionaliteit om zoekopdrachten te filteren op bestemming, waardoor gebruikers alle beschikbare vluchten naar die specifieke locatie kunnen bekijken.
