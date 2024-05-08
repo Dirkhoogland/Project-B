@@ -40,10 +40,20 @@ namespace Project_B.Presentation
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory();
             foreach (Bookinghistory history in userhistory)
             {
-                Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
+                Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
             }
         }
         
+        public static void presentallticketsfromflight()
+        {
+            Console.WriteLine("Which flight do you want the tickets of?");
+            int flightid = Convert.ToInt32(Console.ReadLine());
+            List<Bookinghistory> userhistory = Userhistorylogic.GetflightHistorybyflightid(flightid);
+            foreach (Bookinghistory history in userhistory)
+            {
+                Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
+            }
+        }
 
 
 

@@ -16,5 +16,11 @@ namespace Project_B.BusinessLogic
             List<Bookinghistory> userhistory = Bookinghistory.GetUserHistory();
             return userhistory;
         }
+
+        public static List<Bookinghistory> GetflightHistorybyflightid(int id)
+        {
+            List<Bookinghistory> userhistory = Bookinghistory.GetUserHistory(id);
+            return userhistory;
+        }
     }
 }
