@@ -104,7 +104,7 @@ namespace Project_B.Presentation
             }
             Login.LoginLogic(Email, Password);
             Users User = Users.Getuser(Email);
-            CurrentUser currentUser = new CurrentUser(User.Id, User.Email, User.Name, User.Password, true);
+            CurrentUser currentUser = new CurrentUser(User.Id, User.Email, User.Name, User.Password, 0, true);
             return currentUser;
         }
 
@@ -135,7 +135,7 @@ namespace Project_B.Presentation
                 Users User = Users.Getuser(Email);
                 Console.WriteLine($"Successfully logged in user: {User.Name}");
 
-                CurrentUser currentUser = new CurrentUser(User.Id, User.Email, User.Name, User.Password, true);
+                CurrentUser currentUser = new CurrentUser(User.Id, User.Email, User.Name, User.Password, User.rank, true);
                 return currentUser;
             }
         }
