@@ -178,19 +178,34 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
+                string[] options = { "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
+                string selectedOption;
+                string extraNotes = string.Empty;
+
+                do
+                {
+                    selectedOption = Seat.AskQuestionWithMenu(options);
+
+                    if (selectedOption == "Extra Notes (Allergies, Wheelchair, etc.)")
+                    {
+                        if (!string.IsNullOrEmpty(extraNotes))
+                        {
+                            Console.WriteLine($"Your previous notes were: {extraNotes}");
+                        }
+
+                        Console.WriteLine("Please enter your extra notes:");
+                        extraNotes = Console.ReadLine();
+                        // Add extraNotes to the database...
+                    }
+                } while (selectedOption != "Continue");
+
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                Console.WriteLine("Do you have allergies? (yes/no)");
-                string? hasAllergies = Console.ReadLine();
-
-                if (hasAllergies?.ToLower() == "yes")
-                {
-                    Console.WriteLine("Do you need medication for your allergies? (yes/no)");
-                }
+                Console.ReadLine();
             }
             else
             {
-                Console.WriteLine("you have cancelled your seat.");
+                Console.WriteLine("You have cancelled your seat.");
             }
         }
 

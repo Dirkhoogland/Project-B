@@ -171,15 +171,30 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
+                string[] options = { "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
+                string selectedOption;
+                string extraNotes = string.Empty;
+
+                do
+                {
+                    selectedOption = AskQuestionWithMenu(options);
+
+                    if (selectedOption == "Extra Notes (Allergies, Wheelchair, etc.)")
+                    {
+                        if (!string.IsNullOrEmpty(extraNotes))
+                        {
+                            Console.WriteLine($"Your previous notes were: {extraNotes}");
+                        }
+
+                        Console.WriteLine("Please enter your extra notes:");
+                        extraNotes = Console.ReadLine();
+                        // Add extraNotes to the database...
+                    }
+                } while (selectedOption != "Continue");
+
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                Console.WriteLine("Do you have allergies? (yes/no)");
-                string? hasAllergies = Console.ReadLine();
-
-                if (hasAllergies?.ToLower() == "yes")
-                {
-                    Console.WriteLine("Do you need medication for your allergies? (yes/no)");
-                }
+                Console.ReadLine();
             }
             else
             {
@@ -253,6 +268,50 @@ namespace Project_B.Presentation
                 }
 
                 Console.WriteLine();
+            }
+        }
+        public static string AskQuestionWithMenu(string[] options)
+        {
+            int currentOption = 0;
+
+            while (true)
+            {
+                Console.Clear();
+
+                for (int i = 0; i < options.Length; i++)
+                {
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(options[i]);
+
+                    Console.ResetColor();
+                }
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+                if (keyInfo.Key == ConsoleKey.UpArrow)
+                {
+                    if (currentOption > 0)
+                    {
+                        currentOption--;
+                    }
+                }
+                else if (keyInfo.Key == ConsoleKey.DownArrow)
+                {
+                    if (currentOption < options.Length - 1)
+                    {
+                        currentOption++;
+                    }
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    Console.Clear();
+                    return options[currentOption];
+                }
             }
         }
     }
