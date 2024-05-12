@@ -591,7 +591,7 @@ namespace Project_B.DataAcces
         }
         private static List<string> cities = new List<string>()
         {
-            "London", "Paris", "Berlin", "Rome", "Madrid", "Barcelona", "Amsterdam", "Vienna", "Prague", "Dublin",
+            "London", "Paris", "Berlin", "Rome", "Madrid", "Barcelona", "Vienna", "Prague", "Dublin",
             "Munich", "Venice", "Brussels", "Budapest", "Zurich", "Warsaw", "Copenhagen", "Athens", "Lisbon", "Istanbul"
         };
         private static int cityIndex = 0;
