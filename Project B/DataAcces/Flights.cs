@@ -122,7 +122,7 @@ namespace Project_B.DataAcces
         
         public override string ToString()
         {
-            return $"Time: {DepartureTime:dd/MM/yyyy HH:mm}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Terminal: {Terminal}";
+            return $"Time: {DepartureTime:dd/MM/yyyy HH:mm}, Origin: {Origin}, Destination: {Destination}, Flight Number: {FlightNumber}, Gate: {Gate}, Terminal: {Terminal}";
         }
         public static void AddFlight(Flight flight)
         {
@@ -591,7 +591,7 @@ namespace Project_B.DataAcces
         }
         private static List<string> cities = new List<string>()
         {
-            "London", "Paris", "Berlin", "Rome", "Madrid", "Barcelona", "Amsterdam", "Vienna", "Prague", "Dublin",
+            "London", "Paris", "Berlin", "Rome", "Madrid", "Barcelona", "Vienna", "Prague", "Dublin",
             "Munich", "Venice", "Brussels", "Budapest", "Zurich", "Warsaw", "Copenhagen", "Athens", "Lisbon", "Istanbul"
         };
         private static int cityIndex = 0;
@@ -675,14 +675,7 @@ namespace Project_B.DataAcces
             };
             AddFlight(flight);
         }
-        
-        // functie om een paar vluchten aan te maken voor test
-        public static void CreateTestFlights()
-        {
-            Flight.CreateFlightBoeing737();
-            Flight.CreateFlightBoeing787();
-            Flight.CreateFlightAirbus330();
-        }
+    
         // Filter-systeem:
         // Implementeer een zoekfilter waarmee gebruikers vluchten naar een specifieke locatie kunnen vinden.
         // Implementeer functionaliteit om zoekopdrachten te filteren op bestemming, waardoor gebruikers alle beschikbare vluchten naar die specifieke locatie kunnen bekijken.

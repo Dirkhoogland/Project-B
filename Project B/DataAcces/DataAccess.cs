@@ -175,11 +175,60 @@ namespace Project_B.DataAcces
                             }
 
                             Flight.CreateFlightBoeing737();
-                            Flight.CreateTestFlights();
+                            CreateTestFlights();
+                            CreateUsers();
                         }
                         }
                     }
                 }
+        }
+        // this function is a template for creating users in the database, it creates 20 users with random data
+        public static void CreateUsers()
+        {
+
+                Random random = new Random();
+                for (int i = 0; i < 20; i++)
+                {
+                string name = Guid.NewGuid().ToString();
+                string digits = random.Next(1000, 9999).ToString();
+                string email = name + digits + "@example.com";
+                string password = name + digits;
+                bool check = Users.Newuser(email, name, password);
+                }
+
+        }
+        public static void CreateTestFlights()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                Flight.CreateFlightBoeing737();
+                Flight.CreateFlightBoeing787();
+                Flight.CreateFlightAirbus330();
+            }
+        }
+        public static string GetAircraftType(int flightId)
+        {
+            string aircraftType = null;
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand("SELECT AircraftType FROM Flights WHERE FlightID = @FlightID", c))
+                {
+                    command.Parameters.AddWithValue("@FlightID", flightId);
+
+                    SQLiteDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        aircraftType = reader["AircraftType"].ToString();
+                    }
+                }
+            }
+
+            return aircraftType;
         }
         // this function reads all data from the users table, its a template to use in other functions
         public static void ReadData()
