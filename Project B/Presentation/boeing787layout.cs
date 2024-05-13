@@ -193,9 +193,49 @@ namespace Project_B.Presentation
                     }
                 } while (selectedOption != "Continue");
                 
-                Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
-                Console.Write("Do you want more baggage? (yes/no): ");
-                string baggageResponse = Console.ReadLine();
+               Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
+
+                string[] baggageOptions = { "yes", "no" };
+                int selectedIndex = 0;
+                string baggageResponse = string.Empty;
+
+                Console.WriteLine("Do you want more baggage?");
+
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Do you want more baggage?");
+
+                    for (int i = 0; i < baggageOptions.Length; i++)
+                    {
+                        if (i == selectedIndex)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(baggageOptions[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
+
+                    switch (consoleKeyInfo.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
+                            break;
+                        case ConsoleKey.Enter:
+                            baggageResponse = baggageOptions[selectedIndex];
+                            goto EndLoop;
+                    }
+                }
+
+                EndLoop:
 
                 if (baggageResponse.ToLower() == "yes")
                 {
@@ -206,7 +246,6 @@ namespace Project_B.Presentation
                     Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
 
                     chosenSeat.Price += extraCost; // Add extra cost to seat price
-                    
 
                     Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
                 }
