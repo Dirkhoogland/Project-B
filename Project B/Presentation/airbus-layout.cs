@@ -197,7 +197,7 @@ namespace Project_B.Presentation
         public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
         {
             
-
+            Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
             Console.WriteLine("Seating plan:");
             Console.WriteLine("Seats   Row");
             Console.WriteLine("      A B C  D E F  G H I");
