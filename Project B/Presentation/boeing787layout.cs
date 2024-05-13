@@ -174,6 +174,7 @@ namespace Project_B.Presentation
             {
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("seat succesfully reserved!");
+                DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
             }
             else
             {

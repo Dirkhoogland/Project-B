@@ -230,6 +230,36 @@ namespace Project_B.DataAcces
 
             return aircraftType;
         }
+        public static void ReserveSeat(string email, string name, int seat, string seatClass, int flightId, int userId, string gate, DateTime departureTime, string destination, string origin, string extranotes)
+        {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES(@Email, @PurchaseTime, @Name, @Seat, @SeatClass, @FlightID, @UserID, @Gate, @Departuretime, @Destination, @Origin, @Extranotes)";
+
+            DateTime time = DateTime.Now;
+
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                {
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@PurchaseTime", time);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@Seat", seat);
+                    cmd.Parameters.AddWithValue("@SeatClass", seatClass);
+                    cmd.Parameters.AddWithValue("@FlightID", flightId);
+                    cmd.Parameters.AddWithValue("@UserID", userId);
+                    cmd.Parameters.AddWithValue("@Gate", gate);
+                    cmd.Parameters.AddWithValue("@Departuretime", departureTime);
+                    cmd.Parameters.AddWithValue("@Destination", destination);
+                    cmd.Parameters.AddWithValue("@Origin", origin);
+                    cmd.Parameters.AddWithValue("@Extranotes", extranotes);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         // this function reads all data from the users table, its a template to use in other functions
         public static void ReadData()
         {
