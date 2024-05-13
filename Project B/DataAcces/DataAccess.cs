@@ -230,6 +230,23 @@ namespace Project_B.DataAcces
 
             return aircraftType;
         }
+        public static void AddExtraNotes(int ticketId, string extraNotes)
+        {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+
+                using (SQLiteCommand command = new SQLiteCommand("UPDATE Tickets SET ExtraNotes = @ExtraNotes WHERE TicketID = @TicketID", c))
+                {
+                    command.Parameters.AddWithValue("@ExtraNotes", extraNotes);
+                    command.Parameters.AddWithValue("@TicketID", ticketId);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
         // this function reads all data from the users table, its a template to use in other functions
         public static void ReadData()
         {
