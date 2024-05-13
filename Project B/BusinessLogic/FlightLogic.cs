@@ -1,51 +1,59 @@
-namespace Project_B.DataAcces;
+using Project_B.DataAcces;
 
-public class FlightLogic
+namespace Project_B.BusinessLogic
 {
-    public List<Flight> GetFlights()
+    public class FlightLogic
     {
-        return Flight.GetFlights();
-    }
-
-    public void CreateFlights()
-    {
-        DataAccess.CreateTestFlights();
-    }
-
-    public void DeleteFlights()
-    {
-        Flight.DeleteRow();
-    }
-
-    public void UpdateFlight(Flight flightToUpdate)
-    {
-        Flight.UpdateFlight(flightToUpdate);
-    }
-
-    public Flight GetFlightById(int flightId)
-    {
-        return Flight.GetFlightById(flightId);
-    }
-
-    public List<Flight> FilterFlights(string destination, DateTime? departureDate, string airline)
-    {
-        List<Flight> flights = Flight.GetFlights();
-
-        if (!string.IsNullOrEmpty(destination))
+        public static List<Flight> GetFlights()
         {
-            flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
+            return Flight.GetFlights();
         }
 
-        if (departureDate.HasValue)
+        public static void CreateFlights()
         {
-            flights = flights.Where(f => f.DepartureTime.Date == departureDate.Value.Date).ToList();
+            DataAccess.CreateTestFlights();
         }
 
-        if (!string.IsNullOrEmpty(airline))
+        public static void DeleteFlights()
         {
-            flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
+            Flight.DeleteRow();
         }
 
-        return flights;
+        public static void UpdateFlight(Flight flightToUpdate)
+        {
+            Flight.UpdateFlight(flightToUpdate);
+        }
+
+        public static Flight GetFlightById(int flightId)
+        {
+            return Flight.GetFlightById(flightId);
+        }
+
+        public  List<Flight> FilterFlights(string destination, DateTime? departureDate, string airline)
+        {
+            List<Flight> flights = Flight.GetFlights();
+
+            if (!string.IsNullOrEmpty(destination))
+            {
+                flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
+            }
+
+            if (departureDate.HasValue)
+            {
+                flights = flights.Where(f => f.DepartureTime.Date == departureDate.Value.Date).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(airline))
+            {
+                flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
+            }
+
+            return flights;
+        }
+
+        public static void Reserveseat(int flightid,int userid, int seat, string seatclass)
+        {
+            Flight.reserveseat(flightid, userid, seat, seatclass);
+        }
     }
 }

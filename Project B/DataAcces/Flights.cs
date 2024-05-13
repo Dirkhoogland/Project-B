@@ -202,8 +202,10 @@ namespace Project_B.DataAcces
                             // Create a new flight and set its properties
                             Flight flight = new Flight();
                             flight.FlightId = reader.GetInt32(reader.GetOrdinal("FlightId"));
-                            // ... set the other properties ...
-
+                            flight.Gate = reader.GetString(reader.GetOrdinal("Gate"));
+                            flight.Destination = reader.GetString(reader.GetOrdinal("Destination"));
+                            flight.Origin = reader.GetString(reader.GetOrdinal("Origin"));
+                            flight.DepartureTime = reader.GetDateTime(reader.GetOrdinal("DepartureTime"));
                             return flight;
                         }
                         else
@@ -1037,6 +1039,23 @@ namespace Project_B.DataAcces
 
             Console.WriteLine("Flight added successfully!");
             System.Threading.Thread.Sleep(3000);
+        }
+        public static void reserveseat(int flightid, int userid, int seat, string seatclass)
+        {
+            Users user = Users.GetuserbyId(userid);
+            Flight flight = GetFlightById(flightid);
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+
+            DateTime time = DateTime.Now;
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}',{seat}, '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}', '{flight.Origin}', '-');";
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+                using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                {
+                    cmd1.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
