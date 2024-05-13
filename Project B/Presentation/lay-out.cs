@@ -190,6 +190,7 @@ namespace Project_B.Presentation
         public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
+            
             Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
             Console.WriteLine("Seat plan:");
             Console.WriteLine("Seat   row");
