@@ -192,6 +192,24 @@ namespace Project_B.Presentation
                     }
                 } while (selectedOption != "Continue");
 
+                Console.Write("Do you want more baggage? (yes/no): ");
+                string baggageResponse = Console.ReadLine();
+
+                if (baggageResponse.ToLower() == "yes")
+                {
+                    Console.Write("How many kg do you want extra: ");
+                    int extraKg = Convert.ToInt32(Console.ReadLine());
+                    int extraCost = extraKg * 4; // 4 euros per extra kg
+                     Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
+                    chosenSeat.Price += extraCost; // Add extra cost to seat price
+
+                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
+                }
+                else
+                {
+                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
+                }
+
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
                 Console.ReadLine();
