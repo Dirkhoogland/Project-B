@@ -192,7 +192,8 @@ namespace Project_B.Presentation
                         // Add extraNotes to the database...
                     }
                 } while (selectedOption != "Continue");
-
+                
+                Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
                 Console.Write("Do you want more baggage? (yes/no): ");
                 string baggageResponse = Console.ReadLine();
 
