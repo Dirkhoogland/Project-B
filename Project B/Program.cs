@@ -171,7 +171,7 @@ case "View Flights":
                 if (currentOption > 0) currentOption--;
                 break;
             case ConsoleKey.DownArrow:
-                if (currentOption < options.Count - 1) currentOption++;
+                if (currentOption < Math.Min(19, options.Count - 1)) currentOption++;
                 break;
             case ConsoleKey.N:
                 if (pageNumber < (options.Count + pageSize - 1) / pageSize - 1)
