@@ -1,3 +1,5 @@
+using Project_B.DataAcces;
+
 namespace Project_B.Presentation
 {
     public class AirbusSeat
@@ -121,13 +123,13 @@ namespace Project_B.Presentation
                         seat = Math.Min(8, seat + 1);
                         break;
                     case ConsoleKey.Enter:
-                        ReserveSeat(row, seat);
+                        ReserveSeat(row, seat, userId, flightId);
                         return;
                 }
             } while (key.Key != ConsoleKey.Escape);
         }
 
-        public static void ReserveSeat(int row, int seat)
+        public static void ReserveSeat(int row, int seat, int userId, int flightId)
         {
             AirbusSeat chosenSeat = airbusseats[row, seat];
             if (chosenSeat.IsReserved)
@@ -136,7 +138,7 @@ namespace Project_B.Presentation
                 return;
             }
 
-            Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. CLass: {chosenSeat.Class}, Price: {chosenSeat.Price}");
+            Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
 
             int currentOption = 0;
             string[] yesNoOptions = new string[] { "yes", "no" };
@@ -178,101 +180,27 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
-                string[] options = { "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
-                string selectedOption;
-                string extraNotes = string.Empty;
-
-                do
-                {
-                    selectedOption = Seat.AskQuestionWithMenu(options);
-
-                    if (selectedOption == "Extra Notes (Allergies, Wheelchair, etc.)")
-                    {
-                        if (!string.IsNullOrEmpty(extraNotes))
-                        {
-                            Console.WriteLine($"Your previous notes were: {extraNotes}");
-                        }
-
-                        Console.WriteLine("Please enter your extra notes:");
-                        extraNotes = Console.ReadLine();
-                        // Add extraNotes to the database...
-                    }
-                } while (selectedOption != "Continue");
-                Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
-
-                string[] baggageOptions = { "yes", "no" };
-                int selectedIndex = 0;
-                string baggageResponse = string.Empty;
-
-                Console.WriteLine("Do you want more baggage?");
-
-                while (true)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Do you want more baggage?");
-
-                    for (int i = 0; i < baggageOptions.Length; i++)
-                    {
-                        if (i == selectedIndex)
-                        {
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                            Console.ForegroundColor = ConsoleColor.Black;
-                        }
-
-                        Console.WriteLine(baggageOptions[i]);
-
-                        Console.ResetColor();
-                    }
-
-                    ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-
-                    switch (consoleKeyInfo.Key)
-                    {
-                        case ConsoleKey.UpArrow:
-                            selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
-                            break;
-                        case ConsoleKey.DownArrow:
-                            selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
-                            break;
-                        case ConsoleKey.Enter:
-                            baggageResponse = baggageOptions[selectedIndex];
-                            goto EndLoop;
-                    }
-                }
-
-                EndLoop:
-
-                if (baggageResponse.ToLower() == "yes")
-                {
-                    Console.Write("How many kg do you want extra: ");
-                    int extraKg = Convert.ToInt32(Console.ReadLine());
-                    int extraCost = extraKg * 4; // 4 euros per extra kg
-
-                    Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
-
-                    chosenSeat.Price += extraCost; // Add extra cost to seat price
-
-                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
-                }
-                else
-                {
-                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
-                }
-
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                Console.ReadLine();
+                DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
+                Console.WriteLine("Do you have allergies? (yes/no)");
+                string? hasAllergies = Console.ReadLine();
+
+                if (hasAllergies?.ToLower() == "yes")
+                {
+                    Console.WriteLine("Do you need medication for your allergies? (yes/no)");
+                }
             }
             else
             {
-                Console.WriteLine("You have cancelled your seat.");
+                Console.WriteLine("you have cancelled your seat.");
             }
         }
 
         public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
         {
             
-            Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
+
             Console.WriteLine("Seating plan:");
             Console.WriteLine("Seats   Row");
             Console.WriteLine("      A B C  D E F  G H I");
