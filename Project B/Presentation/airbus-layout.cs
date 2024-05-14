@@ -1,3 +1,5 @@
+using Project_B.DataAcces;
+
 namespace Project_B.Presentation
 {
     public class AirbusSeat
@@ -121,13 +123,13 @@ namespace Project_B.Presentation
                         seat = Math.Min(8, seat + 1);
                         break;
                     case ConsoleKey.Enter:
-                        ReserveSeat(row, seat);
+                        ReserveSeat(row, seat, userId, flightId);
                         return;
                 }
             } while (key.Key != ConsoleKey.Escape);
         }
 
-        public static void ReserveSeat(int row, int seat)
+        public static void ReserveSeat(int row, int seat, int userId, int flightId)
         {
             AirbusSeat chosenSeat = airbusseats[row, seat];
             if (chosenSeat.IsReserved)
@@ -136,7 +138,7 @@ namespace Project_B.Presentation
                 return;
             }
 
-            Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. CLass: {chosenSeat.Class}, Price: {chosenSeat.Price}");
+            Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
 
             int currentOption = 0;
             string[] yesNoOptions = new string[] { "yes", "no" };
@@ -180,6 +182,7 @@ namespace Project_B.Presentation
             {
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
+                DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
                 Console.WriteLine("Do you have allergies? (yes/no)");
                 string? hasAllergies = Console.ReadLine();
 

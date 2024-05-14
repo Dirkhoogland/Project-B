@@ -115,13 +115,13 @@ namespace Project_B.Presentation
                         seat = Math.Min(8, seat + 1);
                         break;
                     case ConsoleKey.Enter:
-                        ReserveSeat(row, seat);
+                        ReserveSeat(row, seat, userId, flightId);
                         return;
                 }
             } while (key.Key != ConsoleKey.Escape);
         }
 
-        public static void ReserveSeat(int row, int seat)
+        public static void ReserveSeat(int row, int seat, int userId, int flightId)
         {
             BoeingSeat chosenSeat = boeingseats[row, seat];
             if (chosenSeat.IsReserved)
