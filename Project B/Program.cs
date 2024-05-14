@@ -228,7 +228,7 @@ case "View Flights":
                             case "Boeing 787":
                                 BoeingSeat boeing787Seats = new BoeingSeat();
                                 boeing787Seats.lay_out();
-                                boeing787Seats.ToonMenu();
+                                boeing787Seats.ToonMenu(currentuser, selectedFlight.FlightId);
                                 break;
                             case "Airbus 330":
                                 AirbusSeat airbus330Seats = new AirbusSeat();
