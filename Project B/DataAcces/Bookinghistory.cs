@@ -35,7 +35,7 @@ namespace Project_B.DataAcces
         public readonly string extranotes;
 
         public readonly string Departuretime;
-
+        // booking history constructor with all ticket information
         public Bookinghistory(int ticketid, string email, string pt, string name,string seat, string seatclass, int Fid, int Uid, string gate, string departuretime, string Origin, string destination,string extranotes)
         {
             this.TicketId = ticketid;
@@ -89,7 +89,7 @@ namespace Project_B.DataAcces
                 }
             }
             return Userhistory;
-        }
+        }// this function collects all tickets made and sorts them by flight idea, so each flight should be listed with their tickets together
         public static List<Bookinghistory> GetUserHistory()
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -126,6 +126,7 @@ namespace Project_B.DataAcces
             }
             return Userhistory;
         }
+        // gets all tickets from one specific flight not yet used
         public static List<Bookinghistory> GetflightHistorybyflightid(int flightid)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
