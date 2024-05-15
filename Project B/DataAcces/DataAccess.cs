@@ -233,6 +233,7 @@ namespace Project_B.DataAcces
         public static void AddExtraNotes(int ticketId, string extraNotes)
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+        }
         public static void ReserveSeat(string email, string name, int seat, string seatClass, int flightId, int userId, string gate, DateTime departureTime, string destination, string origin, string extranotes)
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -266,6 +267,7 @@ namespace Project_B.DataAcces
                     cmd.Parameters.AddWithValue("@Extranotes", extranotes);
 
                     cmd.ExecuteNonQuery();
+                }
                 }
             }
         }
