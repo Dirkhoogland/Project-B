@@ -238,13 +238,13 @@ namespace Project_B.Presentation
                     }
                 }
 
-                EndLoop:
-
+            EndLoop:
+                int extraCost = 0;
                 if (baggageResponse.ToLower() == "yes")
                 {
                     Console.Write("How many kg do you want extra: ");
                     int extraKg = Convert.ToInt32(Console.ReadLine());
-                    int extraCost = extraKg * 4; // 4 euros per extra kg
+                     extraCost = extraKg * 4; // 4 euros per extra kg
 
                     Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
 
@@ -295,7 +295,8 @@ namespace Project_B.Presentation
                 {
                     seatplace = (row + 1).ToString() + " - " + "I";
                 }
-                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class);
+                string notes = extraNotes + "And extra baggage of:" + extraCost + " Euro";
+                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("seat succesfully reserved!");
                 Console.ReadLine();
