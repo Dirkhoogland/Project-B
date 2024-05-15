@@ -299,7 +299,7 @@ namespace Project_B.Presentation
                 {
                     seatplace = (row + 1).ToString() + " - " + "I";
                 }
-                FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class);
+                FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class, "test");
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
                 Console.ReadLine();

@@ -281,7 +281,7 @@ namespace Project_B.Presentation
                 {
                     seatplace = (row + 1).ToString() + " - " + "F";
                 }
-                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class);
+                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, "test");
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
                 Console.ReadLine();
