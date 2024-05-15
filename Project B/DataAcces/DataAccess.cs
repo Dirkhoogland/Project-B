@@ -245,12 +245,12 @@ namespace Project_B.DataAcces
             {
                 c.Open();
 
-                using (SQLiteCommand command = new SQLiteCommand("UPDATE Tickets SET ExtraNotes = @ExtraNotes WHERE TicketID = @TicketID", c))
-                {
-                    command.Parameters.AddWithValue("@ExtraNotes", extraNotes);
-                    command.Parameters.AddWithValue("@TicketID", ticketId);
-
-                    command.ExecuteNonQuery();
+                //using (SQLiteCommand command = new SQLiteCommand("UPDATE Tickets SET ExtraNotes = @ExtraNotes WHERE TicketID = @TicketID", c))
+                //{
+                //    command.Parameters.AddWithValue("@ExtraNotes", extranotes);
+                //    command.Parameters.AddWithValue("@TicketID", ticketId);
+                //
+                //    command.ExecuteNonQuery();
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
                 {
                     cmd.Parameters.AddWithValue("@Email", email);
@@ -268,7 +268,7 @@ namespace Project_B.DataAcces
 
                     cmd.ExecuteNonQuery();
                 }
-                }
+                //}
             }
         }
         // this function reads all data from the users table, its a template to use in other functions

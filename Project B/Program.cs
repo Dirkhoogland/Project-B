@@ -233,7 +233,7 @@ case "View Flights":
                             case "Airbus 330":
                                 AirbusSeat airbus330Seats = new AirbusSeat();
                                 airbus330Seats.lay_out();
-                                airbus330Seats.ToonMenu();
+                                airbus330Seats.ToonMenu(currentuser, selectedFlight.FlightId);
                                 break;
                             default:
                                 Console.WriteLine("Unknown aircraft type.");

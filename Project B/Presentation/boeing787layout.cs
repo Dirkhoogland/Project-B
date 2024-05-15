@@ -118,13 +118,13 @@ namespace Project_B.Presentation
                         seat = Math.Min(8, seat + 1);
                         break;
                     case ConsoleKey.Enter:
-                        ReserveSeat(row, seat, current, flightid, current.Id, userId);
+                        ReserveSeat(row, seat, current, flightid);
                         return;
                 }
             } while (key.Key != ConsoleKey.Escape);
         }
 
-        public static void ReserveSeat(int row, int seat, CurrentUser current, int flightid, int userId)
+        public static void ReserveSeat(int row, int seat, CurrentUser current, int flightid)
         {
             BoeingSeat chosenSeat = boeingseats[row, seat];
             if (chosenSeat.IsReserved)
@@ -178,7 +178,7 @@ namespace Project_B.Presentation
                 FlightLogic.Reserveseat(flightid, current.Id, seat, chosenSeat.Class);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("seat succesfully reserved!");
-                DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
+                // DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
             }
             else
             {

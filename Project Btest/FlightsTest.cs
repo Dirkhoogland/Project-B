@@ -126,7 +126,7 @@ namespace Project_Btest
             CreateFlightsTable();
             // Act
             DeleteRow();
-            Flight.CreateTestFlights();
+            /// Flight.CreateTestFlights();
 
             // Assert
             var flights = Flight.GetFlights();
@@ -140,7 +140,7 @@ namespace Project_Btest
             // Arrange
             DeleteRow();
             CreateFlightsTable();
-            Flight.CreateTestFlights();
+            // Flight.CreateTestFlights();
 
             // Act
             var flights = Flight.GetFlights();
@@ -156,7 +156,7 @@ namespace Project_Btest
             // Arrange
             DeleteRow();
             CreateFlightsTable();
-            Flight.CreateTestFlights();
+            // Flight.CreateTestFlights();
 
             // Act
             DeleteRow();

@@ -1,3 +1,4 @@
+using Project_B.BusinessLogic;
 using Project_B.DataAcces;
 
 namespace Project_B.Presentation
@@ -38,7 +39,7 @@ namespace Project_B.Presentation
         }
     }
     }
-    public void ToonMenu()
+    public void ToonMenu(CurrentUser current, int flightid)
     {
         int currentOption = 0;
         string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart" };
@@ -80,7 +81,7 @@ namespace Project_B.Presentation
         switch (currentOption)
         {
             case 0:
-                ChooseSeatWithArrowKeys();
+                ChooseSeatWithArrowKeys(current, flightid);
                 break;
             case 1:
                 DisplaySeatLayoutAirbus();
@@ -93,7 +94,7 @@ namespace Project_B.Presentation
         Console.WriteLine();
     }
 
-        public static void ChooseSeatWithArrowKeys()
+        public static void ChooseSeatWithArrowKeys(CurrentUser current, int flightid)
         {
             Console.Clear();
             int row = 0;
@@ -123,13 +124,13 @@ namespace Project_B.Presentation
                         seat = Math.Min(8, seat + 1);
                         break;
                     case ConsoleKey.Enter:
-                        ReserveSeat(row, seat, userId, flightId);
+                        ReserveSeat(row, seat, current, flightid);
                         return;
                 }
             } while (key.Key != ConsoleKey.Escape);
         }
 
-        public static void ReserveSeat(int row, int seat, int userId, int flightId)
+        public static void ReserveSeat(int row, int seat, CurrentUser current, int flightId)
         {
             AirbusSeat chosenSeat = airbusseats[row, seat];
             if (chosenSeat.IsReserved)
@@ -180,9 +181,10 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
+                FlightLogic.Reserveseat(flightId, current.Id, seat, chosenSeat.Class);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
+                // DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
                 Console.WriteLine("Do you have allergies? (yes/no)");
                 string? hasAllergies = Console.ReadLine();
 
