@@ -181,27 +181,99 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
-                FlightLogic.Reserveseat(flightId, current.Id, seat, chosenSeat.Class);
+                string[] options = { "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
+                string selectedOption;
+                string extraNotes = string.Empty;
+
+                do
+                {
+                    selectedOption = Seat.AskQuestionWithMenu(options);
+
+                    if (selectedOption == "Extra Notes (Allergies, Wheelchair, etc.)")
+                    {
+                        if (!string.IsNullOrEmpty(extraNotes))
+                        {
+                            Console.WriteLine($"Your previous notes were: {extraNotes}");
+                        }
+
+                        Console.WriteLine("Please enter your extra notes:");
+                        extraNotes = Console.ReadLine();
+                        // Add extraNotes to the database...
+                    }
+                } while (selectedOption != "Continue");
+                Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
+
+                string[] baggageOptions = { "yes", "no" };
+                int selectedIndex = 0;
+                string baggageResponse = string.Empty;
+
+                Console.WriteLine("Do you want more baggage? (20 kg is included in the price)");
+
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Do you want more baggage?");
+
+                    for (int i = 0; i < baggageOptions.Length; i++)
+                    {
+                        if (i == selectedIndex)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(baggageOptions[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
+
+                    switch (consoleKeyInfo.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
+                            break;
+                        case ConsoleKey.Enter:
+                            baggageResponse = baggageOptions[selectedIndex];
+                            goto EndLoop;
+                    }
+                }
+
+                EndLoop:
+
+                if (baggageResponse.ToLower() == "yes")
+                {
+                    Console.Write("How many kg do you want extra: ");
+                    int extraKg = Convert.ToInt32(Console.ReadLine());
+                    int extraCost = extraKg * 4; // 4 euros per extra kg
+
+                    Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
+
+                    chosenSeat.Price += extraCost; // Add extra cost to seat price
+                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
+                }
+                else
+                {
+                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
+                }
+
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                // DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
-                Console.WriteLine("Do you have allergies? (yes/no)");
-                string? hasAllergies = Console.ReadLine();
-
-                if (hasAllergies?.ToLower() == "yes")
-                {
-                    Console.WriteLine("Do you need medication for your allergies? (yes/no)");
-                }
+                Console.ReadLine();
             }
             else
             {
-                Console.WriteLine("you have cancelled your seat.");
+                Console.WriteLine("You have cancelled your seat.");
             }
         }
 
         public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
         {
-            
+            Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
 
             Console.WriteLine("Seating plan:");
             Console.WriteLine("Seats   Row");
