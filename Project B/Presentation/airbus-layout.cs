@@ -260,7 +260,46 @@ namespace Project_B.Presentation
                 {
                     Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
                 }
-
+                //  
+                string seatplace = "";
+                int newseat = seat + 1;
+                if (newseat == 1)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "A";
+                }
+                else if (newseat == 2)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "B";
+                }
+                else if (newseat == 3)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "C";
+                }
+                else if (newseat == 4)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "D";
+                }
+                else if (newseat == 5)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "E";
+                }
+                else if (newseat == 6)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "F";
+                }
+                else if (newseat == 7)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "G";
+                }
+                else if (newseat == 8)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "H";
+                }
+                else if (newseat == 9)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "I";
+                }
+                FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
                 Console.ReadLine();

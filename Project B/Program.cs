@@ -223,7 +223,7 @@ namespace Project_B
                                                         case "Boeing 737":
                                                             Seat seats = new Seat();
                                                             seats.lay_out();
-                                                            seats.ToonMenu();
+                                                            seats.ToonMenu(currentuser, selectedFlight.FlightId);
                                                             break;
                                                         case "Boeing 787":
                                                             BoeingSeat boeing787Seats = new BoeingSeat();
