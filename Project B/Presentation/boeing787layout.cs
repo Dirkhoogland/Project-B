@@ -257,7 +257,7 @@ namespace Project_B.Presentation
                 {
                     Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
                 }
-
+                // counts where the seat is in the plane with numbers that customers understand
                 string seatplace = "";
                 int newseat = seat + 1;
                 if (newseat == 1)
