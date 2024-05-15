@@ -1,3 +1,6 @@
+using Project_B.BusinessLogic;
+using Project_B.DataAcces;
+
 namespace Project_B.Presentation
 {
     public class Seat
@@ -29,7 +32,7 @@ namespace Project_B.Presentation
             }
         }
     }
-    public void ToonMenu()
+    public void ToonMenu(CurrentUser current, int flightid)
     {
         int currentOption = 0;
         string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart" };
@@ -71,7 +74,7 @@ namespace Project_B.Presentation
         switch (currentOption)
         {
             case 0:
-                ChooseSeatWithArrowKeys();
+                ChooseSeatWithArrowKeys( current, flightid);
                 break;
             case 1:
                 DisplaySeatLayoutBoeing737();
@@ -84,7 +87,7 @@ namespace Project_B.Presentation
         Console.WriteLine();
     }
 
-        public static void ChooseSeatWithArrowKeys()
+        public static void ChooseSeatWithArrowKeys(CurrentUser current, int flightid)
         {
             Console.Clear();
             int row = 0;
@@ -114,13 +117,13 @@ namespace Project_B.Presentation
                         seat = Math.Min(5, seat + 1);
                         break;
                     case ConsoleKey.Enter:
-                        ReserveSeat(row, seat);
+                        ReserveSeat(row, seat, current, flightid);
                         return;
                 }
             } while (key.Key != ConsoleKey.Escape);
         }
 
-        public static void ReserveSeat(int row, int seat)
+        public static void ReserveSeat(int row, int seat, CurrentUser current, int flightid)
         {
             Seat chosenSeat = seats[row, seat];
             if (chosenSeat.IsReserved)
@@ -171,15 +174,117 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
+                string[] options = { "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
+                string selectedOption;
+                string extraNotes = string.Empty;
+
+                do
+                {
+                    selectedOption = AskQuestionWithMenu(options);
+
+                    if (selectedOption == "Extra Notes (Allergies, Wheelchair, etc.)")
+                    {
+                        if (!string.IsNullOrEmpty(extraNotes))
+                        {
+                            Console.WriteLine($"Your previous notes were: {extraNotes}");
+                        }
+
+                        Console.WriteLine("Please enter your extra notes:");
+                        extraNotes = Console.ReadLine();
+                        // Add extraNotes to the database...
+                    }
+                } while (selectedOption != "Continue");
+
+                  Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
+
+                string[] baggageOptions = { "yes", "no" };
+                int selectedIndex = 0;
+                string baggageResponse = string.Empty;
+
+                Console.WriteLine("Do you want more baggage?");
+
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Do you want more baggage?");
+
+                    for (int i = 0; i < baggageOptions.Length; i++)
+                    {
+                        if (i == selectedIndex)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(baggageOptions[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
+
+                    switch (consoleKeyInfo.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
+                            break;
+                        case ConsoleKey.Enter:
+                            baggageResponse = baggageOptions[selectedIndex];
+                            goto EndLoop;
+                    }
+                }
+
+                EndLoop:
+
+                if (baggageResponse.ToLower() == "yes")
+                {
+                    Console.Write("How many kg do you want extra: ");
+                    int extraKg = Convert.ToInt32(Console.ReadLine());
+                    int extraCost = extraKg * 4; // 4 euros per extra kg
+
+                    Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
+
+                    chosenSeat.Price += extraCost; // Add extra cost to seat price
+
+                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
+                }
+                else
+                {
+                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
+                }
+                string seatplace = "";
+                int newseat = seat + 1;
+                if (newseat == 1)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "A";
+                }
+                else if (newseat == 2)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "B";
+                }
+                else if (newseat == 3)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "C";
+                }
+                else if (newseat == 4)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "D";
+                }
+                else if (newseat == 5)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "E";
+                }
+                else if (newseat == 6)
+                {
+                    seatplace = (row + 1).ToString() + " - " + "F";
+                }
+                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                Console.WriteLine("Do you have allergies? (yes/no)");
-                string? hasAllergies = Console.ReadLine();
-
-                if (hasAllergies?.ToLower() == "yes")
-                {
-                    Console.WriteLine("Do you need medication for your allergies? (yes/no)");
-                }
+                Console.ReadLine();
             }
             else
             {
@@ -190,7 +295,8 @@ namespace Project_B.Presentation
         public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-
+            
+            Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
             Console.WriteLine("Seat plan:");
             Console.WriteLine("Seat   row");
             Console.WriteLine("      A B C  D E F");
@@ -253,6 +359,50 @@ namespace Project_B.Presentation
                 }
 
                 Console.WriteLine();
+            }
+        }
+        public static string AskQuestionWithMenu(string[] options)
+        {
+            int currentOption = 0;
+
+            while (true)
+            {
+                Console.Clear();
+
+                for (int i = 0; i < options.Length; i++)
+                {
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(options[i]);
+
+                    Console.ResetColor();
+                }
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+                if (keyInfo.Key == ConsoleKey.UpArrow)
+                {
+                    if (currentOption > 0)
+                    {
+                        currentOption--;
+                    }
+                }
+                else if (keyInfo.Key == ConsoleKey.DownArrow)
+                {
+                    if (currentOption < options.Length - 1)
+                    {
+                        currentOption++;
+                    }
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    Console.Clear();
+                    return options[currentOption];
+                }
             }
         }
     }
