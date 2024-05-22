@@ -219,7 +219,7 @@ namespace Project_B
                                                     // Fetch the aircraft type from the selected flight
                                                     string aircraftType = selectedFlight.AircraftType;
 
-                                                    // Show the layout according to the aircraft type
+                                                    // Show the layout according to the aircraft typpe
                                                     switch (aircraftType)
                                                     {
                                                         case "Boeing 737":
