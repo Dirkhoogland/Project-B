@@ -15,7 +15,8 @@ namespace Project_B
                 
                 string[] menuItemsGuest = { "Login/Register", "Exit" };
                 string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
-                string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Users", "Logout", "Exit" };
+                string[] menuItemsAdmin = { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Logout", "Exit" };
+                string[] manageFlightsMenu = { "Add Flight", "Update Flight", "Back" };
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
@@ -269,7 +270,61 @@ namespace Project_B
                                 else
                                 {
                                     continue; // Continue with the next iteration of the main menu loop
-                                }                            
+                                }    
+                            case "Manage Flights":
+                                int manageFlightsIndex = 0;
+                                while (true)
+                                {
+                                    Console.Clear();
+                                    for (int i = 0; i < manageFlightsMenu.Length; i++)
+                                    {
+                                        if (i == manageFlightsIndex)
+                                        {
+                                            Console.BackgroundColor = ConsoleColor.Gray;
+                                            Console.ForegroundColor = ConsoleColor.Black;
+                                        }
+                                        Console.WriteLine(manageFlightsMenu[i]);
+                                        Console.ResetColor();
+                                    }
+
+                                    keyInfo = Console.ReadKey();
+
+                                    if (keyInfo.Key == ConsoleKey.UpArrow)
+                                    {
+                                        if (manageFlightsIndex > 0)
+                                        {
+                                            manageFlightsIndex--;
+                                        }
+                                    }
+                                    else if (keyInfo.Key == ConsoleKey.DownArrow)
+                                    {
+                                        if (manageFlightsIndex < manageFlightsMenu.Length - 1)
+                                        {
+                                            manageFlightsIndex++;
+                                        }
+                                    }
+                                    else if (keyInfo.Key == ConsoleKey.Enter)
+                                    {
+                                        switch (manageFlightsMenu[manageFlightsIndex])
+                                        {
+                                        case "Add Flight":
+                                            Console.Clear();
+                                            Flight.AdminAddFlight();
+                                            flights = Flight.GetFlights(); // Refresh the 'flights' list
+                                            options = new List<string> { filterFlightsText, backText }; // reset the options
+                                            options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
+                                            break;
+                                            case "Update Flight":
+                                                Console.Clear();
+                                                Flight.AdminUpdateFlight();
+                                                break;
+                                            case "Back":
+                                                break;
+                                        }
+                                        if (manageFlightsMenu[manageFlightsIndex] == "Back") break;
+                                    }
+                                }
+                                break;                        
                             case "Flight History":
                                 Console.Clear();
                                 // Check if a user is logged in
@@ -284,17 +339,6 @@ namespace Project_B
                                     Console.WriteLine("No user is currently logged in.");
                                     Console.ReadLine();
                                 }
-                                break;
-                            case "Update Flight":
-                                Console.Clear();
-                                Flight.AdminUpdateFlight();
-                                break;
-                            case "Add Flight":
-                                Console.Clear();
-                                Flight.AdminAddFlight();
-                                flights = Flight.GetFlights(); // Refresh the 'flights' list
-                                options = new List<string> { filterFlightsText, backText }; // reset the options
-                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
                                 break;
                             case "Users":
                                 isBackSelected = false;
