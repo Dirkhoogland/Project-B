@@ -252,13 +252,13 @@ namespace Project_B.Presentation
                     {
                         Console.Write("How many kg do you want extra: ");
                         string input = Console.ReadLine();
-                        if (int.TryParse(input, out extraKg))
+                        if (int.TryParse(input, out extraKg) && extraKg >= 0)
                         {
-                            break; // Exit the loop if the input is a valid number
+                            break; // Exit the loop if the input is a valid number and not negative
                         }
                         else
                         {
-                            Console.WriteLine("Invalid input. Please enter a number.");
+                            Console.WriteLine("Invalid input. Please enter a valid number.");
                         }
                     }
 
