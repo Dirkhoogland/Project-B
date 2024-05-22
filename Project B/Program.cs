@@ -213,7 +213,8 @@ namespace Project_B
                                             {
                                                 if (currentOption >= 2) // Check if 'currentOption' is within the bounds of the 'flights' list
                                                 {
-                                                    Flight selectedFlight = flights[currentOption - 2];
+                                                    int actualIndex = pageNumber * pageSize + currentOption - 2;
+                                                    Flight selectedFlight = flights[actualIndex];
                                                     Console.Clear();
                                                     // Fetch the aircraft type from the selected flight
                                                     string aircraftType = selectedFlight.AircraftType;
