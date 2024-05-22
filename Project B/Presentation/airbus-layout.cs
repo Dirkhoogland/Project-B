@@ -243,13 +243,14 @@ namespace Project_B.Presentation
                     }
                 }
 
-                EndLoop:
-
+            EndLoop:
+                int extraKg = 0;
+                int extraCost = 0;
                 if (baggageResponse.ToLower() == "yes")
                 {
                     Console.Write("How many kg do you want extra: ");
-                    int extraKg = Convert.ToInt32(Console.ReadLine());
-                    int extraCost = extraKg * 4; // 4 euros per extra kg
+                     extraKg = Convert.ToInt32(Console.ReadLine());
+                     extraCost = extraKg * 4; // 4 euros per extra kg
 
                     Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
 
@@ -260,7 +261,7 @@ namespace Project_B.Presentation
                 {
                     Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
                 }
-                //  
+                // counts where the seat is in the plane with numbers that customers understand
                 string seatplace = "";
                 int newseat = seat + 1;
                 if (newseat == 1)
@@ -299,7 +300,14 @@ namespace Project_B.Presentation
                 {
                     seatplace = (row + 1).ToString() + " - " + "I";
                 }
-                FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class);
+                //checks if there are notes to be added to the ticket
+                string notes = "";
+                if (extraCost > 0 || extraNotes != null)
+                {
+                    notes = extraNotes + " And extra baggage of:" + extraCost + " Euro With a weight of" + extraKg;
+                }
+                // creates the ticket inside the database
+                FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
                 Console.ReadLine();
