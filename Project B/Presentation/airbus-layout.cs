@@ -359,7 +359,7 @@ namespace Project_B.Presentation
 
                 for (int seat = 0; seat < 9; seat++) // Adjusted to 9 seats
                 {
-                    if ((row >= 43 && row <= 48) && (seat == 2 || seat == 6)) // If the current row is one of the rows 44-48 and the seat is the 3rd or 7th, skip the iteration
+                    if (row >= 43 && row <= 48 && (seat == 2 || seat == 6)) // If the current row is one of the rows 44-48 and the seat is the 3rd or 7th, skip the iteration
                     {
                         Console.Write("  ");
                         continue;
