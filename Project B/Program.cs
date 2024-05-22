@@ -114,7 +114,8 @@ namespace Project_B
                                 options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
 
                                 int pageSize = 20; // Number of flights to display at a time
-                                int pageNumber = 0; // Current page number
+                                int pageNumber = 0; // Current page numbe
+                                int totalPages = (options.Count + pageSize - 1) / pageSize; // Total number of pages
 
                                 while (true)
                                 {
@@ -341,7 +342,7 @@ namespace Project_B
                                     Console.ReadLine();
                                 }
                                 break;
-                            case "Users":
+                            case "Manage Users":
                                 isBackSelected = false;
                                 string userheader = $"Users";
                                 int userpadding = (Console.WindowWidth - userheader.Length) / 2;
