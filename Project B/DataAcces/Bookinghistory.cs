@@ -18,7 +18,7 @@ namespace Project_B.DataAcces
 
         public readonly string Name;
 
-        public readonly int Seat;
+        public readonly string Seat;
 
         public readonly string SeatClass;
 
@@ -35,8 +35,8 @@ namespace Project_B.DataAcces
         public readonly string extranotes;
 
         public readonly string Departuretime;
-
-        public Bookinghistory(int ticketid, string email, string pt, string name,int seat, string seatclass, int Fid, int Uid, string gate, string departuretime, string Origin, string destination,string extranotes)
+        // booking history constructor with all ticket information
+        public Bookinghistory(int ticketid, string email, string pt, string name,string seat, string seatclass, int Fid, int Uid, string gate, string departuretime, string Origin, string destination,string extranotes)
         {
             this.TicketId = ticketid;
             this.Email = email;
@@ -72,7 +72,7 @@ namespace Project_B.DataAcces
                             string Email = rdr.GetString(1);
                             string PurchaseTime = rdr.GetString(2);
                             string Name = rdr.GetString(3);
-                            int Seat = rdr.GetInt32(4);
+                            string Seat = rdr.GetString(4);
                             string SeatClass = rdr.GetString(5);
                             int FlightId = rdr.GetInt32(6);
                             int UserId = rdr.GetInt32(7);
@@ -89,7 +89,7 @@ namespace Project_B.DataAcces
                 }
             }
             return Userhistory;
-        }
+        }// this function collects all tickets made and sorts them by flight idea, so each flight should be listed with their tickets together
         public static List<Bookinghistory> GetUserHistory()
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -108,7 +108,7 @@ namespace Project_B.DataAcces
                             string Email = rdr.GetString(1);
                             string PurchaseTime = rdr.GetString(2);
                             string Name = rdr.GetString(3);
-                            int Seat = rdr.GetInt32(4);
+                            string Seat = rdr.GetString(4);
                             string SeatClass = rdr.GetString(5);
                             int FlightId = rdr.GetInt32(6);
                             int UserId = rdr.GetInt32(7);
@@ -126,6 +126,7 @@ namespace Project_B.DataAcces
             }
             return Userhistory;
         }
+        // gets all tickets from one specific flight not yet used
         public static List<Bookinghistory> GetflightHistorybyflightid(int flightid)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -145,7 +146,7 @@ namespace Project_B.DataAcces
                             string Email = rdr.GetString(1);
                             string PurchaseTime = rdr.GetString(2);
                             string Name = rdr.GetString(3);
-                            int Seat = rdr.GetInt32(4);
+                            string Seat = rdr.GetString(4);
                             string SeatClass = rdr.GetString(5);
                             int FlightId = rdr.GetInt32(6);
                             int UserId = rdr.GetInt32(7);
