@@ -371,8 +371,18 @@ namespace Project_B.Presentation
                     Console.ResetColor();
                 }
 
+            
                 Console.WriteLine();
+                
             }
+
+            Console.WriteLine("\nSeat Summary:");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Yellow seats are Business class seats with the price €200.");
+            Console.ResetColor(); // Reset the color to the default
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Cyan seats are Economy class seats with the price €100.");
+            Console.ResetColor();
         }
         public static string AskQuestionWithMenu(string[] options)
         {
