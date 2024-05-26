@@ -449,7 +449,6 @@ namespace Project_B.Presentation
                 Console.WriteLine();
             }
 
-            
         }
     }
 }

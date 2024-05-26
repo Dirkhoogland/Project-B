@@ -403,6 +403,16 @@ namespace Project_B.Presentation
             Console.ResetColor();
             Console.WriteLine();
             }
+
+             Console.WriteLine("\nSeat Summary:");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("the Yellow seats are business and cost €200.");
+            Console.ResetColor(); // Reset the color to the default
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"the Blue seats are Economy class seats with the price €100.");
+            Console.ResetColor();
+            Console.WriteLine($"the White seats are Economy class seats with the price €100.");
+            Console.ResetColor();
         }
     }
 }
