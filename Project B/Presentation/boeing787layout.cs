@@ -305,6 +305,7 @@ namespace Project_B.Presentation
                 FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("seat succesfully reserved!");
+                DisplaySeatLayoutAirbus();
                 Console.ReadLine();
                 // DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
             }
