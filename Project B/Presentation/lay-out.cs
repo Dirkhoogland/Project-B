@@ -126,11 +126,14 @@ namespace Project_B.Presentation
         public static void ReserveSeat(int row, int seat, CurrentUser current, int flightid)
         {
             Seat chosenSeat = seats[row, seat];
+            
             if (chosenSeat.IsReserved)
             {
                 Console.WriteLine("This seat has already been reserved. Choose another seat.");
                 return;
             }
+
+            seats[row, seat].IsReserved = true;
 
             Console.WriteLine($"You hace chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
 
