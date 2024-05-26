@@ -448,7 +448,21 @@ namespace Project_B.Presentation
 
                 Console.WriteLine();
             }
-
+            Console.WriteLine("\nSeat Summary:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("the gray seats are Club Class and cost €200.");
+            Console.ResetColor(); 
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"the Pink seats are Seats with extra leg space class seats with the price €200.");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"the Cyan seats are Duo combo seats with the price €200.");
+            Console.ResetColor();
+             Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine($"the Purple seats are Deluxe seats with the price €200.");
+            Console.ResetColor();
+            Console.WriteLine($"the White seats are Economy seats with the price €200.");
+            Console.ResetColor();
         }
     }
 }
