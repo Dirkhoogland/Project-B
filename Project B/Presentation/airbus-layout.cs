@@ -458,7 +458,7 @@ namespace Project_B.Presentation
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine($"the Cyan seats are Duo combo seats with the price €200.");
             Console.ResetColor();
-             Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine($"the Purple seats are Deluxe seats with the price €200.");
             Console.ResetColor();
             Console.WriteLine($"the White seats are Economy seats with the price €200.");

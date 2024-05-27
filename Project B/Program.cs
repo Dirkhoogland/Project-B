@@ -11,6 +11,7 @@ namespace Project_B
         {
             public static void Main(string[] args)
             {
+               Console.OutputEncoding = System.Text.Encoding.Unicode;
                 DataAccess.Database();
                 
                 string[] menuItemsGuest = { "Login/Register", "Exit" };
