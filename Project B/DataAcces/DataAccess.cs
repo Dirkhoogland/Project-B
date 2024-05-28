@@ -54,7 +54,8 @@ namespace Project_B.DataAcces
                "Gate VARCHAR(255)," +
                "Seats INTEGER," +
                "AvailableSeats INTEGER," +
-               "Airline VARCHAR(255))";
+               "Airline VARCHAR(255)," +
+               "Distance INTEGER)";
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
                     c.Open();
@@ -78,6 +79,7 @@ namespace Project_B.DataAcces
                 "Departuretime DATETIME," +
                 "Destination VARCHAR(255)," +
                 "Origin VARCHAR(255)," +
+                "Distance INTEGER," +
                 "Extranotes VARCHAR(255)," +
                 "FOREIGN KEY(FlightID) REFERENCES Flights(FlightID)" +
                 "FOREIGN KEY(UserID) REFERENCES Users(ID))";
@@ -136,38 +138,38 @@ namespace Project_B.DataAcces
                                     cmd3.ExecuteNonQuery();
                             }
                             DateTime time = DateTime.Now;
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES('Email','{time}', 'Dirk','3', 'Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk','3', 'Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', 150 , '-');";
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
 
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES('Email1','{time}', 'Berat', '2','Business', 1, 2, '11', '{time}','Berlin', 'Amsterdam', '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('Email1','{time}', 'Berat', '2','Business', 1, 2, '11', '{time}','Berlin', 'Amsterdam',150 ,  '-');";
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,  Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES('Email','{time}', 'Dirk', '1','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,  Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk', '1','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', 150  , '-');";
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination, Origin, Extranotes) VALUES('Email','{time}', 'Dirk','4','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-')";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination, Origin, Distance, Extranotes) VALUES('Email','{time}', 'Dirk','4','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam',150 , '-')";
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Origin ,Extranotes) VALUES('Email','{time}', 'Dirk','5','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Origin, Distance ,Extranotes) VALUES('Email','{time}', 'Dirk','5','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', 150 , '-');";
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID, Gate, Departuretime, Destination,Origin ,Extranotes) VALUES('Email','{time}', 'Dirk','6','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID, Gate, Departuretime, Destination,Origin, Distance ,Extranotes) VALUES('Email','{time}', 'Dirk','6','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', 150 , '-');";
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
