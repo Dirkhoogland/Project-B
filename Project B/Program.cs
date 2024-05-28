@@ -2,6 +2,7 @@
 using Project_B.Presentation;
 using System.Drawing.Printing;
 using System.Xml.Linq;
+/*
 namespace Project_B
 
 {
@@ -516,13 +517,13 @@ namespace Project_B
                     " | |",
                     "_|_|______________",
                     "        /|\\",
-                    "      */ | \\*",
+                    "       / | \\",
                     "      / -+- \\",
                     "---o--(_)--o---",
                     "    /  0 \" 0  \\",
-                    "  */     |     \\*",
+                    "   /     |     \\*",
                     "  /      |      \\",
-                    "*/       |       \\*"
+                    " /       |       \\*"
                 };
 
                 for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
@@ -538,6 +539,18 @@ namespace Project_B
                 CurrentUser currentuser = null;
                 return currentuser = LoginRegistrations.LoginScreen();
             }
+        }
+    }
+}
+*/
+
+namespace Project_B
+{
+    public class Program
+    {
+        public static void Main()
+        {
+            DataAccess.Create_Json();
         }
     }
 }

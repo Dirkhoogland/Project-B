@@ -1,4 +1,7 @@
-﻿using System.Data.SQLite;
+﻿using System.Data;
+using System.Data.SQLite;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Project_B.DataAcces
 {
@@ -296,5 +299,59 @@ namespace Project_B.DataAcces
             }
         }
 
+        // Takes all table names and converts them to a single json file
+        public static void Convert_to_Json(string ConnectionString){
+            Dictionary<string, DataTable> databaseTables = new Dictionary<string, DataTable>();
+
+            using (SQLiteConnection conn = new SQLiteConnection(ConnectionString))
+            {
+                conn.Open();
+                List<string> tableNames = GetTableNames(conn);
+
+                foreach(string tableName in tableNames)
+                {
+                    DataTable table = new DataTable();
+
+                    string sql;
+                    if(tableName == "Tickets")
+                    {
+                        sql = $"SELECT strftime('%Y-%m-%d %H:%M:%S', PurchaseTime) AS datetime_string, * FROM {tableName}";
+                    }
+                    else
+                    {
+                        sql = $"SELECT * FROM {tableName}";
+                    }
+
+                    SQLiteCommand cmd = new SQLiteCommand(sql, conn);
+                    SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
+                    adapter.Fill(table);
+                    databaseTables[tableName] = table;
+                }
+            }
+
+            string jsonFile = JsonSerializer.Serialize(databaseTables);
+            File.WriteAllText("NewSouthData.json" , jsonFile);
+        }
+
+        // Receives all table names from database and returns a list to iterate over in json creation
+        public static List<String> GetTableNames(SQLiteConnection conn)
+        {
+            List<string> tableNames = new List<string>();
+            DataTable tables = conn.GetSchema("tables");
+
+            foreach (DataRow row in tables.Rows)
+            {
+                tableNames.Add(row["TABLE_NAME"].ToString());
+            }
+
+            return tableNames;
+        }
+
+        public static void Create_Json()
+        {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; DateTimeFormat=Custom;DateTimeStringFormat=dd-MM-yyyy HH:mm:ss";
+            Convert_to_Json(ConnectionString);
+            Console.WriteLine("JSON file created successfully.");
+        }
     }
 }
