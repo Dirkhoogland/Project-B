@@ -235,10 +235,10 @@ namespace Project_B.DataAcces
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
         }
-        public static void ReserveSeat(string email, string name, int seat, string seatClass, int flightId, int userId, string gate, DateTime departureTime, string destination, string origin, string extranotes)
+        public static void ReserveSeat(string email, string name, int seat, string seatClass, int flightId, int userId, string gate, DateTime departureTime, string destination, string retourstatus, string origin, string extranotes)
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES(@Email, @PurchaseTime, @Name, @Seat, @SeatClass, @FlightID, @UserID, @Gate, @Departuretime, @Destination, @Origin, @Extranotes)";
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Retour, Origin, Extranotes ) VALUES(@Email, @PurchaseTime, @Name, @Seat, @SeatClass, @FlightID, @UserID, @Gate, @Departuretime, @Destination, @Retour , @Origin, @Extranotes)";
 
             DateTime time = DateTime.Now;
 
@@ -264,6 +264,7 @@ namespace Project_B.DataAcces
                     cmd.Parameters.AddWithValue("@Gate", gate);
                     cmd.Parameters.AddWithValue("@Departuretime", departureTime);
                     cmd.Parameters.AddWithValue("@Destination", destination);
+                    cmd.Parameters.AddWithValue("@Retour", retourstatus);
                     cmd.Parameters.AddWithValue("@Origin", origin);
                     cmd.Parameters.AddWithValue("@Extranotes", extranotes);
 

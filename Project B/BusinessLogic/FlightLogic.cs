@@ -51,9 +51,9 @@ namespace Project_B.BusinessLogic
             return flights;
         }
 
-        public static void Reserveseat(int flightid,int userid, string seat, string seatclass, string extranotes)
+        public static void Reserveseat(int flightid,int userid, string seat, string seatclass, string retourstatus, string extranotes)
         {
-            Flight.reserveseat(flightid, userid, seat, seatclass, extranotes);
+            Flight.reserveseat(flightid, userid, seat, seatclass, retourstatus, extranotes);
         }
     }
 }
