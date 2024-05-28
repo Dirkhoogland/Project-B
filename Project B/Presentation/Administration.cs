@@ -94,7 +94,7 @@ namespace Project_B.Presentation
         public static void presentalltickets()
         {
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory();
-
+ 
             int pageSize = 20; // Number of tickets to display at a time
             int pageNumber = 0; // Current page number
             int totalPages = (userhistory.Count + pageSize - 1) / pageSize; // Total number of pages
@@ -105,7 +105,7 @@ namespace Project_B.Presentation
 
                 foreach (Bookinghistory history in page)
                 {
-                    Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
+                    Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId}, {history.Name} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
                 }
 
                 Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, totalPages);
