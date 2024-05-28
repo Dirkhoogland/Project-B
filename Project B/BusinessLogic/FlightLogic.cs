@@ -55,5 +55,33 @@ namespace Project_B.BusinessLogic
         {
             Flight.reserveseat(flightid, userid, seat, seatclass, extranotes);
         }
+        public void AddFlyPoints(int userId, int kilometers)
+        {
+            int flyPoints = new DataAccess().GetFlyPoints(userId); // Create an instance of the DataAccess class and call the GetFlyPoints method on that instance
+            flyPoints += kilometers / 2000;
+            DataAccess dataAccess = new DataAccess(); // Create another instance of the DataAccess class
+            dataAccess.UpdateFlyPoints(userId, flyPoints); // Call the UpdateFlyPoints method on the second instance
+        }
+
+        public bool RedeemFlyPoints(int userId)
+        {
+            DataAccess dataAccess = new DataAccess(); // Create an instance of the DataAccess class
+            int flyPoints = dataAccess.GetFlyPoints(userId); // Call the GetFlyPoints method on the instance
+
+            if (flyPoints >= 20)
+            {
+                flyPoints -= 20;
+                dataAccess.UpdateFlyPoints(userId, flyPoints); // Call the UpdateFlyPoints method on the instance
+                return true;
+            }
+
+            return false;
+        }
+
+        public int GetFlyPoints(int userId)
+        {
+            DataAccess dataAccess = new DataAccess(); // Create an instance of the DataAccess class
+            return dataAccess.GetFlyPoints(userId); // Call the GetFlyPoints method on the instance
+        }
     }
 }
