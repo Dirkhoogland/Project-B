@@ -74,6 +74,7 @@ namespace Project_B.DataAcces
                 "SeatClass VARCHAR(255)," +
                 "FlightID INTEGER," +
                 "UserID INTEGER," +
+<<<<<<< HEAD
                 "Gate VARCHAR(255)," +
                 "Departuretime DATETIME," +
                 "Destination VARCHAR(255)," +
@@ -81,6 +82,8 @@ namespace Project_B.DataAcces
                 "Origin VARCHAR(255)," +
                 "Extranotes VARCHAR(255)," +
                 "BaggageWeight INTEGER," +
+=======
+>>>>>>> parent of 95e6c01 (baggage info db)
                 "FOREIGN KEY(FlightID) REFERENCES Flights(FlightID)" +
                 "FOREIGN KEY(UserID) REFERENCES Users(ID))";
                 // using statements are used to confine the use of the connection to only this function, so the database remains useable outside of it since its automatially closed and does not remain open on a function when it shouldnt be
