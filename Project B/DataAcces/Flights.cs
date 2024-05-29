@@ -272,7 +272,11 @@ namespace Project_B.DataAcces
                     break;
                 }
 
-                Console.CursorTop = Console.CursorTop - flights.Count;
+                if (Console.CursorTop >= flights.Count)
+                {
+                    Console.CursorTop = Console.CursorTop - flights.Count;
+                }
+
                 for (int i = 0; i < flights.Count; i++)
                 {
                     if (i == flightIndex)
