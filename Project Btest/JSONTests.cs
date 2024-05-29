@@ -10,6 +10,7 @@ namespace Project_Btest
         // Check if the created JSON file doesn't return empty
         public void JSONfileTest()
         {
+        // Finds path to database file, since unittests and database are in separate folders
             string relativeDatabasePath = Path.Combine("..", "..", "..", "..", "Project B", "DataSource");
             string absoluteDatabasePath = Path.GetFullPath(relativeDatabasePath);
             string databaseFileName = "database.db";
@@ -20,6 +21,7 @@ namespace Project_Btest
 
             string ConnectionString = $"Data Source={databaseFilePath}; Version = 3;";
             List<JSONconversion> tickets = JSONconversion.Convert_to_Json(ConnectionString);
+
             Assert.IsNotNull(tickets);
         }
 
@@ -28,6 +30,7 @@ namespace Project_Btest
         //Check if JSON file is located in the "Documents" folder.
         public void JSONlocationTest()
         {
+            // Finds path to where JSON file is supposed to be located
             string relativeJsonPath = Path.Combine("..", "..", "..", "..", "..", "..", "Documents");
             string absoluteJsonPath = Path.GetFullPath(relativeJsonPath);
             string JsonFileName = "NewSouthTicketData.json";

@@ -52,6 +52,7 @@ namespace Project_B.DataAcces
 
         public static List<JSONconversion> Convert_to_Json(string ConnectionString)
         {
+            // Create list for tickets to store them in a JSON file
             List<JSONconversion> tickets = new List<JSONconversion>();
             using (SQLiteConnection conn = new SQLiteConnection(ConnectionString))
             {
@@ -61,6 +62,7 @@ namespace Project_B.DataAcces
                 {
                     using (SQLiteDataReader rdr = cmd.ExecuteReader())
                     {
+                        // Read all data from database, assign them to variables and adds them to the list
                         while (rdr.Read())
                         {
                             int TicketId = rdr.GetInt32(0);
@@ -102,6 +104,7 @@ namespace Project_B.DataAcces
             return tableNames;
         }
 
+        // Creates a JSON file from the list of tickets
         public static void Create_Json()
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; DateTimeFormat=Custom;DateTimeStringFormat=dd-MM-yyyy HH:mm:ss";

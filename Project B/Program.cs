@@ -328,6 +328,7 @@ namespace Project_B
                                     }
                                 }
                                 break;
+                            // Download ticket data in JSON format
                             case "Download Ticket Data":
                                 Console.Clear();
                                 JSONconversion.Create_Json();
