@@ -74,9 +74,6 @@ namespace Project_B.DataAcces
                 "SeatClass VARCHAR(255)," +
                 "FlightID INTEGER," +
                 "UserID INTEGER," +
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                 "Gate VARCHAR(255)," +
                 "Departuretime DATETIME," +
                 "Destination VARCHAR(255)," +
@@ -84,15 +81,6 @@ namespace Project_B.DataAcces
                 "Origin VARCHAR(255)," +
                 "Extranotes VARCHAR(255)," +
                 "BaggageWeight INTEGER," +
-<<<<<<< HEAD
-=======
->>>>>>> parent of 95e6c01 (baggage info db)
-=======
->>>>>>> parent of 95e6c01 (baggage info db)
-=======
->>>>>>> parent of 95e6c01 (baggage info db)
-=======
->>>>>>> parent of 21346bf (bagage UI en medische info)
                 "FOREIGN KEY(FlightID) REFERENCES Flights(FlightID)" +
                 "FOREIGN KEY(UserID) REFERENCES Users(ID))";
                 // using statements are used to confine the use of the connection to only this function, so the database remains useable outside of it since its automatially closed and does not remain open on a function when it shouldnt be
@@ -150,62 +138,38 @@ namespace Project_B.DataAcces
                                     cmd3.ExecuteNonQuery();
                             }
                             DateTime time = DateTime.Now;
-<<<<<<< HEAD
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Retour, Origin, Extranotes ) VALUES('Email','{time}', 'Dirk','3', 'Business', 1, 1, '11', '{time}', 'Berlin', 'No', 'Amsterdam', '-');";
-=======
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES('Email','{time}', 'Dirk',3, 'Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-');";
->>>>>>> parent of fe4d70a (Merge branch 'Dev-branch' of https://github.com/Dirkhoogland/Project-B into Dev-branch)
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
 
-<<<<<<< HEAD
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Retour, Origin, Extranotes ) VALUES('Email1','{time}', 'Berat', '2','Business', 1, 2, '11', '{time}','Berlin', 'No', 'Amsterdam', '-');";
-=======
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES('Email1','{time}', 'Berat', 2,'Business', 1, 2, '11', '{time}','Berlin', 'Amsterdam', '-');";
->>>>>>> parent of fe4d70a (Merge branch 'Dev-branch' of https://github.com/Dirkhoogland/Project-B into Dev-branch)
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-<<<<<<< HEAD
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,  Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Retour, Origin, Extranotes ) VALUES('Email','{time}', 'Dirk', '1','Business', 1, 1, '11', '{time}', 'Berlin', 'No', 'Amsterdam', '-');";
-=======
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,  Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES('Email','{time}', 'Dirk', 1,'Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-');";
->>>>>>> parent of fe4d70a (Merge branch 'Dev-branch' of https://github.com/Dirkhoogland/Project-B into Dev-branch)
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-<<<<<<< HEAD
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination, Retour, Origin, Extranotes) VALUES('Email','{time}', 'Dirk','4','Business', 1, 1, '11', '{time}', 'Berlin', 'No', 'Amsterdam', '-')";
-=======
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination, Origin, Extranotes) VALUES('Email','{time}', 'Dirk',4,'Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-')";
->>>>>>> parent of fe4d70a (Merge branch 'Dev-branch' of https://github.com/Dirkhoogland/Project-B into Dev-branch)
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-<<<<<<< HEAD
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination, Retour, Origin ,Extranotes) VALUES('Email','{time}', 'Dirk','5','Business', 1, 1, '11', '{time}', 'Berlin', 'No', 'Amsterdam', '-');";
-=======
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Origin ,Extranotes) VALUES('Email','{time}', 'Dirk',5,'Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-');";
->>>>>>> parent of fe4d70a (Merge branch 'Dev-branch' of https://github.com/Dirkhoogland/Project-B into Dev-branch)
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-<<<<<<< HEAD
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID, Gate, Departuretime, Destination, Retour, Origin ,Extranotes) VALUES('Email','{time}', 'Dirk','6','Business', 1, 1, '11', '{time}', 'Berlin', 'No', 'Amsterdam', '-');";
-=======
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID, Gate, Departuretime, Destination,Origin ,Extranotes) VALUES('Email','{time}', 'Dirk',6,'Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', '-');";
->>>>>>> parent of fe4d70a (Merge branch 'Dev-branch' of https://github.com/Dirkhoogland/Project-B into Dev-branch)
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
