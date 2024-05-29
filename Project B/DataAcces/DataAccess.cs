@@ -76,6 +76,7 @@ namespace Project_B.DataAcces
                 "UserID INTEGER," +
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "Gate VARCHAR(255)," +
                 "Departuretime DATETIME," +
                 "Destination VARCHAR(255)," +
@@ -83,6 +84,8 @@ namespace Project_B.DataAcces
                 "Origin VARCHAR(255)," +
                 "Extranotes VARCHAR(255)," +
                 "BaggageWeight INTEGER," +
+=======
+>>>>>>> parent of 95e6c01 (baggage info db)
 =======
 >>>>>>> parent of 95e6c01 (baggage info db)
 =======
