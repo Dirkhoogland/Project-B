@@ -23,8 +23,8 @@ namespace Project_B.Presentation
             int totalPages = (totalFlights + flightsPerPage - 1) / flightsPerPage; // Round up division
             int currentPage = 1;
             int selectedHistoryIndex = 0;
-
-            while (true)
+            bool userhistoryloop = true;
+            while (userhistoryloop == true)
             {
                 AnsiConsole.Clear();
 
@@ -82,7 +82,7 @@ namespace Project_B.Presentation
                 AnsiConsole.WriteLine($"Page {currentPage} of {totalPages}");
 
                 var key = Console.ReadKey(true).Key;
-
+    
                 switch (key)
                 {
                     case ConsoleKey.UpArrow:
@@ -92,7 +92,8 @@ namespace Project_B.Presentation
                         if (selectedHistoryIndex < end - 1) selectedHistoryIndex++;
                         break;
                     case ConsoleKey.Enter:
-                        while (true)
+                        bool cancelTicketLoop = true;
+                        while (cancelTicketLoop)
                         {
                             AnsiConsole.Clear();
 
@@ -134,13 +135,16 @@ namespace Project_B.Presentation
                                     {
                                         AnsiConsole.MarkupLine("[red]Can't cancel ticket. Flight is less than 3 hours away.[/]");
                                         System.Threading.Thread.Sleep(2000);
-                                        return;
+                                        break;
                                     }
                                     break;
                                 case "Back to previous menu":
-                                    return;
+                                    cancelTicketLoop = false;
+                                    AnsiConsole.Clear();
+                                    break;
                             }
                         }
+                        break;
                     case ConsoleKey.N:
                         if (currentPage < totalPages)
                         {

@@ -313,39 +313,20 @@ namespace Project_B
                                 }
                                 break;
                             case "Flight History":
-                            // duidelijkere UI om uit flight history te komen
-                                var historyMenuItems = new[] { "Present user history", "Back to previous menu" };
-                                bool continueHistoryLoop = true;
-                                while (continueHistoryLoop)
-                                {
-                                    AnsiConsole.Clear();
-                                    var historyMenuIndex = AnsiConsole.Prompt(
-                                        new SelectionPrompt<string>()
-                                            .Title("Please choose an option:")
-                                            .PageSize(10)
-                                            .AddChoices(historyMenuItems));
+                                // Clear the console
+                                AnsiConsole.Clear();
 
-                                    switch (historyMenuIndex)
-                                    {
-                                        case "Present user history":
-                                            AnsiConsole.Clear();
-                                            // Check if a user is logged in
-                                            if (currentuser != null)
-                                            {
-                                                // Call the method with the current user
-                                                Userhistory.presentuserhistory(currentuser); 
-                                                Console.ReadKey();
-                                            }
-                                            else
-                                            {
-                                                AnsiConsole.WriteLine("No user is currently logged in.");
-                                                Console.ReadKey();
-                                            }
-                                            break;
-                                        case "Back to previous menu":
-                                            continueHistoryLoop = false;
-                                            break;
-                                    }
+                                // Check if a user is logged in
+                                if (currentuser != null)
+                                {
+                                    // Call the method with the current user
+                                    Userhistory.presentuserhistory(currentuser); 
+                                    Console.ReadKey();
+                                }
+                                else
+                                {
+                                    AnsiConsole.MarkupLine("[red]No user is currently logged in.[/]");
+                                    Console.ReadKey();
                                 }
                                 break;
                             case "Manage Users":

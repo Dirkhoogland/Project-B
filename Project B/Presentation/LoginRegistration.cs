@@ -50,11 +50,11 @@ namespace Project_B.Presentation
             bool successful = Registration.RegistrationLogic(email, name, password);
             if (!successful)
             {
-                AnsiConsole.WriteLine($"[red]Email already exists: {email}[/]");
+                AnsiConsole.MarkupLine("[red]Email already exists: {0}[/]", email);
             }
             else
             {
-                AnsiConsole.WriteLine($"[green]Successfully created user: {name} with Email: {email}[/]");
+                AnsiConsole.MarkupLine("[green]Successfully created user: {0} with Email: {1}[/]", name, email);
             }
 
             Login.LoginLogic(email, password);
@@ -65,13 +65,14 @@ namespace Project_B.Presentation
 
         private static CurrentUser Loginscreen()
         {
-            string email = AnsiConsole.Ask<string>("Please fill in your Email: ");
-            string password = AnsiConsole.Prompt(new TextPrompt<string>("Please fill in your Password: ").Secret());
+            string email = AnsiConsole.Ask<string>("[blue]Email:[/] ");
+            string password = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Password:[/] ").Secret());
 
             bool successful = Login.LoginLogic(email, password);
             if (!successful)
             {
-                AnsiConsole.WriteLine("[red]Wrong Email or Password[/]");
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[red]Wrong Email or Password[/]");
                 return null;
             }
             else
