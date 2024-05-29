@@ -68,6 +68,9 @@ namespace Project_B.Presentation
 
                 for (int i = 0; i < page.Count; i++)
                 {
+
+                    Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Distance: {history.distance}");
+
                     if (i == ticketIndex)
                     {
                         Console.BackgroundColor = ConsoleColor.Gray;
@@ -78,6 +81,7 @@ namespace Project_B.Presentation
                     Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
 
                     Console.ResetColor();
+
                 }
 
                 Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, totalPages);
@@ -173,6 +177,9 @@ namespace Project_B.Presentation
 
                 for (int i = 0; i < page.Count; i++)
                 {
+
+                    Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}, Distance: {history.distance}");
+
                     if (i == ticketIndex)
                     {
                         Console.BackgroundColor = ConsoleColor.Gray;
@@ -183,6 +190,7 @@ namespace Project_B.Presentation
                     Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
 
                     Console.ResetColor();
+
                 }
 
                 Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, totalPages);
@@ -282,6 +290,9 @@ namespace Project_B.Presentation
 
                 for (int i = 0; i < page.Count; i++)
                 {
+
+                    Console.WriteLine($"Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}, Distance: {history.distance}");
+
                     if (i == ticketIndex)
                     {
                         Console.BackgroundColor = ConsoleColor.Gray;
@@ -292,6 +303,7 @@ namespace Project_B.Presentation
                     Console.WriteLine($"Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
 
                     Console.ResetColor();
+
                 }
 
                 Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, totalPages);
