@@ -57,21 +57,21 @@ namespace Project_B.BusinessLogic
         }
         public void AddFlyPoints(int userId, int kilometers)
         {
-            int flyPoints = new DataAccess().GetFlyPoints(userId); // Create an instance of the DataAccess class and call the GetFlyPoints method on that instance
+            int flyPoints = new DataAccess().GetFlyPoints(userId);
             flyPoints += kilometers / 2000;
-            DataAccess dataAccess = new DataAccess(); // Create another instance of the DataAccess class
-            dataAccess.UpdateFlyPoints(userId, flyPoints); // Call the UpdateFlyPoints method on the second instance
+            DataAccess dataAccess = new DataAccess();
+            dataAccess.UpdateFlyPoints(userId, flyPoints);
         }
 
         public bool RedeemFlyPoints(int userId)
         {
-            DataAccess dataAccess = new DataAccess(); // Create an instance of the DataAccess class
-            int flyPoints = dataAccess.GetFlyPoints(userId); // Call the GetFlyPoints method on the instance
+            DataAccess dataAccess = new DataAccess();
+            int flyPoints = dataAccess.GetFlyPoints(userId);
 
             if (flyPoints >= 20)
             {
                 flyPoints -= 20;
-                dataAccess.UpdateFlyPoints(userId, flyPoints); // Call the UpdateFlyPoints method on the instance
+                dataAccess.UpdateFlyPoints(userId, flyPoints);
                 return true;
             }
 
@@ -80,8 +80,8 @@ namespace Project_B.BusinessLogic
 
         public int GetFlyPoints(int userId)
         {
-            DataAccess dataAccess = new DataAccess(); // Create an instance of the DataAccess class
-            return dataAccess.GetFlyPoints(userId); // Call the GetFlyPoints method on the instance
+            DataAccess dataAccess = new DataAccess();
+            return dataAccess.GetFlyPoints(userId);
         }
     }
 }
