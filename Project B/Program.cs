@@ -11,81 +11,120 @@ namespace Project_B
     {
         public class Program
         {
+            public static Flight SelectFlight(List<Flight> flights)
+            {
+                var flightPrompt = new SelectionPrompt<Flight>()
+                    .Title("Please select a flight:")
+                    .PageSize(10)
+                    .AddChoices(flights);
+
+                return AnsiConsole.Prompt(flightPrompt);
+            }
+            public static void PrintImages()
+            {
+                string[] image1 = new string[]
+                {
+                    "                      ___",
+                    "                      \\\\ \\",
+                    "                       \\\\ `\\",
+                    "    ___                 \\\\  \\",
+                    "   |    \\                \\\\  `\\",
+                    "   |____\\                \\    \\",
+                    "   |______\\                \\    `\\",
+                    "   |       \\                \\     \\",
+                    "   |      __\\__---------------------------------._.",
+                    " __|---~~~__o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_[]\\",
+                    "|___                         /~      )  New South     \\__",
+                    "    ~~~---..._______________/      ,/_________________/",
+                    "                           /      /",
+                    "                          /     ,/",
+                    "                         /     /",
+                    "                        /    ,/",
+                    "                       /    /",
+                    "                      //  ,/",
+                    "                     //  /",
+                    "                    // ,/",
+                    "                   //_/"
+                };
+
+                string[] image2 = new string[]
+                {
+                    "",
+                    "",
+                    "",
+                    "",
+                    "__|__",
+                    "\\___/",
+                    " | |",
+                    " | |",
+                    "_|_|______________",
+                    "        /|\\",
+                    "      */ | \\*",
+                    "      / -+- \\",
+                    "---o--(_)--o---",
+                    "    /  0 \" 0  \\",
+                    "  */     |     \\*",
+                    "  /      |      \\",
+                    "*/       |       \\*"
+                };
+
+                for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
+                {
+                    string line1 = i < image1.Length ? image1[i] : new string(' ', image1.Max(s => s.Length));
+                    string line2 = i < image2.Length ? image2[i] : "";
+
+                    AnsiConsole.WriteLine(line1.PadRight(image1.Max(s => s.Length)) + "    " + line2);
+                }
+            }
+            private static CurrentUser Login()
+            {
+                CurrentUser currentuser = null;
+                return currentuser = LoginRegistrations.LoginScreen();
+            }
             public static void Main(string[] args)
             {
+
                 DataAccess.Database();
-                
-                string[] menuItemsGuest = { "Login/Register", "Exit" };
-                string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
-                string[] menuItemsAdmin = { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Logout", "Exit" };
-                string[] manageFlightsMenu = { "Add Flight", "Update Flight", "Back" };
+
+                var menuItemsGuest = new[] { "Login/Register", "Exit" };
+                var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
+                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Logout", "Exit" };
+                var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
                 CurrentUser currentuser = null;
                 bool isFilterActive = false;
-                bool isBackSelected = false;
                 int currentOption = 0;
                 string filterFlightsText = " Filter Flights ";
                 string removeFiltersText = " Remove Filters ";
                 string backText = " Back ";
                 List<string> options = new List<string> { filterFlightsText };
                 
-                while (true)
-                {
-                    Console.Clear();
+                    while (true)
+                    {
+                        AnsiConsole.Clear();
 
-                    if (currentuser == null)
-                    {
-                        PrintImages();
-                    }
-                    if (currentuser != null)
-                    {
-                        string loginText = $"Logged in as {currentuser.Name}";
-                        int padding = (Console.WindowWidth - loginText.Length) / 2;
-                        Console.WriteLine(new string('-', padding) + loginText + new string('-', padding));
-                    }
-
-                    for (int i = 0; i < menuItems.Length; i++)
-                    {
-                        if (i == currentIndex)
+                        if (currentuser == null)
                         {
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                            Console.ForegroundColor = ConsoleColor.Black;
+                            PrintImages();
+                        }
+                        if (currentuser != null)
+                        {
+                            string loginText = $"Logged in as {currentuser.Name}";
+                            int padding = (Console.WindowWidth - loginText.Length) / 2;
+                            AnsiConsole.WriteLine(new string('-', padding) + loginText + new string('-', padding));
                         }
 
-                        Console.WriteLine(menuItems[i]);
+                        var selectedOption = AnsiConsole.Prompt(
+                            new SelectionPrompt<string>()
+                                .PageSize(10)
+                                .AddChoices(menuItems));
 
-                        Console.ResetColor();
-                    }
-
-                    ConsoleKeyInfo keyInfo;
-                    do
-                    {
-                        keyInfo = Console.ReadKey(true);
-                    } while (keyInfo.Key != ConsoleKey.UpArrow && keyInfo.Key != ConsoleKey.DownArrow && keyInfo.Key != ConsoleKey.Enter);
-
-                    if (keyInfo.Key == ConsoleKey.UpArrow)
-                    {
-                        if (currentIndex > 0)
-                        {
-                            currentIndex--;
-                        }
-                    }
-                    else if (keyInfo.Key == ConsoleKey.DownArrow)
-                    {
-                        if (currentIndex < menuItems.Length - 1)
-                        {
-                            currentIndex++;
-                        }
-                    }
-                    else if (keyInfo.Key == ConsoleKey.Enter)
-                    {
-                        switch (menuItems[currentIndex])
+                        switch (selectedOption)
                         {
                             case "Login/Register":
-                                Console.Clear();
-                                
+                                AnsiConsole.Clear();
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
@@ -97,31 +136,25 @@ namespace Project_B
                                     {
                                         menuItems = menuItemsUser;
                                     }
-                                    currentIndex = 0;
                                 }
-                                Console.Clear();
+                                AnsiConsole.Clear();
                                 break;
                             case "Logout":
                                 currentuser = null;
                                 menuItems = menuItemsGuest;
-                                currentIndex = 0;
                                 break;
                             case "Exit":
                                 return;
                             case "View Flights":
-                                isBackSelected = false;
-                                Console.Clear();
+                                bool continueViewFlights = true;
+                                AnsiConsole.Clear();
                                 List<Flight> flights = Flight.GetFlights(); // get the list of flights without any filters
                                 options = new List<string> { filterFlightsText, backText }; // reset the options
                                 options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
 
-                                int pageSize = 20; // Number of flights to display at a time
-                                int pageNumber = 0; // Current page numbe
-                                int totalPages = (options.Count + pageSize - 1) / pageSize; // Total number of pages
-
-                                while (true)
+                                while (continueViewFlights)
                                 {
-                                    Console.Clear();
+                                    AnsiConsole.Clear();
 
                                     if (isFilterActive)
                                     {
@@ -132,128 +165,59 @@ namespace Project_B
                                         options[1] = backText;
                                     }
 
-                                    var page = options.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+                                    var innerSelectedOption = AnsiConsole.Prompt(
+                                        new SelectionPrompt<string>()
+                                            .Title("View Flights:")
+                                            .PageSize(20)
+                                            .AddChoices(options));
 
-                                    for (int i = 0; i < page.Count; i++)
+                                    switch (innerSelectedOption)
                                     {
-                                        if (i == currentOption)
-                                        {
-                                            Console.BackgroundColor = ConsoleColor.Gray;
-                                            Console.ForegroundColor = ConsoleColor.Black;
-                                        }
-
-                                        if (i == 0) // Filter Flights
-                                        {
-                                            int padding = (Console.WindowWidth - filterFlightsText.Length) / 2;
-                                            Console.WriteLine(new string('-', padding) + filterFlightsText + new string('-', padding));
-                                        }
-                                        else if (i == 1 && isFilterActive) // Remove Filters
-                                        {
-                                            int padding = (Console.WindowWidth - removeFiltersText.Length) / 2;
-                                            Console.WriteLine(new string('-', padding) + removeFiltersText + new string('-', padding));
-                                        }
-                                        else if (i == 1 && !isFilterActive) // Back
-                                        {
-                                            int padding = (Console.WindowWidth - backText.Length) / 2;
-                                            Console.WriteLine(new string('-', padding) + backText + new string('-', padding));
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine(page[i]);
-                                        }
-                                        Console.ResetColor();
-                                    }
-
-                                    Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, (options.Count + pageSize - 1) / pageSize);
-                                    Console.WriteLine("Press N for next page, P for previous page.");
-
-                                    ConsoleKeyInfo optionKeyInfo = Console.ReadKey(true);
-
-                                    switch (optionKeyInfo.Key)
-                                    {
-                                        case ConsoleKey.UpArrow:
-                                            if (currentOption > 0) currentOption--;
+                                        case var option when option == filterFlightsText: // Filter Flights
+                                            flights = Flight.FilterFlights();
+                                            isFilterActive = true;
+                                            options = new List<string> { filterFlightsText, removeFiltersText };
+                                            options.AddRange(flights.Select(f => f.ToString()));
                                             break;
-                                        case ConsoleKey.DownArrow:
-                                            if (currentOption < Math.Min(19, options.Count - 1)) currentOption++;
+                                        case var option when option == removeFiltersText: // Remove Filters
+                                            flights = Flight.GetFlights(); // get the list of flights without any filters
+                                            options = new List<string> { filterFlightsText, backText }; // reset the options
+                                            options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
+                                            isFilterActive = false; // reset the filter flag
                                             break;
-                                        case ConsoleKey.N:
-                                            if (pageNumber < (options.Count + pageSize - 1) / pageSize - 1)
+                                        case var option when option == backText: // Back
+                                            menuItems = menuItemsUser;
+                                            continueViewFlights = false;
+                                            break;
+                                        default: // Select Flight
+                                            Flight selectedFlight = flights.First(f => f.ToString() == selectedOption);
+                                            AnsiConsole.Clear();
+                                            // Fetch the aircraft type from the selected flight
+                                            string aircraftType = selectedFlight.AircraftType;
+
+                                            // Show the layout according to the aircraft type
+                                            switch (aircraftType)
                                             {
-                                                pageNumber++;
+                                                case "Boeing 737":
+                                                    Seat seats = new Seat();
+                                                    seats.lay_out();
+                                                    seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                    break;
+                                                case "Boeing 787":
+                                                    BoeingSeat boeing787Seats = new BoeingSeat();
+                                                    boeing787Seats.lay_out();
+                                                    boeing787Seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                    break;
+                                                case "Airbus 330":
+                                                    AirbusSeat airbus330Seats = new AirbusSeat();
+                                                    airbus330Seats.lay_out();
+                                                    airbus330Seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                    break;
+                                                default:
+                                                    AnsiConsole.WriteLine("Unknown aircraft type.");
+                                                    break;
                                             }
                                             break;
-                                        case ConsoleKey.P:
-                                            if (pageNumber > 0)
-                                            {
-                                                pageNumber--;
-                                            }
-                                            break;
-                                        case ConsoleKey.Enter:
-                                            if (currentOption == 0) // Filter Flights
-                                            {
-                                                flights = Flight.FilterFlights();
-                                                isFilterActive = true;
-                                                options = new List<string> { filterFlightsText, removeFiltersText };
-                                                options.AddRange(flights.Select(f => f.ToString()));
-                                                currentOption = 0;
-                                            }
-                                            else if (currentOption == 1 && isFilterActive) // Remove Filters
-                                            {
-                                                flights = Flight.GetFlights(); // get the list of flights without any filters
-                                                options = new List<string> { filterFlightsText, backText }; // reset the options
-                                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
-                                                isFilterActive = false; // reset the filter flag
-                                                currentOption = 0; // reset the current option
-                                            }
-                                            else if (currentOption == 1 && !isFilterActive) // Back
-                                            {
-                                                menuItems = menuItemsUser;
-                                                currentIndex = 0;
-                                                isBackSelected = true;
-                                            }
-                                            else // Select Flight
-                                            {
-                                                if (currentOption >= 2) // Check if 'currentOption' is within the bounds of the 'flights' list
-                                                {
-                                                    int actualIndex = pageNumber * pageSize + currentOption - 2;
-                                                    Flight selectedFlight = flights[actualIndex];
-                                                    Console.Clear();
-                                                    // Fetch the aircraft type from the selected flight
-                                                    string aircraftType = selectedFlight.AircraftType;
-
-                                                    // Show the layout according to the aircraft typpe
-                                                    switch (aircraftType)
-                                                    {
-                                                        case "Boeing 737":
-                                                            Seat seats = new Seat();
-                                                            seats.lay_out();
-                                                            seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                            break;
-                                                        case "Boeing 787":
-                                                            BoeingSeat boeing787Seats = new BoeingSeat();
-                                                            boeing787Seats.lay_out();
-                                                            boeing787Seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                            break;
-                                                        case "Airbus 330":
-                                                            AirbusSeat airbus330Seats = new AirbusSeat();
-                                                            airbus330Seats.lay_out();
-                                                            airbus330Seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                            break;
-                                                        default:
-                                                            Console.WriteLine("Unknown aircraft type.");
-                                                            break;
-                                                    }
-
-                                                    Console.ReadLine();
-                                                }
-                                            }
-                                            break;
-                                    }
-
-                                    if (isBackSelected)
-                                    {
-                                        break;
                                     }
                                 }
 
@@ -266,19 +230,11 @@ namespace Project_B
                                 {
                                     menuItems = menuItemsUser;
                                 }
-
-                                if (isBackSelected)
-                                {
-                                    break; // Break out of the case
-                                }
-                                else
-                                {
-                                    continue; // Continue with the next iteration of the main menu loop
-                                }    
+                                break;
                             case "Manage Flights":
                                 var flightMenuItems = new[] { "Add Flight", "Update Flight", "Back to previous menu" };
-                                bool continueFlightsLoop = true;
-                                while (continueFlightsLoop)
+                                bool continueManageFlightsLoop = true;
+                                while (continueManageFlightsLoop)
                                 {
                                     AnsiConsole.Clear();
                                     var flightMenuIndex = AnsiConsole.Prompt(
@@ -303,7 +259,7 @@ namespace Project_B
                                             Console.ReadKey();
                                             break;
                                         case "Back to previous menu":
-                                            continueFlightsLoop = false;
+                                            continueManageFlightsLoop = false;
                                             break;
                                     }
                                 }
@@ -394,77 +350,5 @@ namespace Project_B
                     }
                 }
             }
-
-            public static Flight SelectFlight(List<Flight> flights)
-            {
-                var flightPrompt = new SelectionPrompt<Flight>()
-                    .Title("Please select a flight:")
-                    .PageSize(10)
-                    .AddChoices(flights);
-
-                return AnsiConsole.Prompt(flightPrompt);
-            }
-            public static void PrintImages()
-            {
-                string[] image1 = new string[]
-                {
-                    "                      ___",
-                    "                      \\\\ \\",
-                    "                       \\\\ `\\",
-                    "    ___                 \\\\  \\",
-                    "   |    \\                \\\\  `\\",
-                    "   |____\\                \\    \\",
-                    "   |______\\                \\    `\\",
-                    "   |       \\                \\     \\",
-                    "   |      __\\__---------------------------------._.",
-                    " __|---~~~__o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_[]\\",
-                    "|___                         /~      )  New South     \\__",
-                    "    ~~~---..._______________/      ,/_________________/",
-                    "                           /      /",
-                    "                          /     ,/",
-                    "                         /     /",
-                    "                        /    ,/",
-                    "                       /    /",
-                    "                      //  ,/",
-                    "                     //  /",
-                    "                    // ,/",
-                    "                   //_/"
-                };
-
-                string[] image2 = new string[]
-                {
-                    "",
-                    "",
-                    "",
-                    "",
-                    "__|__",
-                    "\\___/",
-                    " | |",
-                    " | |",
-                    "_|_|______________",
-                    "        /|\\",
-                    "      */ | \\*",
-                    "      / -+- \\",
-                    "---o--(_)--o---",
-                    "    /  0 \" 0  \\",
-                    "  */     |     \\*",
-                    "  /      |      \\",
-                    "*/       |       \\*"
-                };
-
-                for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
-                {
-                    string line1 = i < image1.Length ? image1[i] : new string(' ', image1.Max(s => s.Length));
-                    string line2 = i < image2.Length ? image2[i] : "";
-
-                    AnsiConsole.WriteLine(line1.PadRight(image1.Max(s => s.Length)) + "    " + line2);
-                }
-            }
-            private static CurrentUser Login()
-            {
-                CurrentUser currentuser = null;
-                return currentuser = LoginRegistrations.LoginScreen();
-            }
         }
     }
-}
