@@ -2,7 +2,7 @@
 using Project_B.Presentation;
 using System.Drawing.Printing;
 using System.Xml.Linq;
-/*
+
 namespace Project_B
 
 {
@@ -16,7 +16,7 @@ namespace Project_B
                 
                 string[] menuItemsGuest = { "Login/Register", "Exit" };
                 string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
-                string[] menuItemsAdmin = { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Logout", "Exit" };
+                string[] menuItemsAdmin = { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Download Ticket Data", "Logout", "Exit" };
                 string[] manageFlightsMenu = { "Add Flight", "Update Flight", "Back" };
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
@@ -327,7 +327,14 @@ namespace Project_B
                                         if (manageFlightsMenu[manageFlightsIndex] == "Back") break;
                                     }
                                 }
-                                break;                        
+                                break;
+                            case "Download Ticket Data":
+                                Console.Clear();
+                                JSONconversion.Create_Json();
+                                Console.WriteLine("Data has been downloaded. Check your Documents folder on your personal computer.");
+                                Console.WriteLine("Press enter to continue.");
+                                Console.ReadLine();
+                                break;                 
                             case "Flight History":
                                 Console.Clear();
                                 // Check if a user is logged in
@@ -521,9 +528,9 @@ namespace Project_B
                     "      / -+- \\",
                     "---o--(_)--o---",
                     "    /  0 \" 0  \\",
-                    "   /     |     \\*",
-                    "  /      |      \\",
-                    " /       |       \\*"
+                    "   */     |     \\*",
+                    "  */      |      \\",
+                    " */       |       \\*"
                 };
 
                 for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
@@ -539,18 +546,6 @@ namespace Project_B
                 CurrentUser currentuser = null;
                 return currentuser = LoginRegistrations.LoginScreen();
             }
-        }
-    }
-}
-*/
-
-namespace Project_B
-{
-    public class Program
-    {
-        public static void Main()
-        {
-            JSONconversion.Create_Json();
         }
     }
 }

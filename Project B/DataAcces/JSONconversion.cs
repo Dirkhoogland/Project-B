@@ -7,15 +7,7 @@ namespace Project_B.DataAcces
 {
     public class JSONconversion
     {
-        public static string databasePath
-        {
-           get
-            {   // gets the path to where ever its currently on your pc/laptop and then into a DataSource file, which if its correctly downloaded from github it should find.
-                return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
-            }
-        }
-
-        public int TicketId;
+        public int TicketId {get; private set;}
 
         public string Email {get; private set;}
 
@@ -112,7 +104,7 @@ namespace Project_B.DataAcces
 
         public static void Create_Json()
         {
-            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; DateTimeFormat=Custom;DateTimeStringFormat=dd-MM-yyyy HH:mm:ss";
+            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; DateTimeFormat=Custom;DateTimeStringFormat=dd-MM-yyyy HH:mm:ss";
             List<JSONconversion> tickets = Convert_to_Json(ConnectionString);
 
             var options = new JsonSerializerOptions
@@ -121,8 +113,9 @@ namespace Project_B.DataAcces
             };
 
             string json = JsonSerializer.Serialize(tickets, options);
-            File.WriteAllText("NewSouthTicketData.json", json);
-            Console.WriteLine("JSON file created successfully.");
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string filePath = Path.Combine(documentsPath, "NewSouthTicketData.json");
+            File.WriteAllText(filePath, json);
         }
     }
 }
