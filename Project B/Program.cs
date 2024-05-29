@@ -189,6 +189,10 @@ namespace Project_B
                                     AnsiConsole.Render(table);
 
                                     // Display the options
+                                    if (isFilterActive)
+                                    {
+                                        AnsiConsole.MarkupLine($"[red]FILTER IS ACTIVE [/]");
+                                    }
                                     AnsiConsole.MarkupLine("[blue]Options:[/]");
                                     AnsiConsole.MarkupLine("[green]F[/]: Filter flights");
                                     if (isFilterActive)

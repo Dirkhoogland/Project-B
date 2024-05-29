@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using Project_B.Presentation;
+using Spectre.Console;
+using Spectre.Console.Cli;
 namespace Project_B.DataAcces
 {
     public class Flight
@@ -243,333 +245,186 @@ namespace Project_B.DataAcces
         public static void AdminUpdateFlight()
         {
             List<Flight> flights = GetFlights();
-            int flightIndex = 0;
 
-            // Display the title
-            Console.WriteLine(new string('-', Console.WindowWidth));
-            Console.WriteLine("Update Flight".PadLeft(Console.WindowWidth / 2 + "Update Flight".Length / 2));
-            Console.WriteLine(new string('-', Console.WindowWidth));
+            // Sort flights by time
+            flights = flights.OrderBy(flight => flight.DepartureTime).ToList();
 
-            Console.WriteLine("Select a flight to update (use arrow keys to navigate, press Enter to select):");
-            foreach (Flight flight in flights)
-            {
-                Console.WriteLine(flight.ToString());
-            }
+            int selectedRow = 0;
+            int currentPage = 0;
+            int rowsPerPage = 20;
 
             while (true)
             {
-                var key = Console.ReadKey(true).Key;
-                if (key == ConsoleKey.UpArrow)
+                var flightTable = new Table().Border(TableBorder.Rounded);
+                flightTable.AddColumn("Time");
+                flightTable.AddColumn("Origin");
+                flightTable.AddColumn("Destination");
+                flightTable.AddColumn("Flight Number");
+                flightTable.AddColumn("Gate");
+                flightTable.AddColumn("Terminal");
+
+                int startRow = currentPage * rowsPerPage;
+                int endRow = Math.Min(startRow + rowsPerPage, flights.Count);
+
+                for (int i = startRow; i < endRow; i++)
                 {
-                    flightIndex = (flightIndex - 1 + flights.Count) % flights.Count;
+                    var flight = flights[i];
+                    if (i == selectedRow)
+                    {
+                        flightTable.AddRow($"[green]{flight.DepartureTime}[/]", $"[green]{flight.Origin}[/]", $"[green]{flight.Destination}[/]", $"[green]{flight.FlightNumber}[/]", $"[green]{flight.Gate}[/]", $"[green]{flight.Terminal}[/]");
+                    }
+                    else
+                    {
+                        flightTable.AddRow(flight.DepartureTime.ToString(), flight.Origin, flight.Destination, flight.FlightNumber, flight.Gate, flight.Terminal);
+                    }
                 }
-                else if (key == ConsoleKey.DownArrow)
+
+                AnsiConsole.Render(flightTable);
+
+                // Display navigation instructions and current page number
+                AnsiConsole.MarkupLine($"Page [green]{currentPage + 1}[/] of [green]{(flights.Count - 1) / rowsPerPage + 1}[/]");
+                AnsiConsole.MarkupLine("[blue]Options:[/]");
+                AnsiConsole.MarkupLine("[green]Up Arrow[/]: Move selection up");
+                AnsiConsole.MarkupLine("[green]Down Arrow[/]: Move selection down");
+                AnsiConsole.MarkupLine("[green]Enter[/]: Select option");
+                AnsiConsole.MarkupLine("[blue]Navigation:[/]");
+                AnsiConsole.MarkupLine("[green]N[/]: Next page");
+                AnsiConsole.MarkupLine("[green]P[/]: Previous page");
+                AnsiConsole.MarkupLine("[green]B[/]: Back to previous menu");
+
+                var key = Console.ReadKey(true);
+
+                if (key.Key == ConsoleKey.UpArrow)
                 {
-                    flightIndex = (flightIndex + 1) % flights.Count;
+                    selectedRow = Math.Max(0, selectedRow - 1);
                 }
-                else if (key == ConsoleKey.Enter)
+                else if (key.Key == ConsoleKey.DownArrow)
+                {
+                    selectedRow = Math.Min(flights.Count - 1, selectedRow + 1);
+                }
+                else if (key.Key == ConsoleKey.P)
+                {
+                    currentPage = Math.Max(0, currentPage - 1);
+                    selectedRow = currentPage * rowsPerPage;
+                }
+                else if (key.Key == ConsoleKey.N)
+                {
+                    currentPage = Math.Min((flights.Count - 1) / rowsPerPage, currentPage + 1);
+                    selectedRow = currentPage * rowsPerPage;
+                }
+                else if (key.Key == ConsoleKey.B)
                 {
                     break;
                 }
-
-                Console.CursorTop = Console.CursorTop - flights.Count;
-                for (int i = 0; i < flights.Count; i++)
+                else if (key.Key == ConsoleKey.Enter)
                 {
-                    if (i == flightIndex)
+                    // Handle selection
+                    Flight selectedFlight = flights[selectedRow];
+                    // Continue with your update logic here...
+                    Flight flightToUpdate = new Flight
                     {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
+                        FlightId = selectedFlight.FlightId,
+                        FlightNumber = selectedFlight.FlightNumber,
+                        Destination = selectedFlight.Destination,
+                        Origin = selectedFlight.Origin,
+                        DepartureTime = selectedFlight.DepartureTime,
+                        Terminal = selectedFlight.Terminal,
+                        Gate = selectedFlight.Gate,
+                        AircraftType = selectedFlight.AircraftType
+                    };
 
-                    Console.WriteLine(flights[i].ToString());
+                    AnsiConsole.Clear();
 
-                    Console.ResetColor();
-                }
-            }
-            Console.WriteLine("Selected flight with ID: " + flights[flightIndex].FlightId);
+                    string[] properties = { "Flight Number", "Destination", "Origin", "Departure Time", "Terminal", "Gate", "Aircraft Type"};
 
-            Flight flightToUpdate = flights[flightIndex];
-            flightToUpdate.FlightId = flights[flightIndex].FlightId;
-
-            // Store the original flight information
-            string originalFlightInfo = flightToUpdate.ToAdminString();
-
-            // List of properties to update
-            string[] properties = { "Flight Number", "Destination", "Origin", "Departure Time", "Terminal", "Gate", "Aircraft Type", "Airline" };
-            foreach (string property in properties)
-            {
-                string[] updateOptions = { "Yes", "No" };
-                    int updateIndex = 0;
-
-                // Clear the console and display the flight information
-                Console.Clear();
-                Console.WriteLine(new string('-', Console.WindowWidth));
-                Console.WriteLine($"Flight Selected: {flightToUpdate.FlightId})".PadLeft(Console.WindowWidth / 2 + $"Flight Selected (Flight ID: {flightToUpdate.FlightId})".Length / 2));
-                Console.WriteLine(new string('-', Console.WindowWidth));
-                Console.WriteLine(flightToUpdate.ToAdminString());
-
-                Console.WriteLine($"Do you want to update the {property}? (use arrow keys to navigate, press Enter to select): ");
-
-                foreach (var option in updateOptions)
-                {
-                    Console.WriteLine(option);
-                }
-
-                while (true)
-                {
-                    var key = Console.ReadKey(true).Key;
-                    if (key == ConsoleKey.UpArrow)
+                    foreach (string property in properties)
                     {
-                        updateIndex = (updateIndex - 1 + updateOptions.Length) % updateOptions.Length;
-                    }
-                    else if (key == ConsoleKey.DownArrow)
-                    {
-                        updateIndex = (updateIndex + 1) % updateOptions.Length;
-                    }
-                    else if (key == ConsoleKey.Enter)
-                    {
-                        break;
-                    }
+                        var updatePropertyPrompt = new SelectionPrompt<string>()
+                            .Title($"Do you want to update the {property}?")
+                            .AddChoices(new List<string> { "Yes", "No" });
 
-                    Console.CursorTop = Console.CursorTop - updateOptions.Length;
-                    for (int i = 0; i < updateOptions.Length; i++)
-                    {
-                        if (i == updateIndex)
+                        var updateProperty = AnsiConsole.Prompt(updatePropertyPrompt) == "Yes";
+
+                        if (updateProperty)
                         {
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                            Console.ForegroundColor = ConsoleColor.Black;
+                            // Update the property
+                            switch (property)
+                            {
+                                case "Flight Number":
+                                    // Update flight number
+                                    flightToUpdate.FlightNumber = AnsiConsole.Ask<string>("Enter new flight number (1000-9999): ");
+                                    break;
+
+                                case "Destination":
+                                    // Update destination
+                                    flightToUpdate.Destination = AnsiConsole.Ask<string>("Enter new destination: ");
+                                    break;
+
+                                case "Origin":
+                                    // Update origin
+                                    flightToUpdate.Origin = AnsiConsole.Ask<string>("Enter new origin: ");
+                                    break;
+
+                                case "Departure Time":
+                                    // Update departure time
+                                    string departureTimeString = AnsiConsole.Ask<string>("Enter new departure time (dd/MM/yyyy HH:mm): ");
+                                    flightToUpdate.DepartureTime = DateTime.ParseExact(departureTimeString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                                    break;
+
+                                case "Terminal":
+                                    // Update terminal
+                                    flightToUpdate.Terminal = AnsiConsole.Ask<string>("Enter new terminal: ");
+                                    break;
+
+                                case "Gate":
+                                    // Update gate
+                                    flightToUpdate.Gate = AnsiConsole.Ask<string>("Enter new gate: ");
+                                    break;
+
+                                case "Aircraft Type":
+                                    // Update aircraft type
+                                    flightToUpdate.AircraftType = AnsiConsole.Ask<string>("Enter new aircraft type: ");
+                                    break;
+                            }
                         }
-
-                        Console.WriteLine(updateOptions[i]);
-
-                        Console.ResetColor();
                     }
-                }
 
-                if (updateOptions[updateIndex] == "Yes")
-                {
-                    // Update the property
-                    switch (property)
+                    // Display the original and updated flight information
+                    AnsiConsole.MarkupLine($"[red]Original flight information:[/]\n{selectedFlight}");
+                    AnsiConsole.MarkupLine($"[green]Updated flight information:[/]\n{flightToUpdate}");
+
+                    // Ask the user if they want to save the changes
+                    var saveChangesPrompt = new SelectionPrompt<string>()
+                        .Title("Do you want to save the changes?")
+                        .AddChoices(new List<string> { "Yes", "No" });
+
+                    var saveChanges = AnsiConsole.Prompt(saveChangesPrompt) == "Yes";
+
+                    if (saveChanges)
                     {
-                        case "Flight Number":
-                            // Update flight number
-                            Console.Write("Enter new flight number (1000-9999): ");
-                            string flightNumberString = Console.ReadLine();
-                            if (flightNumberString?.ToLower() == "exit") return;
-                            int flightNumber;
-                            while (!int.TryParse(flightNumberString, out flightNumber) || flightNumber < 1000 || flightNumber > 9999)
-                            {
-                                Console.Write("Invalid input. Please enter a number between 1000 and 9999: ");
-                                flightNumberString = Console.ReadLine();
-                                if (flightNumberString?.ToLower() == "exit") return;
-                            }
-                            flightToUpdate.FlightNumber = flightNumber.ToString();
-                            break;
+                        // Update the original flight with the new information
+                        selectedFlight.FlightNumber = flightToUpdate.FlightNumber;
+                        selectedFlight.Destination = flightToUpdate.Destination;
+                        selectedFlight.Origin = flightToUpdate.Origin;
+                        selectedFlight.DepartureTime = flightToUpdate.DepartureTime;
+                        selectedFlight.Terminal = flightToUpdate.Terminal;
+                        selectedFlight.Gate = flightToUpdate.Gate;
+                        selectedFlight.AircraftType = flightToUpdate.AircraftType;
 
-                        case "Destination":
-                            // Update destination
-                            Console.Write("Enter new destination: ");
-                            string destination = Console.ReadLine();
-                            if (destination?.ToLower() == "exit") return;
-                            flightToUpdate.Destination = destination;
-                            break;
+                        // Save the updated flight information
+                        UpdateFlight(selectedFlight);
 
-                        case "Origin":
-                            // Update origin
-                            string[] originOptions = { "Amsterdam", "Exit" };
-                            int originIndex = 0;
-                            Console.WriteLine("Select new origin: ");
-                            foreach (var option in originOptions)
-                            {
-                                Console.WriteLine(option);
-                            }
-                            while (true)
-                            {
-                                var key = Console.ReadKey(true).Key;
-                                if (key == ConsoleKey.UpArrow)
-                                {
-                                    originIndex = (originIndex - 1 + originOptions.Length) % originOptions.Length;
-                                }
-                                else if (key == ConsoleKey.DownArrow)
-                                {
-                                    originIndex = (originIndex + 1) % originOptions.Length;
-                                }
-                                else if (key == ConsoleKey.Enter)
-                                {
-                                    if (originOptions[originIndex] == "Exit")
-                                    {
-                                        return;
-                                    }
-                                    break;
-                                }
-                                Console.CursorTop = Console.CursorTop - originOptions.Length;
-                                for (int i = 0; i < originOptions.Length; i++)
-                                {
-                                    if (i == originIndex)
-                                    {
-                                        Console.BackgroundColor = ConsoleColor.Gray;
-                                        Console.ForegroundColor = ConsoleColor.Black;
-                                    }
-                                    Console.WriteLine(originOptions[i]);
-                                    Console.ResetColor();
-                                }
-                            }
-                            flightToUpdate.Origin = originOptions[originIndex];
-                            break;
-
-                        case "Departure Time":
-                            // Update departure time
-                            Console.Write("Enter new departure time (dd/MM/yyyy HH:mm): ");
-                            DateTime departureTime;
-                            while (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out departureTime))
-                            {
-                                Console.Write("Invalid input. Please enter a date and time in the format dd/MM/yyyy HH:mm: ");
-                            }
-                            flightToUpdate.DepartureTime = departureTime;
-                            break;
-                        case "Terminal":
-                            // Update terminal
-                            Console.Write("Enter new terminal (1-4): ");
-                            string terminalString = Console.ReadLine();
-                            if (terminalString?.ToLower() == "exit") return;
-                            int terminal;
-                            while (!int.TryParse(terminalString, out terminal) || terminal < 1 || terminal > 4)
-                            {
-                                Console.Write("Invalid input. Please enter a number between 1 and 4: ");
-                                terminalString = Console.ReadLine();
-                                if (terminalString?.ToLower() == "exit") return;
-                            }
-                            flightToUpdate.Terminal = terminal.ToString();
-                            break;
-
-                        case "Gate":
-                            // Update gate
-                            Console.Write("Enter new gate (1-24): ");
-                            string gateString = Console.ReadLine();
-                            if (gateString?.ToLower() == "exit") return;
-                            int gate;
-                            while (!int.TryParse(gateString, out gate) || gate < 1 || gate > 24)
-                            {
-                                Console.Write("Invalid input. Please enter a number between 1 and 24: ");
-                                gateString = Console.ReadLine();
-                                if (gateString?.ToLower() == "exit") return;
-                            }
-                            flightToUpdate.Gate = gate.ToString();
-                            break;
-
-                        case "Aircraft Type":
-                            // Update aircraft type
-                            string[] aircraftTypeOptions = { "Boeing 787", "Boeing 737", "Airbus 330", "Exit" };
-                            int aircraftTypeIndex = 0;
-                            Console.WriteLine("Enter new aircraft type (use arrow keys to navigate, press Enter to select): ");
-                            foreach (var option in aircraftTypeOptions)
-                            {
-                                Console.WriteLine(option);
-                            }
-                            while (true)
-                            {
-                                var key = Console.ReadKey(true).Key;
-                                if (key == ConsoleKey.UpArrow)
-                                {
-                                    aircraftTypeIndex = (aircraftTypeIndex - 1 + aircraftTypeOptions.Length) % aircraftTypeOptions.Length;
-                                }
-                                else if (key == ConsoleKey.DownArrow)
-                                {
-                                    aircraftTypeIndex = (aircraftTypeIndex + 1) % aircraftTypeOptions.Length;
-                                }
-                                else if (key == ConsoleKey.Enter)
-                                {
-                                    if (aircraftTypeOptions[aircraftTypeIndex] == "Exit")
-                                    {
-                                        return;
-                                    }
-                                    break;
-                                }
-                                Console.CursorTop = Console.CursorTop - aircraftTypeOptions.Length;
-                                for (int i = 0; i < aircraftTypeOptions.Length; i++)
-                                {
-                                    if (i == aircraftTypeIndex)
-                                    {
-                                        Console.BackgroundColor = ConsoleColor.Gray;
-                                        Console.ForegroundColor = ConsoleColor.Black;
-                                    }
-                                    Console.WriteLine(aircraftTypeOptions[i]);
-                                    Console.ResetColor();
-                                }
-                            }
-                            flightToUpdate.AircraftType = aircraftTypeOptions[aircraftTypeIndex];
-                            break;
-
-                        case "Airline":
-                            // Update airline
-                            flightToUpdate.Airline = "New South";
-                            break;
+                        AnsiConsole.MarkupLine("[green]Flight updated successfully![/]");
                     }
-                }
-            }
-            string updatedFlightInfo = flightToUpdate.ToAdminString();
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[red]Changes not saved.[/]");
+                    }
 
-            // Ask the admin if they want to save the changes
-            string[] confirmSaveOptions = { "Save changes", "Exit without saving" };
-            int confirmSaveIndex = 0;
-
-            Console.Write("Original flight information: ");
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(originalFlightInfo);
-
-            Console.ResetColor();
-            Console.Write("Updated flight information: ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(updatedFlightInfo);
-
-            Console.ResetColor();
-            Console.WriteLine("Do you want to save the changes?:");
-            foreach (var option in confirmSaveOptions)
-            {
-                Console.WriteLine(option);
-            }
-
-            while (true)
-            {
-                var key = Console.ReadKey(true).Key;
-                if (key == ConsoleKey.UpArrow)
-                {
-                    confirmSaveIndex = (confirmSaveIndex - 1 + confirmSaveOptions.Length) % confirmSaveOptions.Length;
-                }
-                else if (key == ConsoleKey.DownArrow)
-                {
-                    confirmSaveIndex = (confirmSaveIndex + 1) % confirmSaveOptions.Length;
-                }
-                else if (key == ConsoleKey.Enter)
-                {
                     break;
                 }
 
-                Console.CursorTop = Console.CursorTop - confirmSaveOptions.Length;
-                for (int i = 0; i < confirmSaveOptions.Length; i++)
-                {
-                    if (i == confirmSaveIndex)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine(confirmSaveOptions[i]);
-
-                    Console.ResetColor();
-                }
-            }
-
-            if (confirmSaveOptions[confirmSaveIndex] == "Save changes")
-            {
-                UpdateFlight(flightToUpdate);
-                Console.WriteLine("Flight updated successfully!");
-                System.Threading.Thread.Sleep(3000);
-            }
-            else
-            {
-                Console.WriteLine("Changes not saved.");
-                System.Threading.Thread.Sleep(3000);
+                AnsiConsole.Clear();
             }
         }
         public static string AskQuestion(string question)
@@ -684,339 +539,102 @@ namespace Project_B.DataAcces
         // Ontwikkel filters voor onder andere vertrekdatum en luchtvaartmaatschappij om de zoekresultaten te verbeteren.
         public static List<Flight> FilterFlights()
         {
-            Console.Clear();
+            AnsiConsole.Clear();
             List<Flight> flights = GetFlights();
 
             if (flights == null)
             {
-                Console.WriteLine("Error: Failed to get flights.");
+                AnsiConsole.MarkupLine("[red]Error: Failed to get flights.[/]");
                 return new List<Flight>(); // return an empty list if there's an error
             }
 
-            int currentOption = 0;
-            string[] yesNoOptions = new string[] { "yes", "no" };
+            var yesNoOptions = new[] { "Yes", "No" };
 
-            while (true)
+            var filterByDestination = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Do you want to filter by destination?")
+                    .AddChoices(yesNoOptions));
+
+            if (filterByDestination == "Yes")
             {
-                Console.Clear();
-                Console.WriteLine("Do you want to filter by destination?");
+                var destinations = flights.Select(f => f.Destination).Distinct().OrderBy(d => d).ToList();
+                var selectedDestination = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Please select a destination:")
+                        .PageSize(10)
+                        .AddChoices(destinations));
 
-                for (int i = 0; i < yesNoOptions.Length; i++)
-                {
-                    if (i == currentOption)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine(yesNoOptions[i]);
-
-                    Console.ResetColor();
-                }
-
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
-                switch (keyInfo.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        if (currentOption > 0) currentOption--;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        if (currentOption < yesNoOptions.Length - 1) currentOption++;
-                        break;
-                    case ConsoleKey.Enter:
-                        if (yesNoOptions[currentOption] == "yes")
-                        {
-                            flights = FilterByDestination(flights);
-                        }
-                        // Continue with the next filter
-                        currentOption = 0; // reset the current option for the next question
-                        while (true)
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Do you want to filter by departure time?");
-
-                            for (int i = 0; i < yesNoOptions.Length; i++)
-                            {
-                                if (i == currentOption)
-                                {
-                                    Console.BackgroundColor = ConsoleColor.Gray;
-                                    Console.ForegroundColor = ConsoleColor.Black;
-                                }
-
-                                Console.WriteLine(yesNoOptions[i]);
-
-                                Console.ResetColor();
-                            }
-
-                            keyInfo = Console.ReadKey(true);
-
-                            switch (keyInfo.Key)
-                            {
-                                case ConsoleKey.UpArrow:
-                                    if (currentOption > 0) currentOption--;
-                                    break;
-                                case ConsoleKey.DownArrow:
-                                    if (currentOption < yesNoOptions.Length - 1) currentOption++;
-                                    break;
-                                case ConsoleKey.Enter:
-                                    if (yesNoOptions[currentOption] == "yes")
-                                    {
-                                        flights = FilterByDepartureTime(flights);
-                                    }
-                                    return flights; // return the filtered flights
-                            }
-                        }
-                }
+                flights = flights.Where(f => f.Destination == selectedDestination).ToList();
             }
-        }
-        public static List<Flight> FilterByDestination(List<Flight> flights)
-        {
-            List<string> destinations = flights.Select(f => f.Destination).Distinct().ToList();
-            int currentOption = 0;
 
-            while (true)
+            var filterByDepartureTime = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Do you want to filter by departure time?")
+                    .AddChoices(yesNoOptions));
+
+            if (filterByDepartureTime == "Yes")
             {
-                Console.Clear();
-                for (int i = 0; i < destinations.Count; i++)
-                {
-                    if (i == currentOption)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
+                var departureTimes = flights.Select(f => f.DepartureTime.ToString()).Distinct().OrderBy(d => d).ToList();
+                var selectedDepartureTime = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Please select a departure time:")
+                        .PageSize(10)
+                        .AddChoices(departureTimes));
 
-                    Console.WriteLine(destinations[i]);
-
-                    Console.ResetColor();
-                }
-
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
-                switch (keyInfo.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        if (currentOption > 0) currentOption--;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        if (currentOption < destinations.Count - 1) currentOption++;
-                        break;
-                    case ConsoleKey.Enter:
-                        return flights.Where(f => f.Destination == destinations[currentOption]).ToList();
-                }
+                flights = flights.Where(f => f.DepartureTime.ToString() == selectedDepartureTime).ToList();
             }
-        }
-        public static List<Flight> FilterByDepartureTime(List<Flight> flights)
-        {
-            List<DateTime> departureDates = flights.Select(f => f.DepartureTime.Date).Distinct().ToList();
-            int currentOption = 0;
 
-            while (true)
-            {
-                Console.Clear();
-                for (int i = 0; i < departureDates.Count; i++)
-                {
-                    if (i == currentOption)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine(departureDates[i].ToString("dd/MM/yyyy"));
-
-                    Console.ResetColor();
-                }
-
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
-                switch (keyInfo.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        if (currentOption > 0) currentOption--;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        if (currentOption < departureDates.Count - 1) currentOption++;
-                        break;
-                    case ConsoleKey.Enter:
-                        return flights.Where(f => f.DepartureTime.Date == departureDates[currentOption]).ToList();
-                }
-            }
-        }
-        public static List<Flight> FlightInformation()
-        {
-            var flights = Flight.GetFlights();
-            foreach (var flight in flights)
-            {
-                Console.WriteLine(flight);
-            }
-            return flights;
+            return flights; // return the filtered flights
         }
 
         public static void AdminAddFlight()
         {
-            Console.Clear();
+            AnsiConsole.Clear();
+
+            int consoleWidth = Console.WindowWidth;
             string title = "Add Flight";
-            int windowWidth = Console.WindowWidth;
-            int titlePadding = (windowWidth - title.Length) / 2;
-            string titleLine = new string('-', windowWidth);
+            int padding = (consoleWidth - title.Length) / 2;
 
-            Console.WriteLine(titleLine);
-            Console.WriteLine($"{new string(' ', titlePadding)}{title}");
-            Console.WriteLine(titleLine);
-            Console.WriteLine("Enter flight details (or type 'exit' to cancel):");
+            AnsiConsole.WriteLine(new string('-', consoleWidth));
+            AnsiConsole.WriteLine($"{new string(' ', padding)}{title}{new string(' ', padding)}");
+            AnsiConsole.WriteLine(new string('-', consoleWidth));
 
-            Console.Write("Enter flight number (1000-9999): ");
-            string flightNumberString = Console.ReadLine();
-            if (flightNumberString?.ToLower() == "exit") return;
-            int flightNumber;
-            while (!int.TryParse(flightNumberString, out flightNumber) || flightNumber < 1000 || flightNumber > 9999)
-            {
-                Console.Write("Invalid input. Please enter a number between 1000 and 9999: ");
-                flightNumberString = Console.ReadLine();
-                if (flightNumberString?.ToLower() == "exit") return;
-            }
+            var flightNumber = AnsiConsole.Prompt(new TextPrompt<int>("Enter flight number: (1000-9999)")
+                .Validate(value => value >= 1000 && value <= 9999, "Please enter a number between 1000 and 9999"));
 
-            Console.Write("Enter destination: ");
-            string destination = Console.ReadLine();
-            if (destination?.ToLower() == "exit") return;
+            var destination = AnsiConsole.Ask<string>("Enter destination: ");
 
-            string[] originOptions = { "Amsterdam", "Exit" };
-            int originIndex = 0;
+            var origin = AnsiConsole.Ask<string>("Enter origin: ");
 
-            Console.WriteLine("Select origin: ");
+            var departureTimeString = AnsiConsole.Prompt(new TextPrompt<string>("Enter departure time: (dd/MM/yyyy HH:mm)")
+                .Validate(value => DateTime.TryParseExact(value, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) && date > DateTime.Now, "Please enter a future date and time in the format dd/MM/yyyy HH:mm"));
 
-            foreach (var option in originOptions)
-            {
-                Console.WriteLine(option);
-            }
+            DateTime departureTime = DateTime.ParseExact(departureTimeString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
 
-            while (true)
-            {
-                var key = Console.ReadKey(true).Key;
+            var terminal = AnsiConsole.Prompt(new TextPrompt<int>("Enter terminal: (1-4)")
+                .Validate(value => value >= 1 && value <= 4, "Please enter a number between 1 and 4"));
 
-                if (key == ConsoleKey.UpArrow)
-                {
-                    originIndex = (originIndex - 1 + originOptions.Length) % originOptions.Length;
-                }
-                else if (key == ConsoleKey.DownArrow)
-                {
-                    originIndex = (originIndex + 1) % originOptions.Length;
-                }
-                else if (key == ConsoleKey.Enter)
-                {
-                    if (originOptions[originIndex] == "Exit")
-                    {
-                        return;
-                    }
-                    break;
-                }
+            var gate = AnsiConsole.Prompt(new TextPrompt<int>("Enter gate: (1-24)")
+                .Validate(value => value >= 1 && value <= 24, "Please enter a number between 1 and 24"));
 
-                Console.CursorTop = Console.CursorTop - originOptions.Length;
-                for (int i = 0; i < originOptions.Length; i++)
-                {
-                    if (i == originIndex)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine(originOptions[i]);
-
-                    Console.ResetColor();
-                }
-            }
-
-            string origin = originOptions[originIndex];
-
-            Console.Write("Enter departure time (dd/MM/yyyy HH:mm): ");
-            DateTime departureTime;
-            while (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out departureTime))
-            {
-                Console.Write("Invalid input. Please enter a date and time in the format dd/MM/yyyy HH:mm: ");
-            }
-
-            Console.Write("Enter terminal (1-4): ");
-            string terminalString = Console.ReadLine();
-            if (terminalString?.ToLower() == "exit") return;
-            int terminal;
-            while (!int.TryParse(terminalString, out terminal) || terminal < 1 || terminal > 4)
-            {
-                Console.Write("Invalid input. Please enter a number between 1 and 4: ");
-                terminalString = Console.ReadLine();
-                if (terminalString?.ToLower() == "exit") return;
-            }
-
-            Console.Write("Enter gate (1-24): ");
-            string gateString = Console.ReadLine();
-            if (gateString?.ToLower() == "exit") return;
-            int gate;
-            while (!int.TryParse(gateString, out gate) || gate < 1 || gate > 24)
-            {
-                Console.Write("Invalid input. Please enter a number between 1 and 24: ");
-                gateString = Console.ReadLine();
-                if (gateString?.ToLower() == "exit") return;
-            }
-
-            string[] aircraftTypeOptions = { "Boeing 787", "Boeing 737", "Airbus 330", "Exit" };
-            int aircraftTypeIndex = 0;
-
-            Console.WriteLine("Enter aircraft type (use arrow keys to navigate, press Enter to select): ");
-
-            foreach (var option in aircraftTypeOptions)
-            {
-                Console.WriteLine(option);
-            }
+            var aircraftTypeOptions = new[] { "Boeing 787", "Boeing 737", "Airbus 330", "Exit" };
+            var aircraftType = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                .Title("Enter aircraft type: ")
+                .AddChoices(aircraftTypeOptions));
+            if (aircraftType == "Exit") return;
 
             int seats = 0, availableSeats = 0;
-            string aircraftType = "";
-
-            while (true)
+            if (aircraftType == "Boeing 787")
             {
-                var key = Console.ReadKey(true).Key;
-
-                if (key == ConsoleKey.UpArrow)
-                {
-                    aircraftTypeIndex = (aircraftTypeIndex - 1 + aircraftTypeOptions.Length) % aircraftTypeOptions.Length;
-                }
-                else if (key == ConsoleKey.DownArrow)
-                {
-                    aircraftTypeIndex = (aircraftTypeIndex + 1) % aircraftTypeOptions.Length;
-                }
-                else if (key == ConsoleKey.Enter)
-                {
-                    aircraftType = aircraftTypeOptions[aircraftTypeIndex];
-                    if (aircraftType == "Exit")
-                    {
-                        return;
-                    }
-                    else if (aircraftType == "Boeing 787")
-                    {
-                        seats = availableSeats = 219;
-                    }
-                    else if (aircraftType == "Boeing 737")
-                    {
-                        seats = availableSeats = 186;
-                    }
-                    else if (aircraftType == "Airbus 330")
-                    {
-                        seats = availableSeats = 345;
-                    }
-                    break;
-                }
-
-                Console.CursorTop = Console.CursorTop - aircraftTypeOptions.Length;
-                for (int i = 0; i < aircraftTypeOptions.Length; i++)
-                {
-                    if (i == aircraftTypeIndex)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine(aircraftTypeOptions[i]);
-
-                    Console.ResetColor();
-                }
+                seats = availableSeats = 219;
+            }
+            else if (aircraftType == "Boeing 737")
+            {
+                seats = availableSeats = 186;
+            }
+            else if (aircraftType == "Airbus 330")
+            {
+                seats = availableSeats = 345;
             }
 
             string airline = "New South";
@@ -1034,11 +652,36 @@ namespace Project_B.DataAcces
                 AvailableSeats = availableSeats,
                 Airline = airline
             };
+            
+            AnsiConsole.Clear();
+            // Show the flight information
+            AnsiConsole.MarkupLine($"[blue]Flight Number: [/][green]{newFlight.FlightNumber}[/]");
+            AnsiConsole.MarkupLine($"[blue]Destination: [/][green]{newFlight.Destination}[/]");
+            AnsiConsole.MarkupLine($"[blue]Origin: [/][green]{newFlight.Origin}[/]");
+            AnsiConsole.MarkupLine($"[blue]Departure Time: [/][green]{newFlight.DepartureTime}[/]");
+            AnsiConsole.MarkupLine($"[blue]Terminal: [/][green]{newFlight.Terminal}[/]");
+            AnsiConsole.MarkupLine($"[blue]Gate: [/][green]{newFlight.Gate}[/]");
+            AnsiConsole.MarkupLine($"[blue]Aircraft Type: [/][green]{newFlight.AircraftType}[/]");
+            AnsiConsole.MarkupLine($"[blue]Seats: [/][green]{newFlight.Seats}[/]");
+            AnsiConsole.MarkupLine($"[blue]Available Seats: [/][green]{newFlight.AvailableSeats}[/]");
 
-            AddFlight(newFlight);
+            // Ask the user if they really want to add the flight
+            var confirmationOptions = new[] { "Yes", "No" };
+            var confirmation = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                .Title("Do you really want to add this flight?")
+                .AddChoices(confirmationOptions));
 
-            Console.WriteLine("Flight added successfully!");
-            System.Threading.Thread.Sleep(3000);
+            if (confirmation == "Yes")
+            {
+                AddFlight(newFlight);
+                AnsiConsole.MarkupLine("[green]Flight added successfully![/]");
+                System.Threading.Thread.Sleep(3000);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red]Flight not added.[/]");
+                System.Threading.Thread.Sleep(3000);
+            }
         }
         // function for adding tickets to a plane
         public static void reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
