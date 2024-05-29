@@ -166,10 +166,12 @@ namespace Project_B.Presentation
         {
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory();
 
+
             int pageSize = 20;
             int pageNumber = 0;
             int totalPages = (userhistory.Count + pageSize - 1) / pageSize;
             int ticketIndex = 0;
+
 
             while (true)
             {
@@ -177,6 +179,7 @@ namespace Project_B.Presentation
 
                 for (int i = 0; i < page.Count; i++)
                 {
+
 
                     Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}, Distance: {history.distance}");
 
@@ -190,6 +193,7 @@ namespace Project_B.Presentation
                     Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
 
                     Console.ResetColor();
+
 
                 }
 
