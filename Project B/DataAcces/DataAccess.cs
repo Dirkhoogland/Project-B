@@ -81,7 +81,6 @@ namespace Project_B.DataAcces
                 "Origin VARCHAR(255)," +
                 "Extranotes VARCHAR(255)," +
                 "BaggageWeight INTEGER," +
-                "MedicalInfo VARCHAR(255)," +
                 "FOREIGN KEY(FlightID) REFERENCES Flights(FlightID)" +
                 "FOREIGN KEY(UserID) REFERENCES Users(ID))";
                 // using statements are used to confine the use of the connection to only this function, so the database remains useable outside of it since its automatially closed and does not remain open on a function when it shouldnt be
