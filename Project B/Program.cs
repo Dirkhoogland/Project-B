@@ -99,6 +99,8 @@ namespace Project_B
                 string filterFlightsText = " Filter Flights ";
                 string removeFiltersText = " Remove Filters ";
                 string backText = " Back ";
+                int currentPage = 0;
+                int itemsPerPage = 20;
                 List<string> options = new List<string> { filterFlightsText };
                 
                     while (true)
@@ -149,86 +151,128 @@ namespace Project_B
                                 bool continueViewFlights = true;
                                 AnsiConsole.Clear();
                                 List<Flight> flights = Flight.GetFlights(); // get the list of flights without any filters
-                                options = new List<string> { filterFlightsText, backText }; // reset the options
-                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
+                                int selectedFlightIndex = 0;
+                                isFilterActive = false;
 
                                 while (continueViewFlights)
                                 {
                                     AnsiConsole.Clear();
 
+                                    // Add the flights for the current page to the options
+                                    var pagedFlights = flights.Skip(currentPage * itemsPerPage).Take(itemsPerPage).ToList();
+
+                                    // Create a table and add columns
+                                    var table = new Table()
+                                        .Border(TableBorder.Rounded)
+                                        .AddColumn(new TableColumn("[blue]Time[/]"))
+                                        .AddColumn(new TableColumn("[blue]Origin[/]"))
+                                        .AddColumn(new TableColumn("[blue]Destination[/]"))
+                                        .AddColumn(new TableColumn("[blue]Flight Number[/]"))
+                                        .AddColumn(new TableColumn("[blue]Gate[/]"))
+                                        .AddColumn(new TableColumn("[blue]Terminal[/]"));
+
+                                    // Add the flights for the current page to the table
+                                    for (int i = 0; i < pagedFlights.Count; i++)
+                                    {
+                                        var flight = pagedFlights[i];
+                                        if (i == selectedFlightIndex)
+                                        {
+                                            table.AddRow($"[green]{flight.DepartureTime}[/]", $"[green]{flight.Origin}[/]", $"[green]{flight.Destination}[/]", $"[green]{flight.FlightNumber}[/]", $"[green]{flight.Gate}[/]", $"[green]{flight.Terminal}[/]");
+                                        }
+                                        else
+                                        {
+                                            table.AddRow(flight.DepartureTime.ToString(), flight.Origin, flight.Destination, flight.FlightNumber, flight.Gate, flight.Terminal);
+                                        }
+                                    }
+
+                                    // Render the table
+                                    AnsiConsole.Render(table);
+
+                                    // Display the options
+                                    AnsiConsole.MarkupLine("[blue]Options:[/]");
+                                    AnsiConsole.MarkupLine("[green]F[/]: Filter flights");
                                     if (isFilterActive)
                                     {
-                                        options[1] = removeFiltersText;
+                                        AnsiConsole.MarkupLine("[green]R[/]: Remove filters");
                                     }
-                                    else
+                                    AnsiConsole.MarkupLine("[green]N[/]: Next page");
+                                    AnsiConsole.MarkupLine("[green]P[/]: Previous page");
+                                    AnsiConsole.MarkupLine("[green]B[/]: Back to previous menu");
+
+                                    // Display navigation instructions
+                                    AnsiConsole.MarkupLine("[blue]Navigation:[/]");
+                                    AnsiConsole.MarkupLine("[green]Up Arrow[/]: Move selection up");
+                                    AnsiConsole.MarkupLine("[green]Down Arrow[/]: Move selection down");
+                                    AnsiConsole.MarkupLine("[green]Enter[/]: Select option");
+
+                                    var key = Console.ReadKey(true).Key;
+
+                                    switch (key)
                                     {
-                                        options[1] = backText;
-                                    }
-
-                                    var innerSelectedOption = AnsiConsole.Prompt(
-                                        new SelectionPrompt<string>()
-                                            .Title("View Flights:")
-                                            .PageSize(20)
-                                            .AddChoices(options));
-
-                                    switch (innerSelectedOption)
-                                    {
-                                        case var option when option == filterFlightsText: // Filter Flights
-                                            flights = Flight.FilterFlights();
-                                            isFilterActive = true;
-                                            options = new List<string> { filterFlightsText, removeFiltersText };
-                                            options.AddRange(flights.Select(f => f.ToString()));
+                                        case ConsoleKey.UpArrow:
+                                            if (selectedFlightIndex > 0) selectedFlightIndex--;
                                             break;
-                                        case var option when option == removeFiltersText: // Remove Filters
-                                            flights = Flight.GetFlights(); // get the list of flights without any filters
-                                            options = new List<string> { filterFlightsText, backText }; // reset the options
-                                            options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
-                                            isFilterActive = false; // reset the filter flag
+                                        case ConsoleKey.DownArrow:
+                                            if (selectedFlightIndex < pagedFlights.Count - 1) selectedFlightIndex++;
                                             break;
-                                        case var option when option == backText: // Back
-                                            menuItems = menuItemsUser;
-                                            continueViewFlights = false;
-                                            break;
-                                        default: // Select Flight
-                                            Flight selectedFlight = flights.First(f => f.ToString() == selectedOption);
-                                            AnsiConsole.Clear();
-                                            // Fetch the aircraft type from the selected flight
-                                            string aircraftType = selectedFlight.AircraftType;
-
-                                            // Show the layout according to the aircraft type
-                                            switch (aircraftType)
+                                        case ConsoleKey.Enter:
+                                            if (selectedFlightIndex >= 0 && selectedFlightIndex < pagedFlights.Count)
                                             {
-                                                case "Boeing 737":
-                                                    Seat seats = new Seat();
-                                                    seats.lay_out();
-                                                    seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                    break;
-                                                case "Boeing 787":
-                                                    BoeingSeat boeing787Seats = new BoeingSeat();
-                                                    boeing787Seats.lay_out();
-                                                    boeing787Seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                    break;
-                                                case "Airbus 330":
-                                                    AirbusSeat airbus330Seats = new AirbusSeat();
-                                                    airbus330Seats.lay_out();
-                                                    airbus330Seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                    break;
-                                                default:
-                                                    AnsiConsole.WriteLine("Unknown aircraft type.");
-                                                    break;
+                                                Flight selectedFlight = pagedFlights[selectedFlightIndex];
+                                                AnsiConsole.Clear();
+                                                // Fetch the aircraft type from the selected flight
+                                                string aircraftType = selectedFlight.AircraftType;
+
+                                                // Show the layout according to the aircraft type
+                                                switch (aircraftType)
+                                                {
+                                                    case "Boeing 737":
+                                                        Seat seats = new Seat();
+                                                        seats.lay_out();
+                                                        seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                        break;
+                                                    case "Boeing 787":
+                                                        BoeingSeat boeing787Seats = new BoeingSeat();
+                                                        boeing787Seats.lay_out();
+                                                        boeing787Seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                        break;
+                                                    case "Airbus 330":
+                                                        AirbusSeat airbus330Seats = new AirbusSeat();
+                                                        airbus330Seats.lay_out();
+                                                        airbus330Seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                        break;
+                                                    default:
+                                                        AnsiConsole.WriteLine("Unknown aircraft type.");
+                                                        break;
+                                                }
                                             }
                                             break;
+                                        case ConsoleKey.F:
+                                            // Handle filter flights
+                                            flights = Flight.FilterFlights();
+                                            isFilterActive = true;
+                                            break;
+                                        case ConsoleKey.R:
+                                            // Handle remove filters
+                                            if (isFilterActive)
+                                            {
+                                                flights = Flight.GetFlights(); // get the list of flights without any filters
+                                                isFilterActive = false; // reset the filter flag
+                                            }
+                                            break;
+                                        case ConsoleKey.N:
+                                            // Handle next page
+                                            if (currentPage < (flights.Count / itemsPerPage)) currentPage++;
+                                            break;
+                                        case ConsoleKey.P:
+                                            // Handle previous page
+                                            if (currentPage > 0) currentPage--;
+                                            break;
+                                        case ConsoleKey.B:
+                                            // Back to previous menu
+                                            continueViewFlights = false;
+                                            break;
                                     }
-                                }
-
-                                // After the while loop, check if the user is an admin
-                                if (currentuser.rank == 1)
-                                {
-                                    menuItems = menuItemsAdmin;
-                                }
-                                else
-                                {
-                                    menuItems = menuItemsUser;
                                 }
                                 break;
                             case "Manage Flights":
@@ -239,7 +283,7 @@ namespace Project_B
                                     AnsiConsole.Clear();
                                     var flightMenuIndex = AnsiConsole.Prompt(
                                         new SelectionPrompt<string>()
-                                            .Title("Please choose an option:")
+                                            .Title("Manage Flights:")
                                             .PageSize(10)
                                             .AddChoices(flightMenuItems));
 
