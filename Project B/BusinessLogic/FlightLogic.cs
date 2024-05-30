@@ -29,7 +29,7 @@ namespace Project_B.BusinessLogic
             return Flight.GetFlightById(flightId);
         }
 
-        public  List<Flight> FilterFlights(string destination, DateTime? departureDate, string airline)
+        public List<Flight> FilterFlights(string destination, DateTime? departureDate, string airline)
         {
             List<Flight> flights = Flight.GetFlights();
 
@@ -51,9 +51,38 @@ namespace Project_B.BusinessLogic
             return flights;
         }
 
-        public static void Reserveseat(int flightid,int userid, string seat, string seatclass)
+        public static void Reserveseat(int flightid, int userid, string seat, string seatclass)
         {
             Flight.reserveseat(flightid, userid, seat, seatclass);
+        }
+
+        public void AddFlyPoints(int userId, int kilometers)
+        {
+            int flyPoints = new DataAccess().GetFlyPoints(userId);
+            flyPoints += kilometers / 2000; // Uçuş mesafesine göre puan ekleyin, 2000 km başına 1 puan
+            DataAccess dataAccess = new DataAccess();
+            dataAccess.UpdateFlyPoints(userId, flyPoints);
+        }
+
+        public bool RedeemFlyPoints(int userId)
+        {
+            DataAccess dataAccess = new DataAccess();
+            int flyPoints = dataAccess.GetFlyPoints(userId);
+
+            if (flyPoints >= 20)
+            {
+                flyPoints -= 20;
+                dataAccess.UpdateFlyPoints(userId, flyPoints);
+                return true;
+            }
+
+            return false;
+        }
+
+        public int GetFlyPoints(int userId)
+        {
+            DataAccess dataAccess = new DataAccess();
+            return dataAccess.GetFlyPoints(userId);
         }
     }
 }

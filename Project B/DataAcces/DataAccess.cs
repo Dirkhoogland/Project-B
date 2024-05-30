@@ -93,6 +93,17 @@ namespace Project_B.DataAcces
                     }
                 }
 
+                string sqlFlyPoints = "CREATE TABLE IF NOT EXISTS FlyPoints (" +
+                                      "UserId INTEGER PRIMARY KEY," +
+                                      "Points INTEGER)";
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sqlFlyPoints, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
             catch (Exception ex) { }
 
@@ -296,6 +307,41 @@ namespace Project_B.DataAcces
                     }
                 }
             }
+        }
+        public void UpdateFlyPoints(int userId, int flyPoints)
+        {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string insertOrUpdateQuery = "INSERT OR REPLACE INTO FlyPoints (UserId, Points) VALUES (@UserId, @Points)";
+                using (var command = new SQLiteCommand(insertOrUpdateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.Parameters.AddWithValue("@Points", flyPoints);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public int GetFlyPoints(int userId)
+        {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string selectQuery = "SELECT Points FROM FlyPoints WHERE UserId = @UserId";
+                using (var command = new SQLiteCommand(selectQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    var result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                }
+            }
+            return 0;
         }
 
     }
