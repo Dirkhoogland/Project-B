@@ -181,7 +181,7 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
-                string[] options = { "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
+                string[] options = { "Book a retour flight", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
                 string selectedOption;
                 string extraNotes = string.Empty;
 
@@ -199,6 +199,15 @@ namespace Project_B.Presentation
                         Console.WriteLine("Please enter your extra notes:");
                         extraNotes = Console.ReadLine();
                         // Add extraNotes to the database...
+                    }
+                    if (selectedOption == "Book a retour flight")
+                    {
+                        int retourIndex = 0;
+                        //string retourstatus = string.Empty;
+
+                        Console.Clear();
+                        Console.WriteLine("Do you want to book a retour flight?");
+                        string[] retourOptions = { "yes", "no" };
                     }
                 } while (selectedOption != "Continue");
                 Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
@@ -374,6 +383,7 @@ namespace Project_B.Presentation
                     notes = extraNotes + " And extra baggage of:" + extraCost + " Euro With a weight of" + extraKg;
                 }
                 // creates the ticket inside the database
+                string retourstatus = "No";
                 FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class, retourstatus, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
