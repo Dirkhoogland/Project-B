@@ -28,6 +28,8 @@ namespace Project_B.DataAcces
         public Seat? PlaneLayout { get; set; }
         public int FlightId { get; set; }
 
+        public int Distance { get; set; }
+
         private static string databasePath
         {
             get
@@ -73,7 +75,8 @@ namespace Project_B.DataAcces
                         Destination = sqlite_datareader["Destination"].ToString(),
                         Origin = sqlite_datareader["Origin"].ToString(),
                         Airline = sqlite_datareader["Airline"].ToString(),
-                        Gate = sqlite_datareader["Gate"].ToString()
+                        Gate = sqlite_datareader["Gate"].ToString(),
+                        Distance = int.Parse(sqlite_datareader["Distance"].ToString())
                     };
                     flights.Add(flight);
                 }
@@ -132,7 +135,7 @@ namespace Project_B.DataAcces
             {
                 SQLiteCommand sqlite_cmd;
                 sqlite_cmd = sqlite_conn.CreateCommand();
-                sqlite_cmd.CommandText = "INSERT INTO Flights (DepartureTime, Terminal, FlightNumber, AircraftType, Seats, AvailableSeats, Destination, Origin, Airline, Gate) VALUES (@DepartureTime, @Terminal, @FlightNumber, @AircraftType, @Seats, @AvailableSeats, @Destination, @Origin, @Airline, @Gate)";
+                sqlite_cmd.CommandText = "INSERT INTO Flights (DepartureTime, Terminal, FlightNumber, AircraftType, Seats, AvailableSeats, Destination, Origin, Airline, Gate, Distance) VALUES (@DepartureTime, @Terminal, @FlightNumber, @AircraftType, @Seats, @AvailableSeats, @Destination, @Origin, @Airline, @Gate, @Distance)";
                 sqlite_cmd.Parameters.AddWithValue("@DepartureTime", flight.DepartureTime);
                 sqlite_cmd.Parameters.AddWithValue("@Terminal", flight.Terminal);
                 sqlite_cmd.Parameters.AddWithValue("@FlightNumber", flight.FlightNumber);
@@ -143,6 +146,7 @@ namespace Project_B.DataAcces
                 sqlite_cmd.Parameters.AddWithValue("@Origin", flight.Origin);
                 sqlite_cmd.Parameters.AddWithValue("@Airline", flight.Airline);
                 sqlite_cmd.Parameters.AddWithValue("@Gate", flight.Gate);
+                sqlite_cmd.Parameters.AddWithValue("@Distance", flight.Distance);
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_conn.Close();
             }
@@ -208,6 +212,7 @@ namespace Project_B.DataAcces
                             flight.Destination = reader.GetString(reader.GetOrdinal("Destination"));
                             flight.Origin = reader.GetString(reader.GetOrdinal("Origin"));
                             flight.DepartureTime = reader.GetDateTime(reader.GetOrdinal("DepartureTime"));
+                            flight.Distance = reader.GetInt32(reader.GetOrdinal("Distance"));
                             return flight;
                         }
                         else
@@ -263,10 +268,19 @@ namespace Project_B.DataAcces
                 flightTable.AddColumn("Gate");
                 flightTable.AddColumn("Terminal");
 
+
                 int startRow = currentPage * rowsPerPage;
                 int endRow = Math.Min(startRow + rowsPerPage, flights.Count);
 
                 for (int i = startRow; i < endRow; i++)
+
+                if (Console.CursorTop >= flights.Count)
+                {
+                    Console.CursorTop = Console.CursorTop - flights.Count;
+                }
+
+                for (int i = 0; i < flights.Count; i++)
+
                 {
                     var flight = flights[i];
                     if (i == selectedRow)
@@ -468,7 +482,8 @@ namespace Project_B.DataAcces
                 Destination = cities[cityIndex],
                 Origin = "Amsterdam",
                 Airline = "New South",
-                Gate = random.Next(1, 24).ToString()
+                Gate = random.Next(1, 24).ToString(),
+                Distance = random.Next(1000, 9999)
             };
             AddFlight(flight);
             cityIndex = (cityIndex + 1) % cities.Count;
@@ -489,7 +504,8 @@ namespace Project_B.DataAcces
                 Destination = cities[cityIndex],
                 Origin = "Amsterdam",
                 Airline = "New South",
-                Gate = random.Next(1, 24).ToString()
+                Gate = random.Next(1, 24).ToString(),
+                Distance = random.Next(1000, 9999)
             };
             AddFlight(flight);
             cityIndex = (cityIndex + 1) % cities.Count;
@@ -510,7 +526,8 @@ namespace Project_B.DataAcces
                 Destination = cities[cityIndex],
                 Origin = "Amsterdam",
                 Airline = "New South",
-                Gate = random.Next(1, 24).ToString()
+                Gate = random.Next(1, 24).ToString(),
+                Distance = random.Next(1000, 9999)
             };
             AddFlight(flight);
             cityIndex = (cityIndex + 1) % cities.Count;
@@ -528,7 +545,8 @@ namespace Project_B.DataAcces
                 Destination = "London",
                 Origin = "Amsterdam",
                 Airline = "New South",
-                Gate = "1"
+                Gate = "1",
+                Distance = 150
             };
             AddFlight(flight);
         }
@@ -650,7 +668,8 @@ namespace Project_B.DataAcces
                 Gate = gate.ToString(),
                 Seats = seats,
                 AvailableSeats = availableSeats,
-                Airline = airline
+                Airline = airline,
+                Distance = 100
             };
             
             AnsiConsole.Clear();
@@ -691,7 +710,7 @@ namespace Project_B.DataAcces
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
 
             DateTime time = DateTime.Now;
-            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}', '{flight.Origin}', '{extranotes}');";
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
                 c.Open();
