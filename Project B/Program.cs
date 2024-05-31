@@ -3,7 +3,6 @@ using Project_B.Presentation;
 using System.Drawing.Printing;
 using System.Xml.Linq;
 namespace Project_B
-
 {
     namespace Project_B
     {
@@ -12,10 +11,10 @@ namespace Project_B
             public static void Main(string[] args)
             {
                 DataAccess.Database();
-                
+
                 string[] menuItemsGuest = { "Login/Register", "Exit" };
                 string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
-                string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Users", "Logout", "Exit" };
+                string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Users", "Add Fly Points to user", "Logout", "Exit" };
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
@@ -27,7 +26,7 @@ namespace Project_B
                 string removeFiltersText = " Remove Filters ";
                 string backText = " Back ";
                 List<string> options = new List<string> { filterFlightsText };
-                
+
                 while (true)
                 {
                     Console.Clear();
@@ -82,7 +81,7 @@ namespace Project_B
                         {
                             case "Login/Register":
                                 Console.Clear();
-                                
+
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
@@ -269,14 +268,14 @@ namespace Project_B
                                 else
                                 {
                                     continue; // Continue with the next iteration of the main menu loop
-                                }                            
+                                }
                             case "Flight History":
                                 Console.Clear();
                                 // Check if a user is logged in
                                 if (currentuser != null)
                                 {
                                     // Call the method with the current user
-                                    Userhistory.presentuserhistory(currentuser); 
+                                    Userhistory.presentuserhistory(currentuser);
                                     Console.ReadLine();
                                 }
                                 else
@@ -295,6 +294,11 @@ namespace Project_B
                                 flights = Flight.GetFlights(); // Refresh the 'flights' list
                                 options = new List<string> { filterFlightsText, backText }; // reset the options
                                 options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
+                                break;
+                            case "Add Fly Points to user":
+                                Console.Clear();
+                                Administration.AddFlyPointsToUser();
+                                Console.ReadKey();
                                 break;
                             case "Users":
                                 isBackSelected = false;
@@ -385,8 +389,6 @@ namespace Project_B
             public static Flight SelectFlight(List<Flight> flights)
             {
                 int currentIndex = 0;
-
-
 
                 while (true)
                 {

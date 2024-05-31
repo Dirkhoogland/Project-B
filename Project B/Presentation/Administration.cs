@@ -5,12 +5,10 @@ namespace Project_B.Presentation
 {
     public class Administration
     {
-
-
         // prints all users to the console
         public static void presentallusers()
         {
-            var userlist =  Adminlogic.Getusersfromdb();
+            var userlist = Adminlogic.Getusersfromdb();
             int pageSize = 20; // Number of users to display at a time
             int pageNumber = 0; // Current page number
 
@@ -21,7 +19,7 @@ namespace Project_B.Presentation
                 foreach (Users user in page)
                 {
                     string rank = "user";
-                    if(user.rank == 1) { rank = "Admin"; }
+                    if (user.rank == 1) { rank = "Admin"; }
                     Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}, Rank: {rank}");
                 }
 
@@ -176,10 +174,22 @@ namespace Project_B.Presentation
             string rank = "User";
             if (user.rank == 1) { rank = "Admin"; }
             Console.WriteLine($"Information of user: {userid}");
-            Console.WriteLine($"Name: {user.Name}, Email: {user.Email}, Rank: {rank}  ");
+            Console.WriteLine($"Name: {user.Name}, Email: {user.Email}, Rank: {rank}");
         }
 
+        // add Fly Points to a user
+        public static void AddFlyPointsToUser()
+        {
+            Console.WriteLine("Enter the user ID to add Fly Points to:");
+            int userId = Convert.ToInt32(Console.ReadLine());
 
+            Console.WriteLine("Enter the number of kilometers flown:");
+            int kilometers = Convert.ToInt32(Console.ReadLine());
 
+            FlightLogic flightLogic = new FlightLogic();
+            flightLogic.AddFlyPoints(userId, kilometers);
+
+            Console.WriteLine("Fly Points added successfully.");
+        }
     }
 }
