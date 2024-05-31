@@ -14,7 +14,7 @@ namespace Project_B.Presentation
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(user.Id);
             foreach (Bookinghistory history in userhistory)
             {
-                Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Distance: {history.distance}");
+                Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
             }
         }
     }

@@ -14,7 +14,6 @@ namespace Project_B.BusinessLogic
         public static List<Bookinghistory> returnuserhistory()
         {
             List<Bookinghistory> userhistory = Bookinghistory.GetUserHistory();
-            var historyQuery = from uh in userhistory  orderby uh.FlightId group uh by uh.FlightId;
             return userhistory;
         }
 
