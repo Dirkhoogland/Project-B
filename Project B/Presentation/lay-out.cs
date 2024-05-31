@@ -34,6 +34,7 @@ namespace Project_B.Presentation
             }
         }
     }
+
 public void DisplaySeats()
 {
     string[,] seats = new string[34, 7]
@@ -185,55 +186,77 @@ public void DisplaySeats()
         int currentOption = 0;
         string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart" };
 
-        ConsoleKeyInfo key;
-        Console.Clear();
 
-        do
-        {
-            Console.SetCursorPosition(0, 0);
-            Console.WriteLine("Welcome to the Boeing seat reservation system!");
-            Console.WriteLine("Available options:");
+            ConsoleKeyInfo key;
+            Console.Clear();
 
-            for (int i = 0; i < menuOptions.Length; i++)
+            FlightLogic flightLogic = new FlightLogic();
+
+            do
             {
-                if (i == currentOption)
+                Console.SetCursorPosition(0, 0);
+                Console.WriteLine("Welcome to the seat reservation system!");
+                Console.WriteLine("Available options:");
+
+                for (int i = 0; i < menuOptions.Length; i++)
                 {
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    Console.ForegroundColor = ConsoleColor.Black;
+                    if (i == currentOption)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine($"{i + 1}. {menuOptions[i]}");
+
+                    Console.ResetColor();
                 }
 
-                Console.WriteLine($"{i + 1}. {menuOptions[i]}");
+                key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        currentOption = Math.Max(0, currentOption - 1);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        currentOption = Math.Min(menuOptions.Length - 1, currentOption + 1);
+                        break;
+                }
+            } while (key.Key != ConsoleKey.Enter);
 
-                Console.ResetColor();
-            }
-
-            key = Console.ReadKey(true);
-            switch (key.Key)
+            switch (currentOption)
             {
-                case ConsoleKey.UpArrow:
-                    currentOption = Math.Max(0, currentOption - 1);
+                case 0:
+                    ChooseSeatWithArrowKeys(current, flightid);
                     break;
-                case ConsoleKey.DownArrow:
-                    currentOption = Math.Min(menuOptions.Length - 1, currentOption + 1);
+                case 1:
+                    DisplaySeatLayoutBoeing737();
+                    break;
+                case 2:
+                    Console.WriteLine("Thank you for using the seat reservation system. Bye!");
+                    return;
+                case 3:
+                    int points = flightLogic.GetFlyPoints(current.Id);
+                    Console.WriteLine($"Current Fly points balance: {points}");
+                    break;
+                case 4:
+                    if (flightLogic.RedeemFlyPoints(current.Id))
+                    {
+                        Console.WriteLine("20 Fly points redeemed for a 10% discount on your next booking.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not enough Fly points to redeem. Minimum 20 points required.");
+                    }
+                    int newPoints = flightLogic.GetFlyPoints(current.Id);
+                    Console.WriteLine($"New Fly points balance: {newPoints}");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice");
                     break;
             }
-        } while (key.Key != ConsoleKey.Enter);
 
-        switch (currentOption)
-        {
-            case 0:
-                ChooseSeatWithArrowKeys( current, flightid);
-                break;
-            case 1:
-                DisplaySeatLayoutBoeing737();
-                break;
-            case 2:
-                Console.WriteLine("Thank you for using the seat reservation system. Bye!");
-                return;
+            Console.WriteLine();
         }
-
-        Console.WriteLine();
-    }
 
         public static void ChooseSeatWithArrowKeys(CurrentUser current, int flightid)
         {

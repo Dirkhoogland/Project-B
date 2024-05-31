@@ -77,6 +77,7 @@ namespace Project_B.Presentation
                 AnsiConsole.WriteLine($"Tickets from user: {userid}");
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
+
                 // Create a table and add columns
                 var table = new Table()
                     .Border(TableBorder.Rounded)
@@ -91,6 +92,7 @@ namespace Project_B.Presentation
                 foreach (Bookinghistory history in page)
                 {
                     table.AddRow(history.FlightId.ToString(), history.Seat, history.SeatClass, history.Origin, history.Destination, history.Departuretime.ToString());
+
                 }
 
                 // Render the table
@@ -122,13 +124,16 @@ namespace Project_B.Presentation
         {
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory();
 
+
             int pageSize = 20;
             int pageNumber = 0;
             int totalPages = (userhistory.Count + pageSize - 1) / pageSize;
 
+
             while (true)
             {
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
+
 
                 // Create a table and add columns
                 var table = new Table()
@@ -146,6 +151,7 @@ namespace Project_B.Presentation
                 foreach (Bookinghistory history in page)
                 {
                     table.AddRow(history.FlightId.ToString(), history.UserId.ToString(), history.Seat, history.SeatClass, history.Origin, history.Destination, history.Departuretime.ToString(), history.extranotes);
+
                 }
 
                 // Render the table
@@ -188,6 +194,7 @@ namespace Project_B.Presentation
                 AnsiConsole.WriteLine($"Tickets from flight: {flightid}");
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
+
                 // Create a table and add columns
                 var table = new Table()
                     .Border(TableBorder.Rounded)
@@ -202,6 +209,7 @@ namespace Project_B.Presentation
                 foreach (Bookinghistory history in page)
                 {
                     table.AddRow(history.Seat, history.SeatClass, history.Origin, history.Destination, history.Departuretime.ToString(), history.extranotes);
+
                 }
 
                 // Render the table
