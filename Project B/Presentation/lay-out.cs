@@ -176,6 +176,9 @@ public void DisplaySeats()
                     selectedSeats.Add((currentRow, currentColumn));
                 }
                 break;
+            case ConsoleKey.P:
+                // Purchase the selected seats
+                return;
         }
     }
 }
