@@ -56,7 +56,7 @@ namespace Project_B.DataAcces
         public static List<Bookinghistory> GetUserHistory(int userid)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sql = "SELECT * FROM Tickets WHERE UserID = $userid";
+            string sql = "SELECT * FROM Tickets WHERE UserID = $userid ORDER BY flightid, Name, Seat";
             List<Bookinghistory> Userhistory = new List<Bookinghistory>();
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {   // opens the database connection
@@ -129,7 +129,7 @@ namespace Project_B.DataAcces
         public static List<Bookinghistory> GetflightHistorybyflightid(int flightid)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sql = "SELECT * FROM Tickets WHERE FlightID = $FlightId";
+            string sql = "SELECT * FROM Tickets WHERE FlightID = $FlightId ORDER BY Name, Seat";
             List<Bookinghistory> Userhistory = new List<Bookinghistory>();
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {   // opens the database connection

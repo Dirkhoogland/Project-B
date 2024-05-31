@@ -64,6 +64,13 @@ namespace Project_B.Presentation
 
                 foreach (Bookinghistory history in page)
                 {
+                    if (i == ticketIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Bookinghistory history = page[i];
                     Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
                 }
 
@@ -101,7 +108,14 @@ namespace Project_B.Presentation
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
                 foreach (Bookinghistory history in page)
-                {
+                {  
+                    if (i == ticketIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Bookinghistory history = page[i];
                     Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
                 }
 
@@ -143,6 +157,13 @@ namespace Project_B.Presentation
 
                 foreach (Bookinghistory history in page)
                 {
+                    if (i == ticketIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Bookinghistory history = page[i];
                     Console.WriteLine($"Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
                 }
 
