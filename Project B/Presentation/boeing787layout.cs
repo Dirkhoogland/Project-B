@@ -86,11 +86,11 @@ namespace Project_B.Presentation
                     Console.WriteLine("Thank you for using the seat reservation system. Bye!");
                     return;
                 case 3:
-                    int points = flightLogic.GetFlyPoints(current.Id);
+                    int points = FlightLogic.GetFlyPoints(current.Id);
                     Console.WriteLine($"Current Fly points balance: {points}");
                     break;
                 case 4:
-                    if (flightLogic.RedeemFlyPoints(current.Id))
+                    if (FlightLogic.RedeemFlyPoints(current.Id))
                     {
                         Console.WriteLine("20 Fly points redeemed for a 10% discount on your next booking.");
                     }
@@ -98,7 +98,7 @@ namespace Project_B.Presentation
                     {
                         Console.WriteLine("Not enough Fly points to redeem. Minimum 20 points required.");
                     }
-                    int newPoints = flightLogic.GetFlyPoints(current.Id);
+                    int newPoints = FlightLogic.GetFlyPoints(current.Id);
                     Console.WriteLine($"New Fly points balance: {newPoints}");
                     break;
                 default:

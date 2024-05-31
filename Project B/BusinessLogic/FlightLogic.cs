@@ -29,7 +29,7 @@ namespace Project_B.BusinessLogic
             return Flight.GetFlightById(flightId);
         }
 
-        public  List<Flight> FilterFlights(string destination, DateTime? departureDate, string airline)
+        public List<Flight> FilterFlights(string destination, DateTime? departureDate, string airline)
         {
             List<Flight> flights = Flight.GetFlights();
 
@@ -51,11 +51,12 @@ namespace Project_B.BusinessLogic
             return flights;
         }
 
-        public static void Reserveseat(int flightid,int userid, string seat, string seatclass, string extranotes)
+        public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
         {
             Flight.reserveseat(flightid, userid, seat, seatclass, extranotes);
         }
-        public void AddFlyPoints(int userId, int kilometers)
+
+        public static void AddFlyPoints(int userId, int kilometers)
         {
             int flyPoints = new DataAccess().GetFlyPoints(userId);
             flyPoints += kilometers / 2000;
@@ -63,7 +64,7 @@ namespace Project_B.BusinessLogic
             dataAccess.UpdateFlyPoints(userId, flyPoints);
         }
 
-        public bool RedeemFlyPoints(int userId)
+        public static bool RedeemFlyPoints(int userId)
         {
             DataAccess dataAccess = new DataAccess();
             int flyPoints = dataAccess.GetFlyPoints(userId);
@@ -78,10 +79,16 @@ namespace Project_B.BusinessLogic
             return false;
         }
 
-        public int GetFlyPoints(int userId)
+        public static int GetFlyPoints(int userId)
         {
             DataAccess dataAccess = new DataAccess();
             return dataAccess.GetFlyPoints(userId);
+        }
+        public static bool CheckIfUserCanRedeemFlyPoints(int userId)
+        {
+            DataAccess dataAccess = new DataAccess();
+            int flyPoints = dataAccess.GetFlyPoints(userId);
+            return flyPoints >= 20;
         }
     }
 }
