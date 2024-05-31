@@ -1,5 +1,7 @@
 using Project_B.BusinessLogic;
 using Project_B.DataAcces;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
 namespace Project_B.Presentation
 {
@@ -32,8 +34,154 @@ namespace Project_B.Presentation
             }
         }
     }
+public void DisplaySeats()
+{
+    string[,] seats = new string[34, 7]
+    {
+        {"", "A", "B", "C", "D", "E", "F"},
+        {"1", "0", "0", "0", "0", "0", "0"},
+        {"2", "0", "0", "0", "0", "0", "0"},
+        {"3", "0", "0", "0", "0", "0", "0"},
+        {"4", "0", "0", "0", "0", "0", "0"},
+        {"5", "0", "0", "0", "0", "0", "0"},
+        {"6", "0", "0", "0", "0", "0", "0"},
+        {"7", "0", "0", "0", "0", "0", "0"},
+        {"8", "0", "0", "0", "0", "0", "0"},
+        {"9", "0", "0", "0", "0", "0", "0"},
+        {"10", "0", "0", "0", "0", "0", "0"},
+        {"11", "0", "0", "0", "0", "0", "0"},
+        {"12", "0", "0", "0", "0", "0", "0"},
+        {"13", "0", "0", "0", "0", "0", "0"},
+        {"14", "0", "0", "0", "0", "0", "0"},
+        {"15", "0", "0", "0", "0", "0", "0"},
+        {"16", "0", "0", "0", "0", "0", "0"},
+        {"17", "0", "0", "0", "0", "0", "0"},
+        {"18", "0", "0", "0", "0", "0", "0"},
+        {"19", "0", "0", "0", "0", "0", "0"},
+        {"20", "0", "0", "0", "0", "0", "0"},
+        {"21", "0", "0", "0", "0", "0", "0"},
+        {"22", "0", "0", "0", "0", "0", "0"},
+        {"23", "0", "0", "0", "0", "0", "0"},
+        {"24", "0", "0", "0", "0", "0", "0"},
+        {"25", "0", "0", "0", "0", "0", "0"},
+        {"26", "0", "0", "0", "0", "0", "0"},
+        {"27", "0", "0", "0", "0", "0", "0"},
+        {"28", "0", "0", "0", "0", "0", "0"},
+        {"29", "0", "0", "0", "0", "0", "0"},
+        {"30", "0", "0", "0", "0", "0", "0"},
+        {"31", "0", "0", "0", "0", "0", "0"},
+        {"32", "0", "0", "0", "0", "0", "0"},
+        {"33", "0", "0", "0", "0", "0", "0"}
+    };
+
+    List<(int, int)> selectedSeats = new List<(int, int)>();
+    int currentRow = 1;
+    int currentColumn = 1;
+
+    while (true)
+    {
+        AnsiConsole.Clear();
+
+        // Display information at the top
+        AnsiConsole.Write(new Rule("[yellow]Airplane Seating Plan[/]"));
+        AnsiConsole.MarkupLine("[blue]You are currently viewing the seating layout of the airplane. Seats marked with 'X' are selected.[/]");
+        AnsiConsole.WriteLine();
+
+        for (int i = 0; i < seats.GetLength(0); i++)
+        {
+            for (int j = 0; j < seats.GetLength(1); j++)
+            {
+                // Add extra spaces before the seat letters
+                string seat = seats[i, j].ToString();
+                if (i == 0 && j > 0)
+                {
+                    seat = "" + seat;
+                    if (j == 1) // Add an additional space before 'A'
+                    {
+                        seat = "  " + seat;
+                    }
+                }
+
+                // Add a space before the row number for the first 9 rows
+                if (i > 0 && i < 10 && j == 0)
+                {
+                    seat = " " + seat;
+                }
+
+                // Add a space to simulate the hallway between 'C' and 'D'
+                if (j == 4)
+                {
+                    seat = " " + seat;
+                }
+
+                // Change the color of the seats
+                if (i == 16 || i == 17)
+                {
+                    seat = "[yellow]" + seat + "[/]";
+                }
+
+                // Mark selected seats with an 'X'
+                if (selectedSeats.Contains((i, j)))
+                {
+                    seat = "[green]X[/]";
+                }
+
+                if (i == currentRow && j == currentColumn)
+                {
+                    AnsiConsole.Markup("[[" + seat + "]]");
+                }
+                else
+                {
+                    AnsiConsole.Markup(" " + seat + " ");
+                }
+            }
+            AnsiConsole.WriteLine();
+        }
+
+        // Display navigation instructions
+        AnsiConsole.MarkupLine("[blue]Legend:[/]");
+        AnsiConsole.MarkupLine("Economy Class");
+        AnsiConsole.MarkupLine("[yellow]Business Class[/]");
+        AnsiConsole.MarkupLine("[green]Selected seats[/]\n");
+        AnsiConsole.MarkupLine("[blue]Navigation:[/]");
+        AnsiConsole.MarkupLine("[green]Up Arrow[/]: Move selection up");
+        AnsiConsole.MarkupLine("[green]Down Arrow[/]: Move selection down");
+        AnsiConsole.MarkupLine("[green]Right Arrow[/]: Move selection right");
+        AnsiConsole.MarkupLine("[green]Left Arrow[/]: Move selection left");
+        AnsiConsole.MarkupLine("[green]Enter[/]: Select option");
+        AnsiConsole.MarkupLine("[green]P[/]: Purchase selected seats");
+        AnsiConsole.MarkupLine("[green]B[/]: Go back to previous menu");
+
+        
+        ConsoleKeyInfo key = Console.ReadKey();
+
+        switch (key.Key)
+        {
+            case ConsoleKey.UpArrow:
+                if (currentRow > 1) currentRow--;
+                break;
+            case ConsoleKey.DownArrow:
+                if (currentRow < seats.GetLength(0) - 1) currentRow++;
+                break;
+            case ConsoleKey.LeftArrow:
+                if (currentColumn > 1) currentColumn--;
+                break;
+            case ConsoleKey.RightArrow:
+                if (currentColumn < seats.GetLength(1) - 1) currentColumn++;
+                break;
+            case ConsoleKey.Enter:
+                // Add the selected seat to the list
+                if (!selectedSeats.Contains((currentRow, currentColumn)))
+                {
+                    selectedSeats.Add((currentRow, currentColumn));
+                }
+                break;
+        }
+    }
+}
     public void ToonMenu(CurrentUser current, int flightid)
     {
+        DisplaySeats();
         int currentOption = 0;
         string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart" };
 
@@ -478,5 +626,5 @@ namespace Project_B.Presentation
                 }
             }
         }
+        }
     }
-}
