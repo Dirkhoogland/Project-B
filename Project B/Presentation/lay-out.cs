@@ -205,6 +205,7 @@ namespace Project_B.Presentation
                         if (retourResponse == "yes")
                         {
                             retourstatus = true;
+                            // Change user options to be able to cancel retour status
                             options = new string[] {"Cancel retour status", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
                             Console.WriteLine("Your ticket has been marked as a retour flight.");
                             Thread.Sleep(1000);
@@ -219,6 +220,7 @@ namespace Project_B.Presentation
                             Console.ReadLine();
                         }
                     }
+                    // If the user wants to cancel retour status after selecting it
                     else if (selectedOption == "Cancel retour status")
                     {
                         Console.Clear();
