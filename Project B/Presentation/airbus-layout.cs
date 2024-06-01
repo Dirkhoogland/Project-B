@@ -1,5 +1,6 @@
 using Project_B.BusinessLogic;
 using Project_B.DataAcces;
+using System.Threading;
 
 namespace Project_B.Presentation
 {
@@ -181,6 +182,7 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
+                bool retourstatus = false;
                 string[] options = { "Book a retour flight", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
                 string selectedOption;
                 string extraNotes = string.Empty;
@@ -200,14 +202,40 @@ namespace Project_B.Presentation
                         extraNotes = Console.ReadLine();
                         // Add extraNotes to the database...
                     }
-                    if (selectedOption == "Book a retour flight")
+                    else if (selectedOption == "Book a retour flight")
                     {
-                        int retourIndex = 0;
-                        //string retourstatus = string.Empty;
-
-                        Console.Clear();
-                        Console.WriteLine("Do you want to book a retour flight?");
                         string[] retourOptions = { "yes", "no" };
+                        Console.Clear();
+                        Console.WriteLine("Would you like to book a retour flight?");
+                        
+                        string retourResponse = Seat.AskQuestionWithMenu(retourOptions);
+
+                        if (retourResponse == "yes")
+                        {
+                            retourstatus = true;
+                            options = new string[] {"Cancel retour status", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
+                            Console.WriteLine("Your ticket has been marked as a retour flight.");
+                            Thread.Sleep(1000);
+                            Console.WriteLine("Press enter to continue.");
+                            Console.ReadLine();
+                        }
+                        else if (retourResponse == "no")
+                        {
+                            Console.WriteLine("You have chosen not to book a retour flight.");
+                            Thread.Sleep(1000);
+                            Console.WriteLine("Press enter to continue.");
+                            Console.ReadLine();
+                        }
+                    }
+                    else if (selectedOption == "Cancel retour status")
+                    {
+                        Console.Clear();
+                        retourstatus = false;
+                        options = new string[] { "Book a retour flight", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
+                        Console.WriteLine("Your flight has been marked as a one-way ticket.");
+                        Thread.Sleep(1000);
+                        Console.WriteLine("Press enter to continue.");
+                        Console.ReadLine();
                     }
                 } while (selectedOption != "Continue");
                 Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
@@ -383,7 +411,6 @@ namespace Project_B.Presentation
                     notes = extraNotes + " And extra baggage of:" + extraCost + " Euro With a weight of" + extraKg;
                 }
                 // creates the ticket inside the database
-                string retourstatus = "No";
                 FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class, retourstatus, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");

@@ -1041,7 +1041,7 @@ namespace Project_B.DataAcces
             System.Threading.Thread.Sleep(3000);
         }
         // function for adding tickets to a plane
-        public static void reserveseat(int flightid, int userid, string seat, string seatclass, string retourstatus, string extranotes)
+        public static void reserveseat(int flightid, int userid, string seat, string seatclass, bool retourstatus, string extranotes)
         {
             Users user = Users.GetuserbyId(userid);
             Flight flight = GetFlightById(flightid);
