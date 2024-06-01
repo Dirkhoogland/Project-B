@@ -213,6 +213,8 @@ namespace Project_B.Presentation
                         if (retourResponse == "yes")
                         {
                             retourstatus = true;
+                            // Double the price if the user chooses a retour flight
+                            chosenSeat.Price *= 2;
                             // Change user options to be able to cancel retour status
                             options = new string[] {"Cancel retour status", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
                             Console.WriteLine("Your ticket has been marked as a retour flight.");
@@ -233,6 +235,8 @@ namespace Project_B.Presentation
                     {
                         Console.Clear();
                         retourstatus = false;
+                        // Change price back to original value
+                        chosenSeat.Price /= 2;
                         options = new string[] { "Book a retour flight", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
                         Console.WriteLine("Your flight has been marked as a one-way ticket.");
                         Thread.Sleep(1000);
@@ -301,7 +305,14 @@ namespace Project_B.Presentation
                         }
                     }
 
-                    extraCost = extraKg * 4; // 4 euros per extra kg
+                    if (retourstatus is false)
+                    {
+                        extraCost = extraKg * 4; // 4 euros per extra kg
+                    }
+                    else
+                    {
+                        extraCost = extraKg * 4 * 2; // doubles price of extra baggage if retour flight
+                    }
 
                     // Confirmation step
                     string[] confirmationOptions = { "Yes", "No" };
