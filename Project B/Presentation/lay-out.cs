@@ -34,7 +34,11 @@ namespace Project_B.Presentation
             }
         }
 
+<<<<<<< Updated upstream
         public void DisplaySeats()
+=======
+        public void ToonMenu(CurrentUser current, int flightid)
+>>>>>>> Stashed changes
         {
             string[,] seats = new string[34, 7]
             {
@@ -237,16 +241,23 @@ namespace Project_B.Presentation
                     Console.WriteLine($"Current Fly points balance: {points}");
                     break;
                 case 4:
+<<<<<<< Updated upstream
                     if (FlightLogic.RedeemFlyPoints(current.Id))
+=======
+                    if (flightLogic.CanRedeemFlyPoints(current.Id))
+>>>>>>> Stashed changes
                     {
-                        Console.WriteLine("20 Fly points redeemed for a 10% discount on your next booking.");
+                        Console.WriteLine("You have enough Fly points to redeem for a discount.");
                     }
                     else
                     {
                         Console.WriteLine("Not enough Fly points to redeem. Minimum 20 points required.");
                     }
+<<<<<<< Updated upstream
                     int newPoints = FlightLogic.GetFlyPoints(current.Id);
                     Console.WriteLine($"New Fly points balance: {newPoints}");
+=======
+>>>>>>> Stashed changes
                     break;
                 default:
                     Console.WriteLine("Invalid choice");
@@ -301,7 +312,7 @@ namespace Project_B.Presentation
                 return;
             }
 
-            Console.WriteLine($"You hace chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
+            Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
 
             int currentOption = 0;
             string[] yesNoOptions = new string[] { "yes", "no" };
@@ -364,7 +375,7 @@ namespace Project_B.Presentation
                     }
                 } while (selectedOption != "Continue");
 
-                  Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
+                Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
 
                 string[] baggageOptions = { "yes", "no" };
                 int selectedIndex = 0;
@@ -425,6 +436,7 @@ namespace Project_B.Presentation
 
                     extraCost = extraKg * 4; // 4 euros per extra kg
 
+<<<<<<< Updated upstream
                     // Confirmation step
                     string[] confirmationOptions = { "Yes", "No" };
                     int confirmationIndex = 0;
@@ -482,13 +494,133 @@ namespace Project_B.Presentation
                     }
 
                 EndConfirmation:
+=======
+                    chosenSeat.Price += extraCost; // Add extra cost to seat price
+                }
+>>>>>>> Stashed changes
 
-                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
+                Console.WriteLine($"Your total cost before discount is {chosenSeat.Price} euros.");
+                Console.WriteLine("Do you want to apply your discount now?");
+                int discountOption = 0;
+                do
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop - yesNoOptions.Length);
+                    for (int i = 0; i < yesNoOptions.Length; i++)
+                    {
+                        if (i == discountOption)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(yesNoOptions[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    key = Console.ReadKey(true);
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                        case ConsoleKey.LeftArrow:
+                            discountOption = Math.Max(0, discountOption - 1);
+                            break;
+                        case ConsoleKey.DownArrow:
+                        case ConsoleKey.RightArrow:
+                            discountOption = Math.Min(yesNoOptions.Length - 1, discountOption + 1);
+                            break;
+                    }
+                } while (key.Key != ConsoleKey.Enter);
+
+                FlightLogic flightLogic = new FlightLogic();
+
+                if (discountOption == 0)
+                {
+                    if (flightLogic.RedeemFlyPoints(current.Id))
+                    {
+                        chosenSeat.Price *= 0.9m; // Apply a 10% discount
+                        Console.WriteLine($"Discount applied! Your new total cost is {chosenSeat.Price} euros.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not enough Fly points to redeem. Minimum 20 points required.");
+                    }
+                }
+
+                Console.WriteLine("Do you want to reserve the seat with the final cost?");
+                int reserveOption = 0;
+                do
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop - yesNoOptions.Length);
+                    for (int i = 0; i < yesNoOptions.Length; i++)
+                    {
+                        if (i == reserveOption)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(yesNoOptions[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    key = Console.ReadKey(true);
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                        case ConsoleKey.LeftArrow:
+                            reserveOption = Math.Max(0, reserveOption - 1);
+                            break;
+                        case ConsoleKey.DownArrow:
+                        case ConsoleKey.RightArrow:
+                            reserveOption = Math.Min(yesNoOptions.Length - 1, reserveOption + 1);
+                            break;
+                    }
+                } while (key.Key != ConsoleKey.Enter);
+
+                if (reserveOption == 0)
+                {
+                    string seatplace = "";
+                    int newseat = seat + 1;
+                    if (newseat == 1)
+                    {
+                        seatplace = (row + 1).ToString() + " - " + "A";
+                    }
+                    else if (newseat == 2)
+                    {
+                        seatplace = (row + 1).ToString() + " - " + "B";
+                    }
+                    else if (newseat == 3)
+                    {
+                        seatplace = (row + 1).ToString() + " - " + "C";
+                    }
+                    else if (newseat == 4)
+                    {
+                        seatplace = (row + 1).ToString() + " - " + "D";
+                    }
+                    else if (newseat == 5)
+                    {
+                        seatplace = (row + 1).ToString() + " - " + "E";
+                    }
+                    else if (newseat == 6)
+                    {
+                        seatplace = (row + 1).ToString() + " - " + "F";
+                    }
+                    FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, extraNotes);
+                    chosenSeat.IsReserved = true;
+                    Console.WriteLine("Seat successfully reserved!");
                 }
                 else
                 {
-                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
+                    // Refund FlyPoints if discount was applied but reservation was cancelled
+                    if (discountOption == 0)
+                    {
+                        flightLogic.RefundFlyPoints(current.Id);
+                    }
+                    Console.WriteLine("Seat reservation cancelled.");
                 }
+<<<<<<< Updated upstream
 
                 if (FlightLogic.CheckIfUserCanRedeemFlyPoints(current.Id))
                 {
@@ -578,18 +710,21 @@ namespace Project_B.Presentation
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
                 Console.ReadLine();
+=======
+>>>>>>> Stashed changes
             }
             else
             {
-                Console.WriteLine("You have cancelled your seat.");
+                Console.WriteLine("You have cancelled your seat selection.");
             }
+            Console.ReadLine();
         }
 
         public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             
-            Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
+            Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
             Console.WriteLine("Seat plan:");
             Console.WriteLine("Seat   row");
             Console.WriteLine("      A B C  D E F");
@@ -654,6 +789,7 @@ namespace Project_B.Presentation
                 Console.WriteLine();
             }
         }
+
         public static string AskQuestionWithMenu(string[] options)
         {
             int currentOption = 0;

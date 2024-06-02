@@ -27,6 +27,7 @@ namespace Project_B.DataAcces
         public int FlightID { get; set; }
         public Seat? PlaneLayout { get; set; }
         public int FlightId { get; set; }
+        public int Distance { get; set; } 
 
         public int Distance { get; set; }
 
@@ -65,7 +66,7 @@ namespace Project_B.DataAcces
                 {
                     Flight flight = new Flight
                     {
-                        FlightId = int.Parse(sqlite_datareader["FlightId"].ToString()),
+                        FlightId = int.Parse(sqlite_datareader["FlightID"].ToString()),
                         DepartureTime = DateTime.Parse(sqlite_datareader["DepartureTime"].ToString()),
                         Terminal = sqlite_datareader["Terminal"].ToString(),
                         FlightNumber = sqlite_datareader["FlightNumber"].ToString(),
@@ -76,13 +77,21 @@ namespace Project_B.DataAcces
                         Origin = sqlite_datareader["Origin"].ToString(),
                         Airline = sqlite_datareader["Airline"].ToString(),
                         Gate = sqlite_datareader["Gate"].ToString(),
+<<<<<<< Updated upstream
                         Distance = int.Parse(sqlite_datareader["Distance"].ToString())
+=======
+                        Distance = sqlite_datareader.IsDBNull(sqlite_datareader.GetOrdinal("Distance")) ? 0 : int.Parse(sqlite_datareader["Distance"].ToString())
+>>>>>>> Stashed changes
                     };
                     flights.Add(flight);
                 }
                 catch (FormatException ex)
                 {
                     Console.WriteLine($"Failed to parse flight data: {ex.Message}");
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    Console.WriteLine($"Column not found: {ex.Message}");
                 }
             }
             sqlite_conn.Close();
@@ -702,15 +711,23 @@ namespace Project_B.DataAcces
                 System.Threading.Thread.Sleep(3000);
             }
         }
+<<<<<<< Updated upstream
         // function for adding tickets to a plane
         public static void reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
+=======
+        public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
+>>>>>>> Stashed changes
         {
             Users user = Users.GetuserbyId(userid);
             Flight flight = GetFlightById(flightid);
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
 
             DateTime time = DateTime.Now;
+<<<<<<< Updated upstream
             string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
+=======
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}', '{flight.Origin}', '{extranotes}');";
+>>>>>>> Stashed changes
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
                 c.Open();

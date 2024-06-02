@@ -1,27 +1,29 @@
 ﻿using Project_B.DataAcces;
+using System.Collections.Generic;
 
 namespace Project_B.BusinessLogic
 {
     public class Userhistorylogic
     {
-        // returns a list of user history
         public static List<Bookinghistory> returnuserhistory(int id)
         {
-            List<Bookinghistory> userhistory = Bookinghistory.GetUserHistory(id);
-            return userhistory; 
+            return Bookinghistory.GetUserHistory(id);
         }
 
         public static List<Bookinghistory> returnuserhistory()
         {
+<<<<<<< Updated upstream
             List<Bookinghistory> userhistory = Bookinghistory.GetUserHistory();
             var historyQuery = from uh in userhistory  orderby uh.FlightId group uh by uh.FlightId;
             return userhistory;
+=======
+            return Bookinghistory.GetUserHistory();
+>>>>>>> Stashed changes
         }
 
-        public static List<Bookinghistory> GetflightHistorybyflightid(int id)
+        public static List<Bookinghistory> GetflightHistorybyflightid(int flightid)
         {
-            List<Bookinghistory> userhistory = Bookinghistory.GetUserHistory(id);
-            return userhistory;
+            return Bookinghistory.GetflightHistorybyflightid(flightid);
         }
     }
 }

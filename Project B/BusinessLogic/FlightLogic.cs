@@ -53,18 +53,37 @@ namespace Project_B.BusinessLogic
 
         public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
         {
+<<<<<<< Updated upstream
             Flight.reserveseat(flightid, userid, seat, seatclass, extranotes);
+=======
+            Flight.Reserveseat(flightid, userid, seat, seatclass, extranotes);
+>>>>>>> Stashed changes
         }
 
         public static void AddFlyPoints(int userId, int kilometers)
         {
             int flyPoints = new DataAccess().GetFlyPoints(userId);
+<<<<<<< Updated upstream
             flyPoints += kilometers / 2000;
+=======
+            flyPoints += kilometers / 2000; // Per 2000km 1 point
+>>>>>>> Stashed changes
             DataAccess dataAccess = new DataAccess();
             dataAccess.UpdateFlyPoints(userId, flyPoints);
         }
 
+<<<<<<< Updated upstream
         public static bool RedeemFlyPoints(int userId)
+=======
+        public bool CanRedeemFlyPoints(int userId)
+        {
+            DataAccess dataAccess = new DataAccess();
+            int flyPoints = dataAccess.GetFlyPoints(userId);
+            return flyPoints >= 20;
+        }
+
+        public bool RedeemFlyPoints(int userId)
+>>>>>>> Stashed changes
         {
             DataAccess dataAccess = new DataAccess();
             int flyPoints = dataAccess.GetFlyPoints(userId);
@@ -79,7 +98,19 @@ namespace Project_B.BusinessLogic
             return false;
         }
 
+<<<<<<< Updated upstream
         public static int GetFlyPoints(int userId)
+=======
+        public void RefundFlyPoints(int userId)
+        {
+            DataAccess dataAccess = new DataAccess();
+            int flyPoints = dataAccess.GetFlyPoints(userId);
+            flyPoints += 20;
+            dataAccess.UpdateFlyPoints(userId, flyPoints);
+        }
+
+        public int GetFlyPoints(int userId)
+>>>>>>> Stashed changes
         {
             DataAccess dataAccess = new DataAccess();
             return dataAccess.GetFlyPoints(userId);

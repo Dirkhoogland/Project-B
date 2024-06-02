@@ -12,7 +12,7 @@ namespace Project_B.Presentation
         // prints all users to the console
         public static void presentallusers()
         {
-            var userlist = Adminlogic.Getusersfromdb();
+            var userlist =  Adminlogic.Getusersfromdb();
             int pageSize = 20; // Number of users to display at a time
             int pageNumber = 0; // Current page number
             int totalPages = (userlist.Count + pageSize - 1) / pageSize; // Total number of pages
@@ -32,8 +32,14 @@ namespace Project_B.Presentation
                 // Add rows to the table
                 foreach (Users user in page)
                 {
+<<<<<<< Updated upstream
                     string rank = user.rank == 1 ? "Admin" : "User";
                     table.AddRow(user.Id.ToString(), user.Name, user.Email, rank);
+=======
+                    string rank = "user";
+                    if(user.rank == 1) { rank = "Admin"; }
+                    Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}, Rank: {rank}");
+>>>>>>> Stashed changes
                 }
 
                 // Render the table
@@ -242,6 +248,7 @@ namespace Project_B.Presentation
             AnsiConsole.WriteLine("Which user do you want the information of?");
             int userid = AnsiConsole.Ask<int>("User ID: ");
             Users user = Adminlogic.getuserbyId(userid);
+<<<<<<< Updated upstream
             string rank = user.rank == 1 ? "Admin" : "User";
 
             // Create a table and add columns
@@ -257,6 +264,26 @@ namespace Project_B.Presentation
 
             // Render the table
             AnsiConsole.Render(table);
+=======
+            string rank = "User";
+            if (user.rank == 1) { rank = "Admin"; }
+            Console.WriteLine($"Information of user: {userid}");
+            Console.WriteLine($"Name: {user.Name}, Email: {user.Email}, Rank: {rank}  ");
+        }
+
+        // Add Fly Points to user
+        public static void AddFlyPointsToUser()
+        {
+            Console.WriteLine("Enter user ID:");
+            int userId = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Enter kilometers flown:");
+            int kilometers = Convert.ToInt32(Console.ReadLine());
+
+            FlightLogic flightLogic = new FlightLogic();
+            flightLogic.AddFlyPoints(userId, kilometers);
+
+            Console.WriteLine($"Fly points added to user with ID: {userId}");
+>>>>>>> Stashed changes
         }
     }
 }
