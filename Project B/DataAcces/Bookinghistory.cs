@@ -138,7 +138,7 @@ namespace Project_B.DataAcces
         public static List<Bookinghistory> GetflightHistorybyflightid(int flightid)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sql = "SELECT * FROM Tickets WHERE FlightID = $FlightId ORDER BY Name, Seat\"";
+            string sql = "SELECT * FROM Tickets WHERE FlightID = $FlightId ORDER BY Name, Seat";
             List<Bookinghistory> Userhistory = new List<Bookinghistory>();
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {   // opens the database connection
@@ -163,7 +163,7 @@ namespace Project_B.DataAcces
                             string Destination = rdr.GetString(10);
                             string Origin = rdr.GetString(11);
                             int Distance = rdr.GetInt32(12);
-                            string Extranotes = rdr.GetString(12);
+                            string Extranotes = rdr.GetString(13);
                             // puts it into the list to then post to the logical side
                             Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate, Departuretime, Origin, Destination, Distance, Extranotes);
                             Userhistory.Add(history);
