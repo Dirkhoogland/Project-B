@@ -55,7 +55,7 @@ namespace Project_B.DataAcces
         {
 
                 string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-                string sql = $"INSERT INTO Users(Email, Name, Password, Rank) VALUES('{Email} ','{Name}', '{Password}', 0); ";
+                string sql = $"INSERT INTO Users(Email, Name, Password, Rank) VALUES('{Email}','{Name}', '{Password}', 0); ";
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
                     c.Open();

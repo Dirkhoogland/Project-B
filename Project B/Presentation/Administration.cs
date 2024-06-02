@@ -1,5 +1,7 @@
 ﻿using Project_B.BusinessLogic;
 using Project_B.DataAcces;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
 namespace Project_B.Presentation
 {
@@ -10,82 +12,111 @@ namespace Project_B.Presentation
         // prints all users to the console
         public static void presentallusers()
         {
-            var userlist =  Adminlogic.Getusersfromdb();
+            var userlist = Adminlogic.Getusersfromdb();
             int pageSize = 20; // Number of users to display at a time
             int pageNumber = 0; // Current page number
+            int totalPages = (userlist.Count + pageSize - 1) / pageSize; // Total number of pages
 
             while (true)
             {
                 var page = userlist.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
+                // Create a table and add columns
+                var table = new Table()
+                    .Border(TableBorder.Rounded)
+                    .AddColumn("ID")
+                    .AddColumn("Name")
+                    .AddColumn("Email")
+                    .AddColumn("Rank");
+
+                // Add rows to the table
                 foreach (Users user in page)
                 {
-                    string rank = "user";
-                    if(user.rank == 1) { rank = "Admin"; }
-                    Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}, Rank: {rank}");
+                    string rank = user.rank == 1 ? "Admin" : "User";
+                    table.AddRow(user.Id.ToString(), user.Name, user.Email, rank);
                 }
 
-                Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, (userlist.Count + pageSize - 1) / pageSize);
-                Console.WriteLine("Press N for next page, P for previous page, or any other key to return.");
+                // Render the table
+                AnsiConsole.Render(table);
+
+                AnsiConsole.WriteLine("\nPage {0} of {1}", pageNumber + 1, totalPages);
+                AnsiConsole.WriteLine("Press N for next page, P for previous page, B to go back.");
 
                 var key = Console.ReadKey(true).Key;
 
-                if (key == ConsoleKey.N && pageNumber < (userlist.Count + pageSize - 1) / pageSize - 1)
+                if (key == ConsoleKey.N && pageNumber < totalPages - 1) // Check if there's a next page
                 {
-                    pageNumber++;
+                    pageNumber++; // Go to the next page
                 }
-                else if (key == ConsoleKey.P && pageNumber > 0)
+                else if (key == ConsoleKey.P && pageNumber > 0) // Check if there's a previous page
                 {
-                    pageNumber--;
+                    pageNumber--; // Go to the previous page
                 }
-                else
+                else if (key == ConsoleKey.B)
                 {
                     break;
                 }
 
-                Console.Clear();
+                AnsiConsole.Clear();
             }
         }
         // gets all tickets from a user and the database and presents them to the screen
         public static void presentallticketsfromuser()
         {
-            Console.WriteLine("Fill in user id");
-            string userid = Console.ReadLine();
+            AnsiConsole.WriteLine("Fill in user id");
+            string userid = AnsiConsole.Ask<string>("User ID: ");
             int Id = Int32.Parse(userid);
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(Id);
-            Console.WriteLine($"Tickets from user: {userid}");
 
-            int pageSize = 20; // Number of tickets to display at a time
-            int pageNumber = 0; // Current page number
+            int pageSize = 20;
+            int pageNumber = 0;
+            int totalPages = (userhistory.Count + pageSize - 1) / pageSize;
 
             while (true)
             {
+                AnsiConsole.WriteLine($"Tickets from user: {userid}");
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
+
+                // Create a table and add columns
+                var table = new Table()
+                    .Border(TableBorder.Rounded)
+                    .AddColumn("Flight")
+                    .AddColumn("Seat")
+                    .AddColumn("Class")
+                    .AddColumn("Origin")
+                    .AddColumn("Destination")
+                    .AddColumn("Departure Time");
+
+                // Add rows to the table
                 foreach (Bookinghistory history in page)
                 {
-                    Console.WriteLine($"Flight: {history.FlightId}, Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}");
+                    table.AddRow(history.FlightId.ToString(), history.Seat, history.SeatClass, history.Origin, history.Destination, history.Departuretime.ToString());
+
                 }
 
-                Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, (userhistory.Count + pageSize - 1) / pageSize);
-                Console.WriteLine("Press N for next page, P for previous page, or any other key to return.");
+                // Render the table
+                AnsiConsole.Render(table);
+
+                AnsiConsole.WriteLine("\nPage {0} of {1}", pageNumber + 1, totalPages);
+                AnsiConsole.WriteLine("Press N for next page, P for previous page, B to go back.");
 
                 var key = Console.ReadKey(true).Key;
 
-                if (key == ConsoleKey.N && pageNumber < (userhistory.Count + pageSize - 1) / pageSize - 1)
+                if (key == ConsoleKey.N && pageNumber < totalPages - 1) // Check if there's a next page
                 {
-                    pageNumber++;
+                    pageNumber++; // Go to the next page
                 }
-                else if (key == ConsoleKey.P && pageNumber > 0)
+                else if (key == ConsoleKey.P && pageNumber > 0) // Check if there's a previous page
                 {
-                    pageNumber--;
+                    pageNumber--; // Go to the previous page
                 }
-                else
+                else if (key == ConsoleKey.B)
                 {
                     break;
                 }
 
-                Console.Clear();
+                AnsiConsole.Clear();
             }
         }
         // gets all tickets from the database and presents them
@@ -93,93 +124,139 @@ namespace Project_B.Presentation
         {
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory();
 
-            int pageSize = 20; // Number of tickets to display at a time
-            int pageNumber = 0; // Current page number
+
+            int pageSize = 20;
+            int pageNumber = 0;
+            int totalPages = (userhistory.Count + pageSize - 1) / pageSize;
+
 
             while (true)
             {
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
+
+                // Create a table and add columns
+                var table = new Table()
+                    .Border(TableBorder.Rounded)
+                    .AddColumn("Flight")
+                    .AddColumn("User")
+                    .AddColumn("Seat")
+                    .AddColumn("Class")
+                    .AddColumn("Origin")
+                    .AddColumn("Destination")
+                    .AddColumn("Departure Time")
+                    .AddColumn("Notes");
+
+                // Add rows to the table
                 foreach (Bookinghistory history in page)
                 {
-                    Console.WriteLine($"Flight: {history.FlightId}, User: {history.UserId} Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
+                    table.AddRow(history.FlightId.ToString(), history.UserId.ToString(), history.Seat, history.SeatClass, history.Origin, history.Destination, history.Departuretime.ToString(), history.extranotes);
+
                 }
 
-                Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, (userhistory.Count + pageSize - 1) / pageSize);
-                Console.WriteLine("Press N for next page, P for previous page, or any other key to return.");
+                // Render the table
+                AnsiConsole.Render(table);
+
+                AnsiConsole.WriteLine("\nPage {0} of {1}", pageNumber + 1, totalPages);
+                AnsiConsole.WriteLine("Press N for next page, P for previous page, B to go back.");
 
                 var key = Console.ReadKey(true).Key;
 
-                if (key == ConsoleKey.N && pageNumber < (userhistory.Count + pageSize - 1) / pageSize - 1)
+                if (key == ConsoleKey.N && pageNumber < totalPages - 1) // Check if there's a next page
                 {
-                    pageNumber++;
+                    pageNumber++; // Go to the next page
                 }
-                else if (key == ConsoleKey.P && pageNumber > 0)
+                else if (key == ConsoleKey.P && pageNumber > 0) // Check if there's a previous page
                 {
-                    pageNumber--;
+                    pageNumber--; // Go to the previous page
                 }
-                else
+                else if (key == ConsoleKey.B)
                 {
                     break;
                 }
 
-                Console.Clear();
+                AnsiConsole.Clear();
             }
         }
         // gets all tickets from a specific flight
         public static void presentallticketsfromflight()
         {
-            Console.WriteLine("Which flight do you want the tickets of?");
-            int flightid = Convert.ToInt32(Console.ReadLine());
+            AnsiConsole.WriteLine("Which flight do you want the tickets of?");
+            int flightid = AnsiConsole.Ask<int>("Flight ID: ");
             List<Bookinghistory> userhistory = Userhistorylogic.GetflightHistorybyflightid(flightid);
-            Console.WriteLine($"Tickets from flight: {flightid}");
 
-            int pageSize = 20; // Number of tickets to display at a time
-            int pageNumber = 0; // Current page number
+            int pageSize = 20;
+            int pageNumber = 0;
+            int totalPages = (userhistory.Count + pageSize - 1) / pageSize;
 
             while (true)
             {
+                AnsiConsole.WriteLine($"Tickets from flight: {flightid}");
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
+
+                // Create a table and add columns
+                var table = new Table()
+                    .Border(TableBorder.Rounded)
+                    .AddColumn("Seat")
+                    .AddColumn("Class")
+                    .AddColumn("Origin")
+                    .AddColumn("Destination")
+                    .AddColumn("Departure Time")
+                    .AddColumn("Notes");
+
+                // Add rows to the table
                 foreach (Bookinghistory history in page)
                 {
-                    Console.WriteLine($"Seat: {history.Seat}, Class: {history.SeatClass}, Origin: {history.Origin}, Destination: {history.Destination}, Departure time: {history.Departuretime}, Notes: {history.extranotes}");
+                    table.AddRow(history.Seat, history.SeatClass, history.Origin, history.Destination, history.Departuretime.ToString(), history.extranotes);
+
                 }
 
-                Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, (userhistory.Count + pageSize - 1) / pageSize);
-                Console.WriteLine("Press N for next page, P for previous page, or any other key to return.");
+                // Render the table
+                AnsiConsole.Render(table);
+
+                AnsiConsole.WriteLine("\nPage {0} of {1}", pageNumber + 1, totalPages);
+                AnsiConsole.WriteLine("Press N for next page, P for previous page, B to go back.");
 
                 var key = Console.ReadKey(true).Key;
 
-                if (key == ConsoleKey.N && pageNumber < (userhistory.Count + pageSize - 1) / pageSize - 1)
+                if (key == ConsoleKey.N && pageNumber < totalPages - 1) // Check if there's a next page
                 {
-                    pageNumber++;
+                    pageNumber++; // Go to the next page
                 }
-                else if (key == ConsoleKey.P && pageNumber > 0)
+                else if (key == ConsoleKey.P && pageNumber > 0) // Check if there's a previous page
                 {
-                    pageNumber--;
+                    pageNumber--; // Go to the previous page
                 }
-                else
+                else if (key == ConsoleKey.B)
                 {
                     break;
                 }
 
-                Console.Clear();
+                AnsiConsole.Clear();
             }
         }
         // gets the user information from one user
         public static void presentuserwithID()
         {
-            Console.WriteLine("Which user do you want the information of?");
-            int userid = Convert.ToInt32(Console.ReadLine());
+            AnsiConsole.WriteLine("Which user do you want the information of?");
+            int userid = AnsiConsole.Ask<int>("User ID: ");
             Users user = Adminlogic.getuserbyId(userid);
-            string rank = "User";
-            if (user.rank == 1) { rank = "Admin"; }
-            Console.WriteLine($"Information of user: {userid}");
-            Console.WriteLine($"Name: {user.Name}, Email: {user.Email}, Rank: {rank}  ");
+            string rank = user.rank == 1 ? "Admin" : "User";
+
+            // Create a table and add columns
+            var table = new Table()
+                .Border(TableBorder.Rounded)
+                .AddColumn("User ID")
+                .AddColumn("Name")
+                .AddColumn("Email")
+                .AddColumn("Rank");
+
+            // Add a row to the table
+            table.AddRow(userid.ToString(), user.Name, user.Email, rank);
+
+            // Render the table
+            AnsiConsole.Render(table);
         }
-
-
-
     }
 }
