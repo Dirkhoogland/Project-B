@@ -2,85 +2,135 @@
 using Project_B.Presentation;
 using System.Drawing.Printing;
 using System.Xml.Linq;
+using Spectre.Console;
+using Spectre.Console.Cli;
+
 namespace Project_B
 {
     namespace Project_B
     {
         public class Program
         {
+            public static Flight SelectFlight(List<Flight> flights)
+            {
+                var flightPrompt = new SelectionPrompt<Flight>()
+                    .Title("Please select a flight:")
+                    .PageSize(10)
+                    .AddChoices(flights);
+
+                return AnsiConsole.Prompt(flightPrompt);
+            }
+            public static void PrintImages()
+            {
+                string[] image1 = new string[]
+                {
+                    "                      ___",
+                    "                      \\\\ \\",
+                    "                       \\\\ `\\",
+                    "    ___                 \\\\  \\",
+                    "   |    \\                \\\\  `\\",
+                    "   |____\\                \\    \\",
+                    "   |______\\                \\    `\\",
+                    "   |       \\                \\     \\",
+                    "   |      __\\__---------------------------------._.",
+                    " __|---~~~__o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_[]\\",
+                    "|___                         /~      )  New South     \\__",
+                    "    ~~~---..._______________/      ,/_________________/",
+                    "                           /      /",
+                    "                          /     ,/",
+                    "                         /     /",
+                    "                        /    ,/",
+                    "                       /    /",
+                    "                      //  ,/",
+                    "                     //  /",
+                    "                    // ,/",
+                    "                   //_/"
+                };
+
+                string[] image2 = new string[]
+                {
+                    "",
+                    "",
+                    "",
+                    "",
+                    "__|__",
+                    "\\___/",
+                    " | |",
+                    " | |",
+                    "_|_|______________",
+                    "        /|\\",
+                    "      */ | \\*",
+                    "      / -+- \\",
+                    "---o--(_)--o---",
+                    "    /  0 \" 0  \\",
+                    "  */     |     \\*",
+                    "  /      |      \\",
+                    "*/       |       \\*"
+                };
+
+                for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
+                {
+                    string line1 = i < image1.Length ? image1[i] : new string(' ', image1.Max(s => s.Length));
+                    string line2 = i < image2.Length ? image2[i] : "";
+
+                    AnsiConsole.WriteLine(line1.PadRight(image1.Max(s => s.Length)) + "    " + line2);
+                }
+            }
+            private static CurrentUser Login()
+            {
+                CurrentUser currentuser = null;
+                return currentuser = LoginRegistrations.LoginScreen();
+            }
             public static void Main(string[] args)
             {
+
                 DataAccess.Database();
 
-                string[] menuItemsGuest = { "Login/Register", "Exit" };
-                string[] menuItemsUser = { "View Flights", "Flight History", "Logout", "Exit" };
-                string[] menuItemsAdmin = { "View Flights", "Flight History", "Update Flight", "Add Flight", "Users", "Add Fly Points to user", "Logout", "Exit" };
+                var menuItemsGuest = new[] { "Login/Register", "Exit" };
+                var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
+                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Logout", "Exit" };
+                var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
+
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
                 CurrentUser currentuser = null;
                 bool isFilterActive = false;
-                bool isBackSelected = false;
                 int currentOption = 0;
                 string filterFlightsText = " Filter Flights ";
                 string removeFiltersText = " Remove Filters ";
                 string backText = " Back ";
+                int currentPage = 0;
+                int itemsPerPage = 20;
                 List<string> options = new List<string> { filterFlightsText };
 
-                while (true)
-                {
-                    Console.Clear();
+                
+                    while (true)
 
-                    if (currentuser == null)
                     {
-                        PrintImages();
-                    }
-                    if (currentuser != null)
-                    {
-                        string loginText = $"Logged in as {currentuser.Name}";
-                        int padding = (Console.WindowWidth - loginText.Length) / 2;
-                        Console.WriteLine(new string('-', padding) + loginText + new string('-', padding));
-                    }
+                        AnsiConsole.Clear();
 
-                    for (int i = 0; i < menuItems.Length; i++)
-                    {
-                        if (i == currentIndex)
+                        if (currentuser == null)
                         {
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                            Console.ForegroundColor = ConsoleColor.Black;
+                            PrintImages();
+                        }
+                        if (currentuser != null)
+                        {
+                            string loginText = $"Logged in as {currentuser.Name}";
+                            int padding = (Console.WindowWidth - loginText.Length) / 2;
+                            AnsiConsole.WriteLine(new string('-', padding) + loginText + new string('-', padding));
                         }
 
-                        Console.WriteLine(menuItems[i]);
+                        var selectedOption = AnsiConsole.Prompt(
+                            new SelectionPrompt<string>()
+                                .PageSize(10)
+                                .AddChoices(menuItems));
 
-                        Console.ResetColor();
-                    }
-
-                    ConsoleKeyInfo keyInfo;
-                    do
-                    {
-                        keyInfo = Console.ReadKey(true);
-                    } while (keyInfo.Key != ConsoleKey.UpArrow && keyInfo.Key != ConsoleKey.DownArrow && keyInfo.Key != ConsoleKey.Enter);
-
-                    if (keyInfo.Key == ConsoleKey.UpArrow)
-                    {
-                        if (currentIndex > 0)
-                        {
-                            currentIndex--;
-                        }
-                    }
-                    else if (keyInfo.Key == ConsoleKey.DownArrow)
-                    {
-                        if (currentIndex < menuItems.Length - 1)
-                        {
-                            currentIndex++;
-                        }
-                    }
-                    else if (keyInfo.Key == ConsoleKey.Enter)
-                    {
-                        switch (menuItems[currentIndex])
+                        switch (selectedOption)
                         {
                             case "Login/Register":
-                                Console.Clear();
+
+                                AnsiConsole.Clear();
 
                                 currentuser = Login();
                                 if (currentuser != null)
@@ -93,291 +143,261 @@ namespace Project_B
                                     {
                                         menuItems = menuItemsUser;
                                     }
-                                    currentIndex = 0;
                                 }
-                                Console.Clear();
+                                AnsiConsole.Clear();
                                 break;
                             case "Logout":
                                 currentuser = null;
                                 menuItems = menuItemsGuest;
-                                currentIndex = 0;
                                 break;
                             case "Exit":
                                 return;
                             case "View Flights":
-                                isBackSelected = false;
-                                Console.Clear();
+                                bool continueViewFlights = true;
+                                AnsiConsole.Clear();
                                 List<Flight> flights = Flight.GetFlights(); // get the list of flights without any filters
-                                options = new List<string> { filterFlightsText, backText }; // reset the options
-                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
+                                int selectedFlightIndex = 0;
+                                isFilterActive = false;
 
-                                int pageSize = 20; // Number of flights to display at a time
-                                int pageNumber = 0; // Current page number
-
-                                while (true)
+                                while (continueViewFlights)
                                 {
-                                    Console.Clear();
+                                    AnsiConsole.Clear();
 
-                                    if (isFilterActive)
+                                    // Add the flights for the current page to the options
+                                    var pagedFlights = flights.Skip(currentPage * itemsPerPage).Take(itemsPerPage).ToList();
+
+                                    // Create a table and add columns
+                                    var table = new Table()
+                                        .Border(TableBorder.Rounded)
+                                        .AddColumn(new TableColumn("[blue]Time[/]"))
+                                        .AddColumn(new TableColumn("[blue]Origin[/]"))
+                                        .AddColumn(new TableColumn("[blue]Destination[/]"))
+                                        .AddColumn(new TableColumn("[blue]Flight Number[/]"))
+                                        .AddColumn(new TableColumn("[blue]Gate[/]"))
+                                        .AddColumn(new TableColumn("[blue]Terminal[/]"));
+
+                                    // Add the flights for the current page to the table
+                                    for (int i = 0; i < pagedFlights.Count; i++)
                                     {
-                                        options[1] = removeFiltersText;
-                                    }
-                                    else
-                                    {
-                                        options[1] = backText;
-                                    }
-
-                                    var page = options.Skip(pageNumber * pageSize).Take(pageSize).ToList();
-
-                                    for (int i = 0; i < page.Count; i++)
-                                    {
-                                        if (i == currentOption)
+                                        var flight = pagedFlights[i];
+                                        if (i == selectedFlightIndex)
                                         {
-                                            Console.BackgroundColor = ConsoleColor.Gray;
-                                            Console.ForegroundColor = ConsoleColor.Black;
-                                        }
-
-                                        if (i == 0) // Filter Flights
-                                        {
-                                            int padding = (Console.WindowWidth - filterFlightsText.Length) / 2;
-                                            Console.WriteLine(new string('-', padding) + filterFlightsText + new string('-', padding));
-                                        }
-                                        else if (i == 1 && isFilterActive) // Remove Filters
-                                        {
-                                            int padding = (Console.WindowWidth - removeFiltersText.Length) / 2;
-                                            Console.WriteLine(new string('-', padding) + removeFiltersText + new string('-', padding));
-                                        }
-                                        else if (i == 1 && !isFilterActive) // Back
-                                        {
-                                            int padding = (Console.WindowWidth - backText.Length) / 2;
-                                            Console.WriteLine(new string('-', padding) + backText + new string('-', padding));
+                                            table.AddRow($"[green]{flight.DepartureTime}[/]", $"[green]{flight.Origin}[/]", $"[green]{flight.Destination}[/]", $"[green]{flight.FlightNumber}[/]", $"[green]{flight.Gate}[/]", $"[green]{flight.Terminal}[/]");
                                         }
                                         else
                                         {
-                                            Console.WriteLine(page[i]);
+                                            table.AddRow(flight.DepartureTime.ToString(), flight.Origin, flight.Destination, flight.FlightNumber, flight.Gate, flight.Terminal);
                                         }
-                                        Console.ResetColor();
                                     }
 
-                                    Console.WriteLine("\nPage {0} of {1}", pageNumber + 1, (options.Count + pageSize - 1) / pageSize);
-                                    Console.WriteLine("Press N for next page, P for previous page.");
+                                    // Render the table
+                                    AnsiConsole.Render(table);
 
-                                    ConsoleKeyInfo optionKeyInfo = Console.ReadKey(true);
+                                    // Display the options
+                                    if (isFilterActive)
+                                    {
+                                        AnsiConsole.MarkupLine($"[red]FILTER IS ACTIVE [/]");
+                                    }
+                                    AnsiConsole.MarkupLine("[blue]Options:[/]");
+                                    AnsiConsole.MarkupLine("[green]F[/]: Filter flights");
+                                    if (isFilterActive)
+                                    {
+                                        AnsiConsole.MarkupLine("[green]R[/]: Remove filters");
+                                    }
+                                    AnsiConsole.MarkupLine("[green]N[/]: Next page");
+                                    AnsiConsole.MarkupLine("[green]P[/]: Previous page");
+                                    AnsiConsole.MarkupLine("[green]B[/]: Back to previous menu");
 
-                                    switch (optionKeyInfo.Key)
+                                    // Display navigation instructions
+                                    AnsiConsole.MarkupLine("[blue]Navigation:[/]");
+                                    AnsiConsole.MarkupLine("[green]Up Arrow[/]: Move selection up");
+                                    AnsiConsole.MarkupLine("[green]Down Arrow[/]: Move selection down");
+                                    AnsiConsole.MarkupLine("[green]Enter[/]: Select option");
+
+                                    var key = Console.ReadKey(true).Key;
+
+                                    switch (key)
                                     {
                                         case ConsoleKey.UpArrow:
-                                            if (currentOption > 0) currentOption--;
+                                            if (selectedFlightIndex > 0) selectedFlightIndex--;
                                             break;
                                         case ConsoleKey.DownArrow:
-                                            if (currentOption < Math.Min(19, options.Count - 1)) currentOption++;
-                                            break;
-                                        case ConsoleKey.N:
-                                            if (pageNumber < (options.Count + pageSize - 1) / pageSize - 1)
-                                            {
-                                                pageNumber++;
-                                            }
-                                            break;
-                                        case ConsoleKey.P:
-                                            if (pageNumber > 0)
-                                            {
-                                                pageNumber--;
-                                            }
+                                            if (selectedFlightIndex < pagedFlights.Count - 1) selectedFlightIndex++;
                                             break;
                                         case ConsoleKey.Enter:
-                                            if (currentOption == 0) // Filter Flights
+                                            if (selectedFlightIndex >= 0 && selectedFlightIndex < pagedFlights.Count)
                                             {
-                                                flights = Flight.FilterFlights();
-                                                isFilterActive = true;
-                                                options = new List<string> { filterFlightsText, removeFiltersText };
-                                                options.AddRange(flights.Select(f => f.ToString()));
-                                                currentOption = 0;
-                                            }
-                                            else if (currentOption == 1 && isFilterActive) // Remove Filters
-                                            {
-                                                flights = Flight.GetFlights(); // get the list of flights without any filters
-                                                options = new List<string> { filterFlightsText, backText }; // reset the options
-                                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
-                                                isFilterActive = false; // reset the filter flag
-                                                currentOption = 0; // reset the current option
-                                            }
-                                            else if (currentOption == 1 && !isFilterActive) // Back
-                                            {
-                                                menuItems = menuItemsUser;
-                                                currentIndex = 0;
-                                                isBackSelected = true;
-                                            }
-                                            else // Select Flight
-                                            {
-                                                if (currentOption >= 2) // Check if 'currentOption' is within the bounds of the 'flights' list
+                                                Flight selectedFlight = pagedFlights[selectedFlightIndex];
+                                                AnsiConsole.Clear();
+                                                // Fetch the aircraft type from the selected flight
+                                                string aircraftType = selectedFlight.AircraftType;
+
+                                                // Show the layout according to the aircraft type
+                                                switch (aircraftType)
                                                 {
-                                                    Flight selectedFlight = flights[currentOption - 2];
-                                                    Console.Clear();
-                                                    // Fetch the aircraft type from the selected flight
-                                                    string aircraftType = selectedFlight.AircraftType;
-
-                                                    // Show the layout according to the aircraft type
-                                                    switch (aircraftType)
-                                                    {
-                                                        case "Boeing 737":
-                                                            Seat seats = new Seat();
-                                                            seats.lay_out();
-                                                            seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                            break;
-                                                        case "Boeing 787":
-                                                            BoeingSeat boeing787Seats = new BoeingSeat();
-                                                            boeing787Seats.lay_out();
-                                                            boeing787Seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                            break;
-                                                        case "Airbus 330":
-                                                            AirbusSeat airbus330Seats = new AirbusSeat();
-                                                            airbus330Seats.lay_out();
-                                                            airbus330Seats.ToonMenu(currentuser, selectedFlight.FlightId);
-                                                            break;
-                                                        default:
-                                                            Console.WriteLine("Unknown aircraft type.");
-                                                            break;
-                                                    }
-
-                                                    Console.ReadLine();
+                                                    case "Boeing 737":
+                                                        Seat seats = new Seat();
+                                                        seats.lay_out();
+                                                        seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                        break;
+                                                    case "Boeing 787":
+                                                        BoeingSeat boeing787Seats = new BoeingSeat();
+                                                        boeing787Seats.lay_out();
+                                                        boeing787Seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                        break;
+                                                    case "Airbus 330":
+                                                        AirbusSeat airbus330Seats = new AirbusSeat();
+                                                        airbus330Seats.lay_out();
+                                                        airbus330Seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                        break;
+                                                    default:
+                                                        AnsiConsole.WriteLine("Unknown aircraft type.");
+                                                        break;
                                                 }
                                             }
                                             break;
+                                        case ConsoleKey.F:
+                                            // Handle filter flights
+                                            flights = Flight.FilterFlights();
+                                            isFilterActive = true;
+                                            break;
+                                        case ConsoleKey.R:
+                                            // Handle remove filters
+                                            if (isFilterActive)
+                                            {
+                                                flights = Flight.GetFlights(); // get the list of flights without any filters
+                                                isFilterActive = false; // reset the filter flag
+                                            }
+                                            break;
+                                        case ConsoleKey.N:
+                                            // Handle next page
+                                            if (currentPage < (flights.Count / itemsPerPage)) currentPage++;
+                                            break;
+                                        case ConsoleKey.P:
+                                            // Handle previous page
+                                            if (currentPage > 0) currentPage--;
+                                            break;
+                                        case ConsoleKey.B:
+                                            // Back to previous menu
+                                            continueViewFlights = false;
+                                            break;
                                     }
+                                }
+                                break;
+                            case "Manage Flights":
+                                var flightMenuItems = new[] { "Add Flight", "Update Flight", "Back to previous menu" };
+                                bool continueManageFlightsLoop = true;
+                                while (continueManageFlightsLoop)
+                                {
+                                    AnsiConsole.Clear();
+                                    var flightMenuIndex = AnsiConsole.Prompt(
+                                        new SelectionPrompt<string>()
+                                            .Title("Manage Flights:")
+                                            .PageSize(10)
+                                            .AddChoices(flightMenuItems));
 
-                                    if (isBackSelected)
+                                    switch (flightMenuIndex)
                                     {
-                                        break;
+                                        case "Add Flight":
+                                            AnsiConsole.Clear();
+                                            Flight.AdminAddFlight();
+                                            flights = Flight.GetFlights(); // Refresh the 'flights' list
+                                            options = new List<string> { filterFlightsText, backText }; // reset the options
+                                            options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
+                                            Console.ReadKey();
+                                            break;
+                                        case "Update Flight":
+                                            AnsiConsole.Clear();
+                                            Flight.AdminUpdateFlight();
+                                            Console.ReadKey();
+                                            break;
+                                        case "Back to previous menu":
+                                            continueManageFlightsLoop = false;
+                                            break;
                                     }
                                 }
+                                break;
 
-                                // After the while loop, check if the user is an admin
-                                if (currentuser.rank == 1)
-                                {
-                                    menuItems = menuItemsAdmin;
-                                }
-                                else
-                                {
-                                    menuItems = menuItemsUser;
-                                }
-
-                                if (isBackSelected)
-                                {
-                                    break; // Break out of the case
-                                }
-                                else
-                                {
-                                    continue; // Continue with the next iteration of the main menu loop
-                                }
-                            case "Flight History":
+                            // Download ticket data in JSON format
+                            case "Download Ticket Data":
                                 Console.Clear();
+                                JSONconversion.Create_Json();
+                                Console.WriteLine("Data has been downloaded. Check your Documents folder on your personal computer.");
+                                Console.WriteLine("Press enter to continue.");
+                                Console.ReadLine();
+                                break;                 
+
+
+                            case "Flight History":
+                                // Clear the console
+                                AnsiConsole.Clear();
+
                                 // Check if a user is logged in
                                 if (currentuser != null)
                                 {
                                     // Call the method with the current user
-                                    Userhistory.presentuserhistory(currentuser);
-                                    Console.ReadLine();
+
+                                    Userhistory.presentuserhistory(currentuser); 
+                                    Console.ReadKey();
+
                                 }
                                 else
                                 {
-                                    Console.WriteLine("No user is currently logged in.");
-                                    Console.ReadLine();
+                                    AnsiConsole.MarkupLine("[red]No user is currently logged in.[/]");
+                                    Console.ReadKey();
                                 }
                                 break;
-                            case "Update Flight":
-                                Console.Clear();
-                                Flight.AdminUpdateFlight();
-                                break;
-                            case "Add Flight":
-                                Console.Clear();
-                                Flight.AdminAddFlight();
-                                flights = Flight.GetFlights(); // Refresh the 'flights' list
-                                options = new List<string> { filterFlightsText, backText }; // reset the options
-                                options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
-                                break;
+
                             case "Add Fly Points to user":
                                 Console.Clear();
                                 Administration.AddFlyPointsToUser();
                                 Console.ReadKey();
-                                break;
-                            case "Users":
-                                isBackSelected = false;
-                                string userheader = $"Users";
-                                int userpadding = (Console.WindowWidth - userheader.Length) / 2;
-                                string[] userMenuItems = { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Present user with ID", "Back to previous menu" };
-                                int userMenuIndex = 0;
 
-                                while (!isBackSelected)
+
+                            case "Manage Users":
+                                var userMenuItems = new[] { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Present user with ID", "Back to previous menu" };
+                                bool continueUsersLoop = true;
+
+
+                                while (continueUsersLoop)
                                 {
-                                    Console.Clear();
-                                    Console.WriteLine(new string('-', userpadding) + userheader + new string('-', userpadding));
+                                    AnsiConsole.Clear();
+                                    var userMenuIndex = AnsiConsole.Prompt(
+                                        new SelectionPrompt<string>()
+                                            .Title("Manage Users:")
+                                            .PageSize(10)
+                                            .AddChoices(userMenuItems));
 
-                                    for (int i = 0; i < userMenuItems.Length; i++)
+                                    switch (userMenuIndex)
                                     {
-                                        if (i == userMenuIndex)
-                                        {
-                                            Console.BackgroundColor = ConsoleColor.Gray;
-                                            Console.ForegroundColor = ConsoleColor.Black;
-                                        }
-
-                                        Console.WriteLine(userMenuItems[i]);
-
-                                        Console.ResetColor();
-                                    }
-
-                                    ConsoleKeyInfo newKeyInfo;
-                                    do
-                                    {
-                                        newKeyInfo = Console.ReadKey(true);
-                                    } while (newKeyInfo.Key != ConsoleKey.UpArrow && newKeyInfo.Key != ConsoleKey.DownArrow && newKeyInfo.Key != ConsoleKey.Enter);
-
-                                    if (newKeyInfo.Key == ConsoleKey.UpArrow)
-                                    {
-                                        if (userMenuIndex > 0)
-                                        {
-                                            userMenuIndex--;
-                                        }
-                                    }
-                                    else if (newKeyInfo.Key == ConsoleKey.DownArrow)
-                                    {
-                                        if (userMenuIndex < userMenuItems.Length - 1)
-                                        {
-                                            userMenuIndex++;
-                                        }
-                                    }
-                                    else if (newKeyInfo.Key == ConsoleKey.Enter)
-                                    {
-                                        switch (userMenuItems[userMenuIndex])
-                                        {
-                                            case "Present all users":
-                                                Console.Clear();
-                                                Administration.presentallusers();
-                                                Console.ReadKey();
-                                                break;
-                                            case "Present all tickets from a user":
-                                                Console.Clear();
-                                                Administration.presentallticketsfromuser();
-                                                Console.ReadKey();
-                                                break;
-                                            case "Present all tickets":
-                                                Console.Clear();
-                                                Administration.presentalltickets();
-                                                Console.ReadKey();
-                                                break;
-                                            case "Present all users from flight":
-                                                Console.Clear();
-                                                Administration.presentallticketsfromflight();
-                                                Console.ReadKey();
-                                                break;
-                                            case "Present user with ID":
-                                                Console.Clear();
-                                                Administration.presentuserwithID();
-                                                Console.ReadKey();
-                                                break;
-                                            case "Back to previous menu":
-                                                isBackSelected = true;
-                                                break;
-                                        }
+                                        case "Present all users":
+                                            AnsiConsole.Clear();
+                                            Administration.presentallusers();
+                                            Console.ReadKey();
+                                            break;
+                                        case "Present all tickets from a user":
+                                            AnsiConsole.Clear();
+                                            Administration.presentallticketsfromuser();
+                                            Console.ReadKey();
+                                            break;
+                                        case "Present all tickets":
+                                            AnsiConsole.Clear();
+                                            Administration.presentalltickets();
+                                            Console.ReadKey();
+                                            break;
+                                        case "Present all users from flight":
+                                            AnsiConsole.Clear();
+                                            Administration.presentallticketsfromflight();
+                                            Console.ReadKey();
+                                            break;
+                                        case "Present user with ID":
+                                            AnsiConsole.Clear();
+                                            Administration.presentuserwithID();
+                                            Console.ReadKey();
+                                            break;
+                                        case "Back to previous menu":
+                                            continueUsersLoop = false;
+                                            break;
                                     }
                                 }
                                 break;
@@ -385,6 +405,7 @@ namespace Project_B
                     }
                 }
             }
+
 
             public static Flight SelectFlight(List<Flight> flights)
             {
@@ -494,6 +515,7 @@ namespace Project_B
                 CurrentUser currentuser = null;
                 return currentuser = LoginRegistrations.LoginScreen();
             }
+
         }
     }
-}
+
