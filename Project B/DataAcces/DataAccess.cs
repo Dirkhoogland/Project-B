@@ -1,5 +1,8 @@
-﻿using System;
+
+﻿using System.Data;
 using System.Data.SQLite;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Project_B.DataAcces
 {
@@ -296,7 +299,6 @@ namespace Project_B.DataAcces
                 }
             }
         }
-
         public void UpdateFlyPoints(int userId, int flyPoints)
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -332,5 +334,6 @@ namespace Project_B.DataAcces
             }
             return 0;
         }
+
     }
 }

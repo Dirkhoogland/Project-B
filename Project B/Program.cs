@@ -4,6 +4,7 @@ using System.Drawing.Printing;
 using System.Xml.Linq;
 using Spectre.Console;
 using Spectre.Console.Cli;
+
 namespace Project_B
 
 {
@@ -90,6 +91,7 @@ namespace Project_B
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
                 var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Logout", "Exit" };
                 var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
+
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
@@ -312,6 +314,16 @@ namespace Project_B
                                     }
                                 }
                                 break;
+
+                            // Download ticket data in JSON format
+                            case "Download Ticket Data":
+                                Console.Clear();
+                                JSONconversion.Create_Json();
+                                Console.WriteLine("Data has been downloaded. Check your Documents folder on your personal computer.");
+                                Console.WriteLine("Press enter to continue.");
+                                Console.ReadLine();
+                                break;                 
+
                             case "Flight History":
                                 // Clear the console
                                 AnsiConsole.Clear();
@@ -379,5 +391,7 @@ namespace Project_B
                     }
                 }
             }
+
         }
     }
+
