@@ -711,7 +711,7 @@ namespace Project_B.DataAcces
 
             DateTime time = DateTime.Now;
 
-            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}','{retourstatus}', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
 
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
