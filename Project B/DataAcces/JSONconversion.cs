@@ -8,32 +8,22 @@ namespace Project_B.DataAcces
     public class JSONconversion
     {
         public int TicketId {get; private set;}
-
         public string Email {get; private set;}
-
         public string PurchaseTime {get; private set;}
-
         public string Name {get; private set;}
-
         public string Seat {get; private set;}
-
         public string SeatClass {get; private set;}
-
         public int FlightId {get; private set;}
-
         public int UserId {get; private set;}
-
         public string Gate {get; private set;}
-
+        public string Departuretime {get; private set;}
         public string Destination {get; private set;}
-
+        public bool Retour {get; private set;}
         public string Origin {get; private set;}
-
+        public int Distance {get; private set;}
         public string extranotes {get; private set;}
 
-        public string Departuretime {get; private set;}
-
-        public JSONconversion(int ticketid, string email, string pt, string name, string seat, string seatclass, int Fid, int Uid, string gate, string departuretime, string Origin, string destination, string extranotes)
+        public JSONconversion(int ticketid, string email, string pt, string name, string seat, string seatclass, int Fid, int Uid, string gate, string departuretime, string destination, bool retour, string Origin, int distance, string extranotes)
         {
             this.TicketId = ticketid;
             this.Email = email;
@@ -45,8 +35,10 @@ namespace Project_B.DataAcces
             this.UserId = Uid;
             this.Gate = gate;
             this.Departuretime = departuretime;
-            this.Origin = Origin;
             this.Destination = destination;
+            this.Retour = retour;
+            this.Origin = Origin;
+            this.Distance = distance;
             this.extranotes = extranotes;
         }
 
@@ -76,10 +68,12 @@ namespace Project_B.DataAcces
                             string Gate = rdr.GetString(8);
                             string Departuretime = rdr.GetString(9);
                             string Destination = rdr.GetString(10);
-                            string Origin = rdr.GetString(11);
-                            string Extranotes = rdr.GetString(12);
+                            bool Retour = rdr.GetBoolean(11);
+                            string Origin = rdr.GetString(12);
+                            int Distance = rdr.GetInt32(13);
+                            string Extranotes = rdr.GetString(14);
 
-                            JSONconversion history = new JSONconversion(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate, Departuretime, Destination, Origin, Extranotes);
+                            JSONconversion history = new JSONconversion(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate, Departuretime, Destination, Retour, Origin, Distance, Extranotes);
                             tickets.Add(history);
                         }
                     }
