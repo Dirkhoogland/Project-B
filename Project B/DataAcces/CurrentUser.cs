@@ -1,6 +1,4 @@
-﻿
-
-namespace Project_B.DataAcces
+﻿namespace Project_B.DataAcces
 {
     public class CurrentUser : Users
     {
