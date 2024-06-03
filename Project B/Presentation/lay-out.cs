@@ -12,192 +12,152 @@ namespace Project_B.Presentation
         public bool IsReserved { get; set; }
     
 
-        static Seat[,] seats = new Seat[33, 6]; 
-        public void lay_out()
+    static Seat[,] seats = new Seat[33, 6]; 
+    public void lay_out()
+    {
+    for (int i = 0; i < 33; i++)
         {
-        for (int i = 0; i < 33; i++)
+            for (int j = 0; j < 6; j++)
             {
-                for (int j = 0; j < 6; j++)
+                if (j == 0 || j == 5) 
                 {
-                    if (j == 0 || j == 5) 
-                    {
-                        seats[i, j] = new Seat { Class = "Economy", Price = 125m, IsReserved = false };
-                    }
-                    else
-                    {
-                        seats[i, j] = new Seat { Class = "Economy", Price = 100m, IsReserved = false };
-                    }
-                    if (i == 15 || i == 16) 
-                    {
-                        seats[i, j] = new Seat { Class = "Business", Price = 200m, IsReserved = false };
-                    }
+                    seats[i, j] = new Seat { Class = "Economy", Price = 125m, IsReserved = false };
+                }
+                else
+                {
+                    seats[i, j] = new Seat { Class = "Economy", Price = 100m, IsReserved = false };
+                }
+                 if (i == 15 || i == 16) 
+                {
+                    seats[i, j] = new Seat { Class = "Business", Price = 200m, IsReserved = false };
                 }
             }
         }
+    }
 
-        public void DisplaySeats(CurrentUser current, int flightid)
+public void DisplaySeats()
+{
+    string[,] seats = new string[34, 7]
+    {
+        {"", "A", "B", "C", "D", "E", "F"},
+        {"1", "0", "0", "0", "0", "0", "0"},
+        {"2", "0", "0", "0", "0", "0", "0"},
+        {"3", "0", "0", "0", "0", "0", "0"},
+        {"4", "0", "0", "0", "0", "0", "0"},
+        {"5", "0", "0", "0", "0", "0", "0"},
+        {"6", "0", "0", "0", "0", "0", "0"},
+        {"7", "0", "0", "0", "0", "0", "0"},
+        {"8", "0", "0", "0", "0", "0", "0"},
+        {"9", "0", "0", "0", "0", "0", "0"},
+        {"10", "0", "0", "0", "0", "0", "0"},
+        {"11", "0", "0", "0", "0", "0", "0"},
+        {"12", "0", "0", "0", "0", "0", "0"},
+        {"13", "0", "0", "0", "0", "0", "0"},
+        {"14", "0", "0", "0", "0", "0", "0"},
+        {"15", "0", "0", "0", "0", "0", "0"},
+        {"16", "0", "0", "0", "0", "0", "0"},
+        {"17", "0", "0", "0", "0", "0", "0"},
+        {"18", "0", "0", "0", "0", "0", "0"},
+        {"19", "0", "0", "0", "0", "0", "0"},
+        {"20", "0", "0", "0", "0", "0", "0"},
+        {"21", "0", "0", "0", "0", "0", "0"},
+        {"22", "0", "0", "0", "0", "0", "0"},
+        {"23", "0", "0", "0", "0", "0", "0"},
+        {"24", "0", "0", "0", "0", "0", "0"},
+        {"25", "0", "0", "0", "0", "0", "0"},
+        {"26", "0", "0", "0", "0", "0", "0"},
+        {"27", "0", "0", "0", "0", "0", "0"},
+        {"28", "0", "0", "0", "0", "0", "0"},
+        {"29", "0", "0", "0", "0", "0", "0"},
+        {"30", "0", "0", "0", "0", "0", "0"},
+        {"31", "0", "0", "0", "0", "0", "0"},
+        {"32", "0", "0", "0", "0", "0", "0"},
+        {"33", "0", "0", "0", "0", "0", "0"}
+    };
+
+    List<(int, int)> selectedSeats = new List<(int, int)>();
+    int currentRow = 1;
+    int currentColumn = 1;
+
+    while (true)
+    {
+        AnsiConsole.Clear();
+
+        // Display information at the top
+        AnsiConsole.Write(new Rule("[yellow]Airplane Seating Plan[/]"));
+        AnsiConsole.MarkupLine("[blue]You are currently viewing the seating layout of the airplane. Seats marked with 'X' are selected.[/]");
+        AnsiConsole.WriteLine();
+
+        for (int i = 0; i < seats.GetLength(0); i++)
         {
-            string[,] seats = new string[34, 7]
+            for (int j = 0; j < seats.GetLength(1); j++)
             {
-                {"", "A", "B", "C", "D", "E", "F"},
-                {"1", "0", "0", "0", "0", "0", "0"},
-                {"2", "0", "0", "0", "0", "0", "0"},
-                {"3", "0", "0", "0", "0", "0", "0"},
-                {"4", "0", "0", "0", "0", "0", "0"},
-                {"5", "0", "0", "0", "0", "0", "0"},
-                {"6", "0", "0", "0", "0", "0", "0"},
-                {"7", "0", "0", "0", "0", "0", "0"},
-                {"8", "0", "0", "0", "0", "0", "0"},
-                {"9", "0", "0", "0", "0", "0", "0"},
-                {"10", "0", "0", "0", "0", "0", "0"},
-                {"11", "0", "0", "0", "0", "0", "0"},
-                {"12", "0", "0", "0", "0", "0", "0"},
-                {"13", "0", "0", "0", "0", "0", "0"},
-                {"14", "0", "0", "0", "0", "0", "0"},
-                {"15", "0", "0", "0", "0", "0", "0"},
-                {"16", "0", "0", "0", "0", "0", "0"},
-                {"17", "0", "0", "0", "0", "0", "0"},
-                {"18", "0", "0", "0", "0", "0", "0"},
-                {"19", "0", "0", "0", "0", "0", "0"},
-                {"20", "0", "0", "0", "0", "0", "0"},
-                {"21", "0", "0", "0", "0", "0", "0"},
-                {"22", "0", "0", "0", "0", "0", "0"},
-                {"23", "0", "0", "0", "0", "0", "0"},
-                {"24", "0", "0", "0", "0", "0", "0"},
-                {"25", "0", "0", "0", "0", "0", "0"},
-                {"26", "0", "0", "0", "0", "0", "0"},
-                {"27", "0", "0", "0", "0", "0", "0"},
-                {"28", "0", "0", "0", "0", "0", "0"},
-                {"29", "0", "0", "0", "0", "0", "0"},
-                {"30", "0", "0", "0", "0", "0", "0"},
-                {"31", "0", "0", "0", "0", "0", "0"},
-                {"32", "0", "0", "0", "0", "0", "0"},
-                {"33", "0", "0", "0", "0", "0", "0"}
-            };
-
-            List<(int, int)> selectedSeats = new List<(int, int)>();
-            int currentRow = 1;
-            int currentColumn = 1;
-
-            while (true)
-            {
-                AnsiConsole.Clear();
-
-                // Display information at the top
-                AnsiConsole.Write(new Rule("[yellow]Airplane Seating Plan[/]"));
-                AnsiConsole.MarkupLine("[blue]You are currently viewing the seating layout of the airplane. Seats marked with 'X' are selected.[/]");
-                AnsiConsole.WriteLine();
-
-                for (int i = 0; i < seats.GetLength(0); i++)
+                // Add extra spaces before the seat letters
+                string seat = seats[i, j].ToString();
+                if (i == 0 && j > 0)
                 {
-                    for (int j = 0; j < seats.GetLength(1); j++)
+                    seat = "" + seat;
+                    if (j == 1) // Add an additional space before 'A'
                     {
-                        // Add extra spaces before the seat letters
-                        string seat = seats[i, j].ToString();
-                        if (i == 0 && j > 0)
-                        {
-                            seat = "" + seat;
-                            if (j == 1) // Add an additional space before 'A'
-                            {
-                                seat = "  " + seat;
-                            }
-                        }
-
-                        // Add a space before the row number for the first 9 rows
-                        if (i > 0 && i < 10 && j == 0)
-                        {
-                            seat = " " + seat;
-                        }
-
-                        // Add a space to simulate the hallway between 'C' and 'D'
-                        if (j == 4)
-                        {
-                            seat = " " + seat;
-                        }
-
-                        // Change the color of the seats
-                        if (i == 16 || i == 17)
-                        {
-                            seat = "[yellow]" + seat + "[/]";
-                        }
-                        else
-                        {
-                            seat = "[blue]" + seat + "[/]";
-                        }
-
-                        // Mark selected seats with an 'X'
-                        if (selectedSeats.Contains((i, j)))
-                        {
-                            seat = "[green]X[/]";
-                        }
-
-                        if (i == currentRow && j == currentColumn)
-                        {
-                            AnsiConsole.Markup("[[" + seat + "]]");
-                        }
-                        else
-                        {
-                            AnsiConsole.Markup(" " + seat + " ");
-                        }
+                        seat = "  " + seat;
                     }
-                    AnsiConsole.WriteLine();
                 }
 
-                // Display navigation instructions
-                AnsiConsole.MarkupLine("[red]Legend:[/]");
-                AnsiConsole.MarkupLine("[blue]Economy Class[/]");
-                AnsiConsole.MarkupLine("[yellow]Business Class[/]");
-                AnsiConsole.MarkupLine("[green]Selected seats[/]\n");
-                AnsiConsole.MarkupLine("[red]Navigation:[/]");
-                AnsiConsole.MarkupLine("[green]Up Arrow[/]: Move selection up");
-                AnsiConsole.MarkupLine("[green]Down Arrow[/]: Move selection down");
-                AnsiConsole.MarkupLine("[green]Right Arrow[/]: Move selection right");
-                AnsiConsole.MarkupLine("[green]Left Arrow[/]: Move selection left");
-                AnsiConsole.MarkupLine("[green]Enter[/]: Select option");
-                AnsiConsole.MarkupLine("[green]P[/]: Purchase selected seats");
-                AnsiConsole.MarkupLine("[green]B[/]: Go back to previous menu");
-
-                
-                ConsoleKeyInfo key = Console.ReadKey();
-
-                switch (key.Key)
+                // Add a space before the row number for the first 9 rows
+                if (i > 0 && i < 10 && j == 0)
                 {
-                    case ConsoleKey.UpArrow:
-                        if (currentRow > 1) currentRow--;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        if (currentRow < seats.GetLength(0) - 1) currentRow++;
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        if (currentColumn > 1) currentColumn--;
-                        break;
-                    case ConsoleKey.RightArrow:
-                        if (currentColumn < seats.GetLength(1) - 1) currentColumn++;
-                        break;
-                    case ConsoleKey.Enter:
-                        // Add the selected seat to the list
-                        if (!selectedSeats.Contains((currentRow, currentColumn)))
-                        {
-                            selectedSeats.Add((currentRow, currentColumn));
-                        }
-                        break;
-                    case ConsoleKey.P:
-                        // Purchase the selected seats
-                        return;
-                    case ConsoleKey.B:
-                        // Go back to the previous menu
-                        ToonMenu(current, flightid);
-                        return;
+                    seat = " " + seat;
+                }
+
+                // Add a space to simulate the hallway between 'C' and 'D'
+                if (j == 4)
+                {
+                    seat = " " + seat;
+                }
+
+                // Change the color of the seats
+                if (i == 16 || i == 17)
+                {
+                    seat = "[yellow]" + seat + "[/]";
+                }
+
+                // Mark selected seats with an 'X'
+                if (selectedSeats.Contains((i, j)))
+                {
+                    seat = "[green]X[/]";
+                }
+
+                if (i == currentRow && j == currentColumn)
+                {
+                    AnsiConsole.Markup("[[" + seat + "]]");
+                }
+                else
+                {
+                    AnsiConsole.Markup(" " + seat + " ");
                 }
             }
+            AnsiConsole.WriteLine();
         }
-        public void ToonMenu(CurrentUser current, int flightid)
+
+        // Display navigation instructions
+        AnsiConsole.MarkupLine("[blue]Legend:[/]");
+        AnsiConsole.MarkupLine("Economy Class");
+        AnsiConsole.MarkupLine("[yellow]Business Class[/]");
+        AnsiConsole.MarkupLine("[green]Selected seats[/]\n");
+        AnsiConsole.MarkupLine("[blue]Navigation:[/]");
+        AnsiConsole.MarkupLine("[green]Up Arrow[/]: Move selection up");
+        AnsiConsole.MarkupLine("[green]Down Arrow[/]: Move selection down");
+        AnsiConsole.MarkupLine("[green]Right Arrow[/]: Move selection right");
+        AnsiConsole.MarkupLine("[green]Left Arrow[/]: Move selection left");
+        AnsiConsole.MarkupLine("[green]Enter[/]: Select option");
+        AnsiConsole.MarkupLine("[green]P[/]: Purchase selected seats");
+        AnsiConsole.MarkupLine("[green]B[/]: Go back to previous menu");
+
+        
+        ConsoleKeyInfo key = Console.ReadKey();
+
+        switch (key.Key)
         {
-
-            Seatreservationmenu :
-            int currentOption = 0;
-            string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Current Fly Points", "Redeem Fly Points", "Leave the seating chart"};
-
             case ConsoleKey.UpArrow:
                 if (currentRow > 1) currentRow--;
                 break;
@@ -226,7 +186,6 @@ namespace Project_B.Presentation
         DisplaySeats();
         int currentOption = 0;
         string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart", "Show Fly points", "Redeem Fly points"  };
-
 
 
             ConsoleKeyInfo key;
@@ -270,22 +229,20 @@ namespace Project_B.Presentation
             switch (currentOption)
             {
                 case 0:
-                    DisplaySeats(current, flightid);
+                    ChooseSeatWithArrowKeys(current, flightid);
                     break;
                 case 1:
-
-                    Console.Clear();
-                    DisplaySeatsLayout(current, flightid);
+                    DisplaySeatLayoutBoeing737();
 
                     break;
                 case 2:
-                    Console.Clear();
+                    Console.WriteLine("Thank you for using the seat reservation system. Bye!");
+                    return;
+                case 3:
                     int points = flightLogic.GetFlyPoints(current.Id);
                     Console.WriteLine($"Current Fly points balance: {points}");
-                    Console.ReadLine();
-                    goto Seatreservationmenu;
-                case 3:
-                    Console.Clear();
+                    break;
+                case 4:
                     if (flightLogic.RedeemFlyPoints(current.Id))
                     {
                         Console.WriteLine("20 Fly points redeemed for a 10% discount on your next booking.");
@@ -296,131 +253,14 @@ namespace Project_B.Presentation
                     }
                     int newPoints = flightLogic.GetFlyPoints(current.Id);
                     Console.WriteLine($"New Fly points balance: {newPoints}");
-
-                    Console.ReadLine();
-                    goto Seatreservationmenu;
-                case 4:
-                    return;
-
                     break;
+
                 default:
                     Console.WriteLine("Invalid choice");
                     break;
             }
 
-        Console.WriteLine();
-        }
-        public void DisplaySeatsLayout(CurrentUser current, int flightid)
-        {
-            string[,] seats = new string[34, 7]
-            {
-                {"", "A", "B", "C", "D", "E", "F"},
-                {"1", "0", "0", "0", "0", "0", "0"},
-                {"2", "0", "0", "0", "0", "0", "0"},
-                {"3", "0", "0", "0", "0", "0", "0"},
-                {"4", "0", "0", "0", "0", "0", "0"},
-                {"5", "0", "0", "0", "0", "0", "0"},
-                {"6", "0", "0", "0", "0", "0", "0"},
-                {"7", "0", "0", "0", "0", "0", "0"},
-                {"8", "0", "0", "0", "0", "0", "0"},
-                {"9", "0", "0", "0", "0", "0", "0"},
-                {"10", "0", "0", "0", "0", "0", "0"},
-                {"11", "0", "0", "0", "0", "0", "0"},
-                {"12", "0", "0", "0", "0", "0", "0"},
-                {"13", "0", "0", "0", "0", "0", "0"},
-                {"14", "0", "0", "0", "0", "0", "0"},
-                {"15", "0", "0", "0", "0", "0", "0"},
-                {"16", "0", "0", "0", "0", "0", "0"},
-                {"17", "0", "0", "0", "0", "0", "0"},
-                {"18", "0", "0", "0", "0", "0", "0"},
-                {"19", "0", "0", "0", "0", "0", "0"},
-                {"20", "0", "0", "0", "0", "0", "0"},
-                {"21", "0", "0", "0", "0", "0", "0"},
-                {"22", "0", "0", "0", "0", "0", "0"},
-                {"23", "0", "0", "0", "0", "0", "0"},
-                {"24", "0", "0", "0", "0", "0", "0"},
-                {"25", "0", "0", "0", "0", "0", "0"},
-                {"26", "0", "0", "0", "0", "0", "0"},
-                {"27", "0", "0", "0", "0", "0", "0"},
-                {"28", "0", "0", "0", "0", "0", "0"},
-                {"29", "0", "0", "0", "0", "0", "0"},
-                {"30", "0", "0", "0", "0", "0", "0"},
-                {"31", "0", "0", "0", "0", "0", "0"},
-                {"32", "0", "0", "0", "0", "0", "0"},
-                {"33", "0", "0", "0", "0", "0", "0"}
-            };
-            List<(int, int)> selectedSeats = new List<(int, int)>();
-            while (true)
-            {
-                // Display information at the top
-                AnsiConsole.Write(new Rule("[yellow]Airplane Seating Plan[/]"));
-                AnsiConsole.MarkupLine("[blue]You are currently viewing the seating layout of the airplane. Seats marked with 'X' are unavailable.[/]");
-                AnsiConsole.WriteLine();
-
-                for (int i = 0; i < seats.GetLength(0); i++)
-                {
-                    for (int j = 0; j < seats.GetLength(1); j++)
-                    {
-                        // Add extra spaces before the seat letters
-                        string seat = seats[i, j].ToString();
-                        if (i == 0 && j > 0)
-                        {
-                            seat = "" + seat;
-                            if (j == 1) // Add an additional space before 'A'
-                            {
-                                seat = "  " + seat;
-                            }
-                        }
-
-                        // Add a space before the row number for the first 9 rows
-                        if (i > 0 && i < 10 && j == 0)
-                        {
-                            seat = " " + seat;
-                        }
-
-                        // Add a space to simulate the hallway between 'C' and 'D'
-                        if (j == 4)
-                        {
-                            seat = " " + seat;
-                        }
-
-                        // Change the color of the seats
-                        if (i == 16 || i == 17)
-                        {
-                            seat = "[yellow]" + seat + "[/]";
-                        }
-                        else
-                        {
-                            seat = "[blue]" + seat + "[/]";
-                        }
-
-                        // Mark selected seats with an 'X'
-                        if (selectedSeats.Contains((i, j)))
-                        {
-                            seat = "[green]X[/]";
-                        }
-                        else
-                        {
-                            AnsiConsole.Markup(" " + seat + " ");
-                        }
-                    }
-                    AnsiConsole.WriteLine();
-                }
-                AnsiConsole.MarkupLine("[red]Legend:[/]");
-                AnsiConsole.MarkupLine("[blue]Economy Class[/]");
-                AnsiConsole.MarkupLine("[yellow]Business Class[/]");
-                
-                AnsiConsole.WriteLine("Press 'B' to go back to the previous menu.");
-                var key = Console.ReadKey(true);
-
-                if (key.Key == ConsoleKey.B)
-                {
-                    ToonMenu(current, flightid);
-                    break;
-                }
-
-                Console.Clear();
-            }
+            Console.WriteLine();
         }
 
         public static void ChooseSeatWithArrowKeys(CurrentUser current, int flightid)
@@ -434,6 +274,7 @@ namespace Project_B.Presentation
             do
             {
                 Console.SetCursorPosition(0,0);
+                DisplaySeatLayoutBoeing737(row, seat);
 
                 key = Console.ReadKey(true);
 
@@ -786,7 +627,6 @@ namespace Project_B.Presentation
                 Console.WriteLine("You have cancelled your seat.");
             }
         }
-
         public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -856,7 +696,6 @@ namespace Project_B.Presentation
                 Console.WriteLine();
             }
         }
-
         public static string AskQuestionWithMenu(string[] options)
         {
             int currentOption = 0;
@@ -893,5 +732,5 @@ namespace Project_B.Presentation
 
             return options[currentOption];
         }
+        }
     }
-}
