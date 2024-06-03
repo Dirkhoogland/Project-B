@@ -64,9 +64,10 @@ namespace Project_B.Presentation
         public static void presentallticketsfromuser()
         {
             AnsiConsole.WriteLine("Fill in user id");
-            string userid = AnsiConsole.Ask<string>("User ID: ");
-            int Id = Int32.Parse(userid);
-            List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(Id);
+            int userid = AnsiConsole.Prompt(new TextPrompt<int>("User ID: ")
+                .Validate(value => value > 0, "[red]Please enter a positive number.[/]"));
+
+            List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(userid);
 
             int pageSize = 20;
             int pageNumber = 0;
@@ -182,7 +183,8 @@ namespace Project_B.Presentation
         public static void presentallticketsfromflight()
         {
             AnsiConsole.WriteLine("Which flight do you want the tickets of?");
-            int flightid = AnsiConsole.Ask<int>("Flight ID: ");
+            int flightid = AnsiConsole.Prompt(new TextPrompt<int>("Flight ID: ")
+                .Validate(value => value > 0, "[red]Please enter a positive number.[/]"));
             List<Bookinghistory> userhistory = Userhistorylogic.GetflightHistorybyflightid(flightid);
 
             int pageSize = 20;
@@ -240,7 +242,8 @@ namespace Project_B.Presentation
         public static void presentuserwithID()
         {
             AnsiConsole.WriteLine("Which user do you want the information of?");
-            int userid = AnsiConsole.Ask<int>("User ID: ");
+            int userid = AnsiConsole.Prompt(new TextPrompt<int>("User ID: ")
+                .Validate(value => value > 0, "[red]Please enter a positive number.[/]"));
             Users user = Adminlogic.getuserbyId(userid);
             string rank = user.rank == 1 ? "Admin" : "User";
 
