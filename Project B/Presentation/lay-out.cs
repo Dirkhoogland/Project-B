@@ -342,8 +342,6 @@ namespace Project_B.Presentation
                 }
                 seats[row -1, seatnumber].IsReserved = true;
 
-
-
             }
             Console.ForegroundColor = ConsoleColor.Cyan;
             
