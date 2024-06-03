@@ -136,7 +136,7 @@ namespace Project_B.Presentation
 
             seats[row, seat].IsReserved = true;
 
-            Console.WriteLine($"You hace chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
+            Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
 
             int currentOption = 0;
             string[] yesNoOptions = new string[] { "yes", "no" };
@@ -414,6 +414,7 @@ namespace Project_B.Presentation
                 
             }
 
+            Console.WriteLine("use your arrow keys to select a seat. Press enter to reserve the seat.");
             Console.WriteLine("\nSeat Summary:");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Yellow seats are Business class seats with the price €200.");

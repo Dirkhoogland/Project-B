@@ -448,6 +448,8 @@ namespace Project_B.Presentation
 
                 Console.WriteLine();
             }
+            
+            Console.WriteLine("use your arrow keys to select a seat. Press enter to reserve the seat.");
             Console.WriteLine("\nSeat Summary:");
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("the gray seats are Club Class and cost €200.");
