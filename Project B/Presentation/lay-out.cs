@@ -78,7 +78,7 @@ namespace Project_B.Presentation
                 ChooseSeatWithArrowKeys( current, flightid);
                 break;
             case 1:
-                DisplaySeatLayoutBoeing737();
+                DisplaySeatLayoutBoeing737(flightid);
                 break;
             case 2:
                 Console.WriteLine("Thank you for using the seat reservation system. Bye!");
@@ -99,7 +99,7 @@ namespace Project_B.Presentation
             do
             {
                 Console.SetCursorPosition(0,0);
-                DisplaySeatLayoutBoeing737(row, seat);
+                DisplaySeatLayoutBoeing737(flightid, row, seat);
 
                 key = Console.ReadKey(true);
 
@@ -297,7 +297,7 @@ namespace Project_B.Presentation
                 FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                DisplaySeatLayoutBoeing737();
+                DisplaySeatLayoutBoeing737(flightid);
                 Console.ReadLine();
             }
             else
@@ -306,10 +306,12 @@ namespace Project_B.Presentation
             }
         }
 
-        public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
+        public static void DisplaySeatLayoutBoeing737(int FlightID, int selectedRow = -1, int selectedSeat = -1)
         {
-            List<Bookinghistory> userhistory = Bookinghistory.GetflightHistorybyflightid(FlightID);
-
+            List<Bookinghistory> seatsdatabase = Bookinghistory.GetflightHistorybyflightid(FlightID);
+            foreach(Bookinghistory seat in seatsdatabase) {
+                string test = seat.Seat;
+            }
             Console.ForegroundColor = ConsoleColor.Cyan;
             
             Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
