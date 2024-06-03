@@ -312,7 +312,38 @@ namespace Project_B.Presentation
             foreach(Bookinghistory seat in seatsdatabase) 
             {
                 string test = seat.Seat;
-                
+                string[] parts = test.Split('-');
+                int row = Convert.ToInt32(parts[0]);    
+                string seatss = parts[1];
+                int seatnumber = 0;
+                if (seatss == "A")
+                {
+                    seatnumber = 1;
+                }
+                else if (seatss == "B")
+                {
+                    seatnumber = 2;
+                }
+                else if (seatss == "C")
+                {
+                    seatnumber = 3;
+                }
+                else if (seatss == "D")
+                {
+                    seatnumber = 4;
+                }
+                else if (seatss == "E")
+                {
+                    seatnumber = 5;
+                }
+                else if (seatss == "F")
+                {
+                    seatnumber = 6;
+                }
+                seats[row - 1, seatnumber - 1].IsReserved = true;
+
+
+
             }
             Console.ForegroundColor = ConsoleColor.Cyan;
             
