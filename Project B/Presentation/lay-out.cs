@@ -309,8 +309,10 @@ namespace Project_B.Presentation
         public static void DisplaySeatLayoutBoeing737(int FlightID, int selectedRow = -1, int selectedSeat = -1)
         {
             List<Bookinghistory> seatsdatabase = Bookinghistory.GetflightHistorybyflightid(FlightID);
-            foreach(Bookinghistory seat in seatsdatabase) {
+            foreach(Bookinghistory seat in seatsdatabase) 
+            {
                 string test = seat.Seat;
+                
             }
             Console.ForegroundColor = ConsoleColor.Cyan;
             
