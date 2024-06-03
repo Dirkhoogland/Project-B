@@ -85,6 +85,7 @@ namespace Project_B.Presentation
             {
                 case 0:
                     ChooseSeatWithArrowKeys(current, flightid);
+
                     break;
                 case 1:
                     DisplaySeatLayoutAirbus();
@@ -108,6 +109,7 @@ namespace Project_B.Presentation
                     int newPoints = flightLogic.GetFlyPoints(current.Id);
                     Console.WriteLine($"New Fly points balance: {newPoints}");
                     break;
+
                 default:
                     Console.WriteLine("Invalid choice");
                     break;

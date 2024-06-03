@@ -181,10 +181,11 @@ public void DisplaySeats()
     }
 }
     public void ToonMenu(CurrentUser current, int flightid)
+
     {
         DisplaySeats();
         int currentOption = 0;
-        string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart" };
+        string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart", "Show Fly points", "Redeem Fly points"  };
 
 
             ConsoleKeyInfo key;
@@ -211,6 +212,7 @@ public void DisplaySeats()
                     Console.ResetColor();
                 }
 
+
                 key = Console.ReadKey(true);
                 switch (key.Key)
                 {
@@ -223,6 +225,7 @@ public void DisplaySeats()
                 }
             } while (key.Key != ConsoleKey.Enter);
 
+
             switch (currentOption)
             {
                 case 0:
@@ -230,6 +233,7 @@ public void DisplaySeats()
                     break;
                 case 1:
                     DisplaySeatLayoutBoeing737();
+
                     break;
                 case 2:
                     Console.WriteLine("Thank you for using the seat reservation system. Bye!");
@@ -250,6 +254,7 @@ public void DisplaySeats()
                     int newPoints = flightLogic.GetFlyPoints(current.Id);
                     Console.WriteLine($"New Fly points balance: {newPoints}");
                     break;
+
                 default:
                     Console.WriteLine("Invalid choice");
                     break;
@@ -296,6 +301,8 @@ public void DisplaySeats()
 
         public static void ReserveSeat(int row, int seat, CurrentUser current, int flightid)
         {
+            Console.WriteLine("Welcome to the seat reservation system");
+
             Seat chosenSeat = seats[row, seat];
             if (chosenSeat.IsReserved)
             {
@@ -303,14 +310,12 @@ public void DisplaySeats()
                 return;
             }
 
-            Console.WriteLine($"You hace chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
+            Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
 
             int currentOption = 0;
             string[] yesNoOptions = new string[] { "yes", "no" };
 
             Console.WriteLine("Do you want to select this seat?");
-            Console.WriteLine();
-            Console.WriteLine();
             ConsoleKeyInfo key;
 
             do
@@ -406,7 +411,7 @@ public void DisplaySeats()
                     }
                 } while (selectedOption != "Continue");
 
-                  Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
+                Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
 
                 string[] baggageOptions = { "yes", "no" };
                 int selectedIndex = 0;
@@ -538,7 +543,47 @@ public void DisplaySeats()
                 {
                     Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
                 }
+
+
+                // Flight points usage step
+                int flightPoints = new FlightLogic().GetFlyPoints(current.Id);
+                Console.WriteLine($"Current Flight Points: {flightPoints}");
+                Console.WriteLine("Would you like to use flight points for this reservation? (yes/no)");
+                string useFlightPoints = Console.ReadLine();
+                if (useFlightPoints.ToLower() == "yes")
+                {
+                    if (flightPoints >= 20) // Check if user has enough points (assuming 20 points for a discount)
+                    {
+                        new FlightLogic().RedeemFlyPoints(current.Id);
+                        chosenSeat.Price -= (chosenSeat.Price * 0.10m); // Apply 10% discount
+                        Console.WriteLine("Flight points applied to your reservation.");
+                        Console.WriteLine($"New total cost is {chosenSeat.Price} euros.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("You do not have enough flight points.");
+                        Console.WriteLine($"Your total cost is {chosenSeat.Price} euros. Do you want to proceed? (yes/no)");
+                        string proceed = Console.ReadLine();
+                        if (proceed.ToLower() != "yes")
+                        {
+                            Console.WriteLine("Reservation cancelled.");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Your total cost is {chosenSeat.Price} euros. Do you want to proceed? (yes/no)");
+                    string proceed = Console.ReadLine();
+                    if (proceed.ToLower() != "yes")
+                    {
+                        Console.WriteLine("Reservation cancelled.");
+                        return;
+                    }
+                }
+
                 // counts where the seat is in the plane with numbers that customers understand
+
                 string seatplace = "";
                 int newseat = seat + 1;
                 if (newseat == 1)
@@ -574,7 +619,7 @@ public void DisplaySeats()
                 // creates the ticket inside the database
                 FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, retourstatus, notes);
                 chosenSeat.IsReserved = true;
-                Console.WriteLine("Seat succesfully reserved!");
+                Console.WriteLine("Seat successfully reserved!");
                 Console.ReadLine();
             }
             else
@@ -582,7 +627,6 @@ public void DisplaySeats()
                 Console.WriteLine("You have cancelled your seat.");
             }
         }
-
         public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -655,11 +699,10 @@ public void DisplaySeats()
         public static string AskQuestionWithMenu(string[] options)
         {
             int currentOption = 0;
-
-            while (true)
+            ConsoleKeyInfo key;
+            do
             {
-                Console.Clear();
-
+                Console.SetCursorPosition(0, Console.CursorTop - options.Length);
                 for (int i = 0; i < options.Length; i++)
                 {
                     if (i == currentOption)
@@ -673,28 +716,21 @@ public void DisplaySeats()
                     Console.ResetColor();
                 }
 
-                ConsoleKeyInfo keyInfo = Console.ReadKey();
+                key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.LeftArrow:
+                        currentOption = Math.Max(0, currentOption - 1);
+                        break;
+                    case ConsoleKey.DownArrow:
+                    case ConsoleKey.RightArrow:
+                        currentOption = Math.Min(options.Length - 1, currentOption + 1);
+                        break;
+                }
+            } while (key.Key != ConsoleKey.Enter);
 
-                if (keyInfo.Key == ConsoleKey.UpArrow)
-                {
-                    if (currentOption > 0)
-                    {
-                        currentOption--;
-                    }
-                }
-                else if (keyInfo.Key == ConsoleKey.DownArrow)
-                {
-                    if (currentOption < options.Length - 1)
-                    {
-                        currentOption++;
-                    }
-                }
-                else if (keyInfo.Key == ConsoleKey.Enter)
-                {
-                    Console.Clear();
-                    return options[currentOption];
-                }
-            }
+            return options[currentOption];
         }
         }
     }

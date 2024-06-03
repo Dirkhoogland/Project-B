@@ -6,7 +6,6 @@ using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Project_B
-
 {
     namespace Project_B
     {
@@ -89,7 +88,7 @@ namespace Project_B
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
-                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Logout", "Exit" };
+                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Logout", "Exit" };
                 var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
 
 
@@ -104,8 +103,10 @@ namespace Project_B
                 int currentPage = 0;
                 int itemsPerPage = 20;
                 List<string> options = new List<string> { filterFlightsText };
+
                 
                     while (true)
+
                     {
                         AnsiConsole.Clear();
 
@@ -128,7 +129,9 @@ namespace Project_B
                         switch (selectedOption)
                         {
                             case "Login/Register":
+
                                 AnsiConsole.Clear();
+
                                 currentuser = Login();
                                 if (currentuser != null)
                                 {
@@ -324,6 +327,7 @@ namespace Project_B
                                 Console.ReadLine();
                                 break;                 
 
+
                             case "Flight History":
                                 // Clear the console
                                 AnsiConsole.Clear();
@@ -332,8 +336,10 @@ namespace Project_B
                                 if (currentuser != null)
                                 {
                                     // Call the method with the current user
+
                                     Userhistory.presentuserhistory(currentuser); 
                                     Console.ReadKey();
+
                                 }
                                 else
                                 {
@@ -341,9 +347,17 @@ namespace Project_B
                                     Console.ReadKey();
                                 }
                                 break;
+
+                            case "Add Fly Points to user":
+                                Console.Clear();
+                                Administration.AddFlyPointsToUser();
+                                Console.ReadKey();
+
+
                             case "Manage Users":
                                 var userMenuItems = new[] { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Present user with ID", "Back to previous menu" };
                                 bool continueUsersLoop = true;
+
 
                                 while (continueUsersLoop)
                                 {
@@ -390,6 +404,116 @@ namespace Project_B
                         }
                     }
                 }
+            }
+
+
+            public static Flight SelectFlight(List<Flight> flights)
+            {
+                int currentIndex = 0;
+
+                while (true)
+                {
+                    Console.Clear();
+
+                    for (int i = 0; i < flights.Count; i++)
+                    {
+                        if (i == currentIndex)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(flights[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    ConsoleKeyInfo keyInfo;
+                    do
+                    {
+                        keyInfo = Console.ReadKey(true);
+                    } while (keyInfo.Key != ConsoleKey.UpArrow && keyInfo.Key != ConsoleKey.DownArrow && keyInfo.Key != ConsoleKey.Enter);
+
+                    if (keyInfo.Key == ConsoleKey.UpArrow)
+                    {
+                        if (currentIndex > 0)
+                        {
+                            currentIndex--;
+                        }
+                    }
+                    else if (keyInfo.Key == ConsoleKey.DownArrow)
+                    {
+                        if (currentIndex < flights.Count - 1)
+                        {
+                            currentIndex++;
+                        }
+                    }
+                    else if (keyInfo.Key == ConsoleKey.Enter)
+                    {
+                        return flights[currentIndex];
+                    }
+                }
+            }
+            public static void PrintImages()
+            {
+                string[] image1 = new string[]
+                {
+                    "                      ___",
+                    "                      \\\\ \\",
+                    "                       \\\\ `\\",
+                    "    ___                 \\\\  \\",
+                    "   |    \\                \\\\  `\\",
+                    "   |____\\                \\    \\",
+                    "   |______\\                \\    `\\",
+                    "   |       \\                \\     \\",
+                    "   |      __\\__---------------------------------._.",
+                    " __|---~~~__o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_[]\\",
+                    "|___                         /~      )  New South     \\__",
+                    "    ~~~---..._______________/      ,/_________________/",
+                    "                           /      /",
+                    "                          /     ,/",
+                    "                         /     /",
+                    "                        /    ,/",
+                    "                       /    /",
+                    "                      //  ,/",
+                    "                     //  /",
+                    "                    // ,/",
+                    "                   //_/"
+                };
+
+                string[] image2 = new string[]
+                {
+                    "",
+                    "",
+                    "",
+                    "",
+                    "__|__",
+                    "\\___/",
+                    " | |",
+                    " | |",
+                    "_|_|______________",
+                    "        /|\\",
+                    "      */ | \\*",
+                    "      / -+- \\",
+                    "---o--(_)--o---",
+                    "    /  0 \" 0  \\",
+                    "  */     |     \\*",
+                    "  /      |      \\",
+                    "*/       |       \\*"
+                };
+
+                for (int i = 0; i < Math.Max(image1.Length, image2.Length); i++)
+                {
+                    string line1 = i < image1.Length ? image1[i] : new string(' ', image1.Max(s => s.Length));
+                    string line2 = i < image2.Length ? image2[i] : "";
+
+                    Console.WriteLine(line1.PadRight(image1.Max(s => s.Length)) + "    " + line2);
+                }
+            }
+            private static CurrentUser Login()
+            {
+                CurrentUser currentuser = null;
+                return currentuser = LoginRegistrations.LoginScreen();
             }
 
         }
