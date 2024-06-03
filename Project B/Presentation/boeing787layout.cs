@@ -196,8 +196,7 @@ namespace Project_B.Presentation
 
             if (currentOption == 0)
             {
-                bool retourstatus = false;
-                string[] options = { "Book a retour flight", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
+                string[] options = { "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
                 string selectedOption;
                 string extraNotes = string.Empty;
 
@@ -215,44 +214,6 @@ namespace Project_B.Presentation
                         Console.WriteLine("Please enter your extra notes:");
                         extraNotes = Console.ReadLine();
                         // Add extraNotes to the database...
-                    }
-                    else if (selectedOption == "Book a retour flight")
-                    {
-                        string[] retourOptions = { "yes", "no" };
-                        Console.Clear();
-                        Console.WriteLine("Would you like to book a retour flight?");
-                        
-                        string retourResponse = Seat.AskQuestionWithMenu(retourOptions);
-
-                        if (retourResponse == "yes")
-                        {
-                            retourstatus = true;
-                            // Double the price if the user chooses a retour flight
-                            chosenSeat.Price *= 2;
-                            // Change user options to be able to cancel retour status
-                            options = new string[] {"Cancel retour status", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
-                            Console.WriteLine("Your ticket has been marked as a retour flight.");
-                            Thread.Sleep(1000);
-                            Console.WriteLine("Press enter to continue.");
-                            Console.ReadLine();
-                        }
-                        else if (retourResponse == "no")
-                        {
-                            Console.WriteLine("You have chosen not to book a retour flight.");
-                            Thread.Sleep(1000);
-                            Console.WriteLine("Press enter to continue.");
-                            Console.ReadLine();
-                        }
-                    }
-                    else if (selectedOption == "Cancel retour status")
-                    {
-                        Console.Clear();
-                        retourstatus = false;
-                        options = new string[] { "Book a retour flight", "Extra Notes (Allergies, Wheelchair, etc.)", "Continue" };
-                        Console.WriteLine("Your flight has been marked as a one-way ticket.");
-                        Thread.Sleep(1000);
-                        Console.WriteLine("Press enter to continue.");
-                        Console.ReadLine();
                     }
                 } while (selectedOption != "Continue");
                 
@@ -317,14 +278,7 @@ namespace Project_B.Presentation
                         }
                     }
 
-                    if (retourstatus is false)
-                    {
-                        extraCost = extraKg * 4; // 4 euros per extra kg
-                    }
-                    else
-                    {
-                        extraCost = extraKg * 4 * 2; // doubles price of extra baggage if retour flight
-                    }
+                    extraCost = extraKg * 4; // 4 euros per extra kg
 
                     // Confirmation step
                     string[] confirmationOptions = { "Yes", "No" };
@@ -435,8 +389,7 @@ namespace Project_B.Presentation
                     notes = extraNotes + " And extra baggage of:" + extraCost + " Euro With a weight of" + extraKg;
                 }
                 // creates the ticket inside the database
-
-                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, retourstatus, notes);
+                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("seat succesfully reserved!");
                 Console.ReadLine();

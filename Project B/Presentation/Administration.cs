@@ -7,6 +7,8 @@ namespace Project_B.Presentation
 {
     public class Administration
     {
+
+
         // prints all users to the console
         public static void presentallusers()
         {
@@ -30,10 +32,8 @@ namespace Project_B.Presentation
                 // Add rows to the table
                 foreach (Users user in page)
                 {
-
                     string rank = user.rank == 1 ? "Admin" : "User";
                     table.AddRow(user.Id.ToString(), user.Name, user.Email, rank);
-
                 }
 
                 // Render the table
@@ -245,7 +245,6 @@ namespace Project_B.Presentation
             int userid = AnsiConsole.Prompt(new TextPrompt<int>("User ID: ")
                 .Validate(value => value > 0, "[red]Please enter a positive number.[/]"));
             Users user = Adminlogic.getuserbyId(userid);
-
             string rank = user.rank == 1 ? "Admin" : "User";
 
             // Create a table and add columns
@@ -258,23 +257,9 @@ namespace Project_B.Presentation
 
             // Add a row to the table
             table.AddRow(userid.ToString(), user.Name, user.Email, rank);
+
+            // Render the table
             AnsiConsole.Render(table);
-        }
-
-        // add Fly Points to a user
-        public static void AddFlyPointsToUser()
-        {
-            Console.WriteLine("Enter the user ID to add Fly Points to:");
-            int userId = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Enter the number of kilometers flown:");
-            int kilometers = Convert.ToInt32(Console.ReadLine());
-
-            FlightLogic flightLogic = new FlightLogic();
-            flightLogic.AddFlyPoints(userId, kilometers);
-
-            Console.WriteLine("Fly Points added successfully.");
-
         }
     }
 }

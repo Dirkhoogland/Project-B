@@ -1,8 +1,5 @@
-
-﻿using System.Data;
+﻿using System;
 using System.Data.SQLite;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Project_B.DataAcces
 {
@@ -81,7 +78,6 @@ namespace Project_B.DataAcces
                 "Gate VARCHAR(255)," +
                 "Departuretime DATETIME," +
                 "Destination VARCHAR(255)," +
-                "Retour BOOLEAN," +
                 "Origin VARCHAR(255)," +
                 "Distance INTEGER," +
                 "Extranotes VARCHAR(255)," +
@@ -144,52 +140,42 @@ namespace Project_B.DataAcces
                                 cmd3.ExecuteNonQuery();
                             }
 
-
                             DateTime time = DateTime.Now;
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk','3', 'Business', 1, 1, '11', '{time}', 'Berlin',0,'Amsterdam', 150 , '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk','3', 'Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', 150 , '-');";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
 
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('Email1','{time}', 'Berat', '2','Business', 1, 2, '11', '{time}','Berlin',0, 'Amsterdam',150 ,  '-');";
-
-
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('Email1','{time}', 'Berat', '2','Business', 1, 2, '11', '{time}','Berlin', 'Amsterdam',150 ,  '-');";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
 
-
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,  Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk', '1','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam', 150  , '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,  Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk', '1','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', 150  , '-');";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
+                           
 
-
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes) VALUES('Email','{time}', 'Dirk','4','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam',150 , '-')";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination, Origin, Distance, Extranotes) VALUES('Email','{time}', 'Dirk','4','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam',150 , '-')";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-
-
 
                            
 
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Retour,Origin, Distance ,Extranotes) VALUES('Email','{time}', 'Dirk','5','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam', 150 , '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Origin, Distance ,Extranotes) VALUES('Email','{time}', 'Dirk','5','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', 150 , '-');";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
+                   
 
-
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID, Gate, Departuretime, Destination,Retour,Origin, Distance ,Extranotes) VALUES('Email','{time}', 'Dirk','6','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam', 150 , '-');";
+                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID, Gate, Departuretime, Destination,Origin, Distance ,Extranotes) VALUES('Email','{time}', 'Dirk','6','Business', 1, 1, '11', '{time}', 'Berlin', 'Amsterdam', 150 , '-');";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
@@ -252,6 +238,40 @@ namespace Project_B.DataAcces
             return aircraftType;
         }
 
+        public static void AddExtraNotes(int ticketId, string extraNotes)
+        {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+        }
+
+        public static void ReserveSeat(string email, string name, int seat, string seatClass, int flightId, int userId, string gate, DateTime departureTime, string destination, string origin, string extranotes)
+        {
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Extranotes ) VALUES(@Email, @PurchaseTime, @Name, @Seat, @SeatClass, @FlightID, @UserID, @Gate, @Departuretime, @Destination, @Origin, @Extranotes)";
+
+            DateTime time = DateTime.Now;
+
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                {
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@PurchaseTime", time);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@Seat", seat);
+                    cmd.Parameters.AddWithValue("@SeatClass", seatClass);
+                    cmd.Parameters.AddWithValue("@FlightID", flightId);
+                    cmd.Parameters.AddWithValue("@UserID", userId);
+                    cmd.Parameters.AddWithValue("@Gate", gate);
+                    cmd.Parameters.AddWithValue("@Departuretime", departureTime);
+                    cmd.Parameters.AddWithValue("@Destination", destination);
+                    cmd.Parameters.AddWithValue("@Origin", origin);
+                    cmd.Parameters.AddWithValue("@Extranotes", extranotes);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         public static void ReadData()
         {
@@ -277,7 +297,6 @@ namespace Project_B.DataAcces
             }
         }
 
-
         public void UpdateFlyPoints(int userId, int flyPoints)
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -293,6 +312,7 @@ namespace Project_B.DataAcces
                 }
             }
         }
+
         public int GetFlyPoints(int userId)
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -312,6 +332,5 @@ namespace Project_B.DataAcces
             }
             return 0;
         }
-
     }
 }

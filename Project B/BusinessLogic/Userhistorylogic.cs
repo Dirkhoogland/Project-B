@@ -20,7 +20,7 @@ namespace Project_B.BusinessLogic
 
         public static List<Bookinghistory> GetflightHistorybyflightid(int id)
         {
-            List<Bookinghistory> userhistory = Bookinghistory.GetflightHistorybyflightid(id);
+            List<Bookinghistory> userhistory = Bookinghistory.GetUserHistory(id);
             return userhistory;
         }
     }
