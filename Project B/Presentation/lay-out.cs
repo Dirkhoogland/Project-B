@@ -3,6 +3,7 @@ using Project_B.DataAcces;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
+
 namespace Project_B.Presentation
 {
     public class Seat
@@ -260,7 +261,19 @@ public void DisplaySeats()
                     break;
             }
 
-            Console.WriteLine();
+
+        switch (currentOption)
+        {
+            case 0:
+                ChooseSeatWithArrowKeys( current, flightid);
+                break;
+            case 1:
+                DisplaySeatLayoutBoeing737(flightid);
+                break;
+            case 2:
+                Console.WriteLine("Thank you for using the seat reservation system. Bye!");
+                return;
+
         }
 
         public static void ChooseSeatWithArrowKeys(CurrentUser current, int flightid)
@@ -274,7 +287,7 @@ public void DisplaySeats()
             do
             {
                 Console.SetCursorPosition(0,0);
-                DisplaySeatLayoutBoeing737(row, seat);
+                DisplaySeatLayoutBoeing737(flightid, row, seat);
 
                 key = Console.ReadKey(true);
 
@@ -304,11 +317,16 @@ public void DisplaySeats()
             Console.WriteLine("Welcome to the seat reservation system");
 
             Seat chosenSeat = seats[row, seat];
+            
             if (chosenSeat.IsReserved)
             {
                 Console.WriteLine("This seat has already been reserved. Choose another seat.");
                 return;
             }
+
+
+            seats[row, seat].IsReserved = true;
+
 
             Console.WriteLine($"You have chosen this seat: {row + 1}{(char)(seat + 'A')}. Class: {chosenSeat.Class}, Price: {chosenSeat.Price}");
 
@@ -619,7 +637,10 @@ public void DisplaySeats()
                 // creates the ticket inside the database
                 FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, retourstatus, notes);
                 chosenSeat.IsReserved = true;
-                Console.WriteLine("Seat successfully reserved!");
+
+                Console.WriteLine("Seat succesfully reserved!");
+                DisplaySeatLayoutBoeing737(flightid);
+
                 Console.ReadLine();
             }
             else
@@ -627,8 +648,46 @@ public void DisplaySeats()
                 Console.WriteLine("You have cancelled your seat.");
             }
         }
-        public static void DisplaySeatLayoutBoeing737(int selectedRow = -1, int selectedSeat = -1)
+\
+
+        public static void DisplaySeatLayoutBoeing737(int FlightID, int selectedRow = -1, int selectedSeat = -1)
+\
         {
+            List<Bookinghistory> seatsdatabase = Bookinghistory.GetflightHistorybyflightid(FlightID);
+            foreach(Bookinghistory seat in seatsdatabase) 
+            {
+                string test = seat.Seat;
+                string[] parts = test.Split('-');
+                int row = Convert.ToInt32(parts[0]);    
+                string seatss = parts[1];
+                int seatnumber = 0;
+                if (seatss == " A")
+                {
+                    seatnumber = 0;
+                }
+                else if (seatss == " B")
+                {
+                    seatnumber = 1;
+                }
+                else if (seatss == " C")
+                {
+                    seatnumber = 2;
+                }
+                else if (seatss == " D")
+                {
+                    seatnumber = 3;
+                }
+                else if (seatss == " E")
+                {
+                    seatnumber = 4;
+                }
+                else if (seatss == " F")
+                {
+                    seatnumber = 5;
+                }
+                seats[row -1, seatnumber].IsReserved = true;
+
+            }
             Console.ForegroundColor = ConsoleColor.Cyan;
             
             Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
@@ -693,8 +752,19 @@ public void DisplaySeats()
                     Console.ResetColor();
                 }
 
+            
                 Console.WriteLine();
+                
             }
+
+            Console.WriteLine("use your arrow keys to select a seat. Press enter to reserve the seat.");
+            Console.WriteLine("\nSeat Summary:");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Yellow seats are Business class seats with the price €200.");
+            Console.ResetColor(); // Reset the color to the default
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Cyan seats are Economy class seats with the price €100.");
+            Console.ResetColor();
         }
         public static string AskQuestionWithMenu(string[] options)
         {

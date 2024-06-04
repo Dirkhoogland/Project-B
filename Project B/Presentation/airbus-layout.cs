@@ -115,7 +115,19 @@ namespace Project_B.Presentation
                     break;
             }
 
-            Console.WriteLine();
+
+        switch (currentOption)
+        {
+            case 0:
+                ChooseSeatWithArrowKeys(current, flightid);
+                break;
+            case 1:
+                DisplaySeatLayoutAirbus(flightid);
+                break;
+            case 2:
+                Console.WriteLine("Thank you for using the seat reservation system. Bye!");
+                return;
+
         }
 
 
@@ -130,7 +142,7 @@ namespace Project_B.Presentation
             do
             {
                 Console.SetCursorPosition(0,0);
-                DisplaySeatLayoutAirbus(row, seat);
+                DisplaySeatLayoutAirbus(flightid, row, seat);
 
                 key = Console.ReadKey(true);
 
@@ -451,6 +463,7 @@ namespace Project_B.Presentation
                 FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class, retourstatus, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
+                DisplaySeatLayoutAirbus(flightId);
                 Console.ReadLine();
             }
             else
@@ -459,8 +472,55 @@ namespace Project_B.Presentation
             }
         }
 
-        public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
+        public static void DisplaySeatLayoutAirbus(int FlightID, int selectedRow = -1, int selectedSeat = -1)
         {
+            List<Bookinghistory> seatsdatabase = Bookinghistory.GetflightHistorybyflightid(FlightID);
+            foreach(Bookinghistory stoelen in seatsdatabase) 
+            {
+                string airbusstoel = stoelen.Seat;
+                string[] airbusstoelarray = airbusstoel.Split('-');
+                int row = Convert.ToInt32(airbusstoelarray[0]);
+                string seat = airbusstoelarray[1];
+                int seatnumber = 0;
+                if (seat == " A")
+                {
+                    seatnumber = 0;
+                }
+                else if (seat == " B")
+                {
+                    seatnumber = 1;
+                }
+                else if (seat == " C")
+                {
+                    seatnumber = 2;
+                }
+                else if (seat == " D")
+                {
+                    seatnumber = 3;
+                }
+                else if (seat == " E")
+                {
+                    seatnumber = 4;
+                }
+                else if (seat == " F")
+                {
+                    seatnumber = 5;
+                }
+                else if (seat == " G")
+                {
+                    seatnumber = 6;
+                } 
+                else if (seat == " H")
+                {
+                    seatnumber = 7;
+                }
+                else if (seat == " I")
+                {
+                    seatnumber = 8;
+                }
+                airbusseats[row - 1, seatnumber].IsReserved = true;
+            }
+
             Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
 
             Console.WriteLine("Seating plan:");
@@ -500,7 +560,7 @@ namespace Project_B.Presentation
 
                 for (int seat = 0; seat < 9; seat++) // Adjusted to 9 seats
                 {
-                    if ((row >= 43 && row <= 48) && (seat == 2 || seat == 6)) // If the current row is one of the rows 44-48 and the seat is the 3rd or 7th, skip the iteration
+                    if (row >= 43 && row <= 48 && (seat == 2 || seat == 6)) // If the current row is one of the rows 44-48 and the seat is the 3rd or 7th, skip the iteration
                     {
                         Console.Write("  ");
                         continue;
@@ -588,6 +648,23 @@ namespace Project_B.Presentation
 
                 Console.WriteLine();
             }
+            
+            Console.WriteLine("use your arrow keys to select a seat. Press enter to reserve the seat.");
+            Console.WriteLine("\nSeat Summary:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("the gray seats are Club Class and cost €200.");
+            Console.ResetColor(); 
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"the Pink seats are Seats with extra leg space class seats with the price €200.");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"the Cyan seats are Duo combo seats with the price €200.");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine($"the Purple seats are Deluxe seats with the price €200.");
+            Console.ResetColor();
+            Console.WriteLine($"the White seats are Economy seats with the price €200.");
+            Console.ResetColor();
         }
     }
 }
