@@ -84,7 +84,7 @@ namespace Project_B.Presentation
                 ChooseSeatWithArrowKeys(current, flightid);
                 break;
             case 1:
-                DisplaySeatLayoutAirbus();
+                DisplaySeatLayoutAirbus(flightid);
                 break;
             case 2:
                 Console.WriteLine("Thank you for using the seat reservation system. Bye!");
@@ -105,7 +105,7 @@ namespace Project_B.Presentation
             do
             {
                 Console.SetCursorPosition(0,0);
-                DisplaySeatLayoutAirbus(row, seat);
+                DisplaySeatLayoutAirbus(flightid, row, seat);
 
                 key = Console.ReadKey(true);
 
@@ -310,7 +310,7 @@ namespace Project_B.Presentation
                 FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class, notes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("Seat succesfully reserved!");
-                DisplaySeatLayoutAirbus();
+                DisplaySeatLayoutAirbus(flightId);
                 Console.ReadLine();
             }
             else
@@ -319,8 +319,55 @@ namespace Project_B.Presentation
             }
         }
 
-        public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
+        public static void DisplaySeatLayoutAirbus(int FlightID, int selectedRow = -1, int selectedSeat = -1)
         {
+            List<Bookinghistory> seatsdatabase = Bookinghistory.GetflightHistorybyflightid(FlightID);
+            foreach(Bookinghistory stoelen in seatsdatabase) 
+            {
+                string airbusstoel = stoelen.Seat;
+                string[] airbusstoelarray = airbusstoel.Split('-');
+                int row = Convert.ToInt32(airbusstoelarray[0]);
+                string seat = airbusstoelarray[1];
+                int seatnumber = 0;
+                if (seat == " A")
+                {
+                    seatnumber = 0;
+                }
+                else if (seat == " B")
+                {
+                    seatnumber = 1;
+                }
+                else if (seat == " C")
+                {
+                    seatnumber = 2;
+                }
+                else if (seat == " D")
+                {
+                    seatnumber = 3;
+                }
+                else if (seat == " E")
+                {
+                    seatnumber = 4;
+                }
+                else if (seat == " F")
+                {
+                    seatnumber = 5;
+                }
+                else if (seat == " G")
+                {
+                    seatnumber = 6;
+                } 
+                else if (seat == " H")
+                {
+                    seatnumber = 7;
+                }
+                else if (seat == " I")
+                {
+                    seatnumber = 8;
+                }
+                airbusseats[row - 1, seatnumber].IsReserved = true;
+            }
+
             Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
 
             Console.WriteLine("Seating plan:");

@@ -327,39 +327,39 @@ namespace Project_B.Presentation
                 int seatnumber = 0;
                 if (seat == " A")
                 {
-                    seatnumber = 1;
+                    seatnumber = 0;
                 }
                 else if (seat == " B")
                 {
-                    seatnumber = 2;
+                    seatnumber = 1;
                 }
                 else if (seat == " C")
                 {
-                    seatnumber = 3;
+                    seatnumber = 2;
                 }
                 else if (seat == " D")
                 {
-                    seatnumber = 4;
+                    seatnumber = 3;
                 }
                 else if (seat == " E")
                 {
-                    seatnumber = 5;
+                    seatnumber = 4;
                 }
                 else if (seat == " F")
                 {
-                    seatnumber = 6;
+                    seatnumber = 5;
                 }
                 else if (seat == " G")
                 {
-                    seatnumber = 7;
+                    seatnumber = 6;
                 }
                 else if (seat == " H")
                 {
-                    seatnumber = 8;
+                    seatnumber = 7;
                 }
                 else if (seat == " I")
                 {
-                    seatnumber = 9;
+                    seatnumber = 8;
                 }
                 boeingseats[row - 1, seatnumber].IsReserved = true;
             }
