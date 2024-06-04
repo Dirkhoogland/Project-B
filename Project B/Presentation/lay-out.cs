@@ -305,11 +305,6 @@ namespace Project_B.Presentation
                 Console.WriteLine("You have cancelled your seat.");
             }
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> parent of 467dd69 (Merge branch 'Dev-branch' into meerderetickets)
-
         public static void DisplaySeatLayoutBoeing737(int FlightID, int selectedRow = -1, int selectedSeat = -1)
         {
             List<Bookinghistory> seatsdatabase = Bookinghistory.GetflightHistorybyflightid(FlightID);
@@ -469,9 +464,6 @@ namespace Project_B.Presentation
                 }
             }
         }
-<<<<<<< HEAD
         }
-=======
->>>>>>> parent of 467dd69 (Merge branch 'Dev-branch' into meerderetickets)
+
     }
-}
