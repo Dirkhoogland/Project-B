@@ -648,10 +648,9 @@ public void DisplaySeats()
                 Console.WriteLine("You have cancelled your seat.");
             }
         }
-\
+
 
         public static void DisplaySeatLayoutBoeing737(int FlightID, int selectedRow = -1, int selectedSeat = -1)
-\
         {
             List<Bookinghistory> seatsdatabase = Bookinghistory.GetflightHistorybyflightid(FlightID);
             foreach(Bookinghistory seat in seatsdatabase) 
@@ -804,3 +803,4 @@ public void DisplaySeats()
         }
         }
     }
+}
