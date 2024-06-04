@@ -296,7 +296,50 @@ namespace Project_B.Presentation
                 // creates the ticket inside the database
                 FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, notes);
                 chosenSeat.IsReserved = true;
-                Console.WriteLine("Seat succesfully reserved!");
+                Console.WriteLine("do you want to buy one more seat?");
+                string[] yesNoOptions2 = new string[] { "yes", "no" };
+                int currentOption2 = 0;
+                ConsoleKeyInfo key2;
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("do you want to buy one more seat?");
+                    for (int i = 0; i < yesNoOptions2.Length; i++)
+                    {
+                        if (i == currentOption2)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(yesNoOptions2[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    key2 = Console.ReadKey(true);
+                    switch (key2.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            currentOption2 = Math.Max(0, currentOption2 - 1);
+                            break;
+                        case ConsoleKey.DownArrow:
+                            currentOption2 = Math.Min(yesNoOptions2.Length - 1, currentOption2 + 1);
+                            break;
+                    }
+                } while (key2.Key != ConsoleKey.Enter);
+
+                if (currentOption2 == 0)
+                {
+                    ChooseSeatWithArrowKeys(current, flightid);
+                }
+                else
+                {
+                    Console.WriteLine("Thank you for reserving a seat. Press enter to continue.");
+                    return;
+                }
+
+                Console.WriteLine("Your seat has been reserved! Press enter to continue.");
                 DisplaySeatLayoutBoeing737(flightid);
                 Console.ReadLine();
             }
