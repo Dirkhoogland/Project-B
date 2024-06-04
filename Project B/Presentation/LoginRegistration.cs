@@ -8,7 +8,6 @@ namespace Project_B.Presentation
 {
     public class LoginRegistrations
     {
-
         // checks if the user wants to log in or register 
         public static CurrentUser LoginScreen()
         {
@@ -39,6 +38,7 @@ namespace Project_B.Presentation
 
             return currentUser;
         }
+
         // registration asks for user details to then send to the business logic side
         private static CurrentUser Registrationscreen()
         {
@@ -51,6 +51,7 @@ namespace Project_B.Presentation
             if (!successful)
             {
                 AnsiConsole.MarkupLine("[red]Email already exists: {0}[/]", email);
+                return null;
             }
             else
             {
@@ -59,7 +60,7 @@ namespace Project_B.Presentation
 
             Login.LoginLogic(email, password);
             Users user = Users.Getuser(email);
-            CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, 0, true);
+            CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, user.rank, user.FlyPoints, true);
             return currentUser;
         }
 
@@ -79,8 +80,7 @@ namespace Project_B.Presentation
             {
                 Users user = Users.Getuser(email);
                 AnsiConsole.WriteLine($"[green]Successfully logged in user: {user.Name}[/]");
-
-                CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, user.rank, true);
+                CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, user.rank, user.FlyPoints, true);
                 return currentUser;
             }
         }
@@ -88,7 +88,7 @@ namespace Project_B.Presentation
         private static CurrentUser Guestscreen()
         {
             string email = AnsiConsole.Ask<string>("Please fill in your Email: ");
-            CurrentUser user = Login.Guestlogin(email);
+            CurrentUser user = Login.GuestLogin(email);
             return user;
         }
     }
