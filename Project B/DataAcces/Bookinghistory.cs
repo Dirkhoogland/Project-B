@@ -5,8 +5,6 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
-using Spectre.Console;
-using Spectre.Console.Cli;
 
 namespace Project_B.DataAcces
 {
@@ -37,12 +35,8 @@ namespace Project_B.DataAcces
         public readonly string extranotes;
 
         public readonly string Departuretime;
-
-        public readonly int distance;
-
-        public readonly bool retour;
         // booking history constructor with all ticket information
-        public Bookinghistory(int ticketid, string email, string pt, string name,string seat, string seatclass, int Fid, int Uid, string gate, string departuretime, string Origin, string destination, int distance, string extranotes, bool retour)
+        public Bookinghistory(int ticketid, string email, string pt, string name,string seat, string seatclass, int Fid, int Uid, string gate, string departuretime, string Origin, string destination,string extranotes)
         {
             this.TicketId = ticketid;
             this.Email = email;
@@ -56,10 +50,7 @@ namespace Project_B.DataAcces
             this.Departuretime = departuretime;
             this.Origin = Origin;
             this.Destination = destination;
-            this.distance = distance;
             this.extranotes = extranotes;
-            this.retour = retour;
-            this.retour = retour;
         }
         // gets user history by their ID 
         public static List<Bookinghistory> GetUserHistory(int userid)
@@ -88,12 +79,10 @@ namespace Project_B.DataAcces
                             string Gate = rdr.GetString(8);
                             string Departuretime = rdr.GetString(9);
                             string Destination = rdr.GetString(10);
-                            bool retour = rdr.GetBoolean(11);
-                            string Origin = rdr.GetString(12);
-                            int Distance = rdr.GetInt32(13);
-                            string Extranotes = rdr.GetString(14);
+                            string Origin = rdr.GetString(11);
+                            string Extranotes = rdr.GetString(12);
                             // puts it into the list to then post to the logical side
-                            Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate,Departuretime, Origin, Destination,Distance, Extranotes, retour);
+                            Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate,Departuretime, Origin, Destination, Extranotes);
                             Userhistory.Add(history);
                         }
                     }
@@ -104,7 +93,7 @@ namespace Project_B.DataAcces
         public static List<Bookinghistory> GetUserHistory()
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sql = "SELECT * FROM Tickets ORDER BY flightid, Name, Seat";
+            string sql = "SELECT * FROM Tickets ORDER BY flightid";
             List<Bookinghistory> Userhistory = new List<Bookinghistory>();
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {   // opens the database connection
@@ -126,12 +115,10 @@ namespace Project_B.DataAcces
                             string Gate = rdr.GetString(8);
                             string Departuretime = rdr.GetString(9);
                             string Destination = rdr.GetString(10);
-                            bool retour = rdr.GetBoolean(11);
-                            string Origin = rdr.GetString(12);
-                            int Distance = rdr.GetInt32(13);
-                            string Extranotes = rdr.GetString(14);
+                            string Origin = rdr.GetString(11);
+                            string Extranotes = rdr.GetString(12);
                             // puts it into the list to then post to the logical side
-                            Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate, Departuretime, Origin, Destination, Distance, Extranotes, retour);
+                            Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate, Departuretime, Origin, Destination, Extranotes);
                             Userhistory.Add(history);
                         }
                     }
@@ -143,7 +130,7 @@ namespace Project_B.DataAcces
         public static List<Bookinghistory> GetflightHistorybyflightid(int flightid)
         {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-            string sql = "SELECT * FROM Tickets WHERE FlightID = $FlightId ORDER BY Name, Seat";
+            string sql = "SELECT * FROM Tickets WHERE FlightID = $FlightId";
             List<Bookinghistory> Userhistory = new List<Bookinghistory>();
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {   // opens the database connection
@@ -166,12 +153,10 @@ namespace Project_B.DataAcces
                             string Gate = rdr.GetString(8);
                             string Departuretime = rdr.GetString(9);
                             string Destination = rdr.GetString(10);
-                            bool retour = rdr.GetBoolean(11);
-                            string Origin = rdr.GetString(12);
-                            int Distance = rdr.GetInt32(13);
-                            string Extranotes = rdr.GetString(14);
+                            string Origin = rdr.GetString(11);
+                            string Extranotes = rdr.GetString(12);
                             // puts it into the list to then post to the logical side
-                            Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate, Departuretime, Origin, Destination, Distance, Extranotes, retour);
+                            Bookinghistory history = new Bookinghistory(TicketId, Email, PurchaseTime, Name, Seat, SeatClass, FlightId, UserId, Gate, Departuretime, Origin, Destination, Extranotes);
                             Userhistory.Add(history);
                         }
                     }
