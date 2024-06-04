@@ -325,39 +325,39 @@ namespace Project_B.Presentation
                 int row = Convert.ToInt32(stoelarray[0]);
                 string seat = stoelarray[1];
                 int seatnumber = 0;
-                if (seat == "A")
+                if (seat == " A")
                 {
                     seatnumber = 1;
                 }
-                else if (seat == "B")
+                else if (seat == " B")
                 {
                     seatnumber = 2;
                 }
-                else if (seat == "C")
+                else if (seat == " C")
                 {
                     seatnumber = 3;
                 }
-                else if (seat == "D")
+                else if (seat == " D")
                 {
                     seatnumber = 4;
                 }
-                else if (seat == "E")
+                else if (seat == " E")
                 {
                     seatnumber = 5;
                 }
-                else if (seat == "F")
+                else if (seat == " F")
                 {
                     seatnumber = 6;
                 }
-                else if (seat == "G")
+                else if (seat == " G")
                 {
                     seatnumber = 7;
                 }
-                else if (seat == "H")
+                else if (seat == " H")
                 {
                     seatnumber = 8;
                 }
-                else if (seat == "I")
+                else if (seat == " I")
                 {
                     seatnumber = 9;
                 }
