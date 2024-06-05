@@ -708,10 +708,13 @@ namespace Project_B.DataAcces
             Users user = Users.GetuserbyId(userid);
             Flight flight = GetFlightById(flightid);
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-
+            int returnstatusint = 0 ;
             DateTime time = DateTime.Now;
-
-            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}','{retourstatus}', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
+            if(retourstatus == true)
+            {
+                returnstatusint = 1;
+            }
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}','{returnstatusint}', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
 
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
