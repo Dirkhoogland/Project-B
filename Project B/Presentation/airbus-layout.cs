@@ -39,82 +39,60 @@ namespace Project_B.Presentation
         }
     }
     }
-        public void ToonMenu(CurrentUser current, int flightid)
+    public void ToonMenu(CurrentUser current, int flightid)
+    {
+        int currentOption = 0;
+        string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart" };
+
+        ConsoleKeyInfo key;
+        Console.Clear();
+
+        do
         {
-            int currentOption = 0;
-            string[] menuOptions = new string[] { "Reserve a seat", "View the seating chart", "Leave the seating chart", "Show Fly points", "Redeem Fly points" };
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("Welcome to the Airbus seat reservation system!");
+            Console.WriteLine("Available options:");
 
-            ConsoleKeyInfo key;
-            Console.Clear();
-
-            FlightLogic flightLogic = new FlightLogic();
-
-            do
+            for (int i = 0; i < menuOptions.Length; i++)
             {
-                Console.SetCursorPosition(0, 0);
-                Console.WriteLine("Welcome to the Airbus seat reservation system!");
-                Console.WriteLine("Available options:");
-
-                for (int i = 0; i < menuOptions.Length; i++)
+                if (i == currentOption)
                 {
-                    if (i == currentOption)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
-
-                    Console.WriteLine($"{i + 1}. {menuOptions[i]}");
-
-                    Console.ResetColor();
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor = ConsoleColor.Black;
                 }
 
-                key = Console.ReadKey(true);
-                switch (key.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        currentOption = Math.Max(0, currentOption - 1);
-                        break;
-                    case ConsoleKey.DownArrow:
-                        currentOption = Math.Min(menuOptions.Length - 1, currentOption + 1);
-                        break;
-                }
-            } while (key.Key != ConsoleKey.Enter);
+                Console.WriteLine($"{i + 1}. {menuOptions[i]}");
 
-            switch (currentOption)
-            {
-                case 0:
-                    ChooseSeatWithArrowKeys(current, flightid);
-                    break;
-                case 1:
-                    DisplaySeatLayoutAirbus();
-                    break;
-                case 2:
-                    Console.WriteLine("Thank you for using the seat reservation system. Bye!");
-                    return;
-                case 3:
-                    int points = flightLogic.GetFlyPoints(current.Id);
-                    Console.WriteLine($"Current Fly points balance: {points}");
-                    break;
-                case 4:
-                    if (flightLogic.RedeemFlyPoints(current.Id))
-                    {
-                        Console.WriteLine("20 Fly points redeemed for a 10% discount on your next booking.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Not enough Fly points to redeem. Minimum 20 points required.");
-                    }
-                    int newPoints = flightLogic.GetFlyPoints(current.Id);
-                    Console.WriteLine($"New Fly points balance: {newPoints}");
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice");
-                    break;
+                Console.ResetColor();
             }
 
-            Console.WriteLine();
+            key = Console.ReadKey(true);
+            switch (key.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    currentOption = Math.Max(0, currentOption - 1);
+                    break;
+                case ConsoleKey.DownArrow:
+                    currentOption = Math.Min(menuOptions.Length - 1, currentOption + 1);
+                    break;
+            }
+        } while (key.Key != ConsoleKey.Enter);
+
+        switch (currentOption)
+        {
+            case 0:
+                ChooseSeatWithArrowKeys(current, flightid);
+                break;
+            case 1:
+                DisplaySeatLayoutAirbus(flightid);
+                break;
+            case 2:
+                Console.WriteLine("Thank you for using the seat reservation system. Bye!");
+                return;
         }
 
+        Console.WriteLine();
+    }
 
         public static void ChooseSeatWithArrowKeys(CurrentUser current, int flightid)
         {
@@ -127,7 +105,7 @@ namespace Project_B.Presentation
             do
             {
                 Console.SetCursorPosition(0,0);
-                DisplaySeatLayoutAirbus(row, seat);
+                DisplaySeatLayoutAirbus(flightid, row, seat);
 
                 key = Console.ReadKey(true);
 
@@ -270,80 +248,13 @@ namespace Project_B.Presentation
                 int extraCost = 0;
                 if (baggageResponse.ToLower() == "yes")
                 {
-                    while (true)
-                    {
-                        Console.Write("How many kg do you want extra: ");
-                        string input = Console.ReadLine();
-                        if (int.TryParse(input, out extraKg) && extraKg >= 0)
-                        {
-                            break; // Exit the loop if the input is a valid number and not negative
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid input. Please enter a valid number.");
-                        }
-                    }
+                    Console.Write("How many kg do you want extra: ");
+                     extraKg = Convert.ToInt32(Console.ReadLine());
+                     extraCost = extraKg * 4; // 4 euros per extra kg
 
-                    extraCost = extraKg * 4; // 4 euros per extra kg
+                    Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
 
-                    // Confirmation step
-                    string[] confirmationOptions = { "Yes", "No" };
-                    int confirmationIndex = 0;
-                    while (true)
-                    {
-                        Console.Clear();
-                        Console.WriteLine($"The extra cost for baggage is {extraCost} euros. Total cost: {chosenSeat.Price + extraCost} euros."); 
-                        Console.WriteLine("Do you really want to purchase with the extra baggage cost?");
-
-                        for (int i = 0; i < confirmationOptions.Length; i++)
-                        {
-                            if (i == confirmationIndex)
-                            {
-                                Console.BackgroundColor = ConsoleColor.Gray;
-                                Console.ForegroundColor = ConsoleColor.Black;
-                            }
-
-                            Console.WriteLine(confirmationOptions[i]);
-
-                            Console.ResetColor();
-                        }
-
-                        ConsoleKeyInfo confirmationKeyInfo = Console.ReadKey();
-
-                        switch (confirmationKeyInfo.Key)
-                        {
-                            case ConsoleKey.UpArrow:
-                                if (confirmationIndex > 0)
-                                {
-                                    confirmationIndex--;
-                                }
-                                break;
-                            case ConsoleKey.DownArrow:
-                                if (confirmationIndex < confirmationOptions.Length - 1)
-                                {
-                                    confirmationIndex++;
-                                }
-                                break;
-                            case ConsoleKey.Enter:
-                                if (confirmationOptions[confirmationIndex] == "Yes")
-                                {
-                                    chosenSeat.Price += extraCost; // Add extra cost to seat price only if 'Yes' is selected
-                                    goto EndConfirmation;
-                                }
-
-                                else if (confirmationOptions[confirmationIndex] == "No")
-                                {
-                                    Console.WriteLine("You have cancelled your seat.");
-                                    return;
-                                }
-                                break;
-                        }
-
-                        Console.Clear();
-                    }
-
-                EndConfirmation:
-
+                    chosenSeat.Price += extraCost; // Add extra cost to seat price
                     Console.WriteLine($"Your total cost is {chosenSeat.Price} euros.");
                 }
                 else
@@ -395,10 +306,56 @@ namespace Project_B.Presentation
                 {
                     notes = extraNotes + " And extra baggage of:" + extraCost + " Euro With a weight of" + extraKg;
                 }
+                var test = Console.ReadLine();
                 // creates the ticket inside the database
                 FlightLogic.Reserveseat(flightId, current.Id, seatplace, chosenSeat.Class, notes);
                 chosenSeat.IsReserved = true;
+                Console.WriteLine("do you want to buy one more seat?");
+                string[] yesNoOptions2 = new string[] { "yes", "no" };
+                int currentOption2 = 0;
+                ConsoleKeyInfo key2;
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("do you want to buy one more seat?");
+                    for (int i = 0; i < yesNoOptions2.Length; i++)
+                    {
+                        if (i == currentOption2)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(yesNoOptions2[i]);
+
+                        Console.ResetColor();
+                    }
+
+                    key2 = Console.ReadKey(true);
+                    switch (key2.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            currentOption2 = Math.Max(0, currentOption2 - 1);
+                            break;
+                        case ConsoleKey.DownArrow:
+                            currentOption2 = Math.Min(yesNoOptions2.Length - 1, currentOption2 + 1);
+                            break;
+                    }
+                } while (key2.Key != ConsoleKey.Enter);
+
+                if (currentOption2 == 0)
+                {
+                    ChooseSeatWithArrowKeys(current, flightId);
+                }
+                else
+                {
+                    Console.WriteLine("Thank you for reserving a seat. Press enter to continue.");
+                    return;
+                }
+
+
                 Console.WriteLine("Seat succesfully reserved!");
+                DisplaySeatLayoutAirbus(flightId);
                 Console.ReadLine();
             }
             else
@@ -407,8 +364,55 @@ namespace Project_B.Presentation
             }
         }
 
-        public static void DisplaySeatLayoutAirbus(int selectedRow = -1, int selectedSeat = -1)
+        public static void DisplaySeatLayoutAirbus(int FlightID, int selectedRow = -1, int selectedSeat = -1)
         {
+            List<Bookinghistory> seatsdatabase = Bookinghistory.GetflightHistorybyflightid(FlightID);
+            foreach(Bookinghistory stoelen in seatsdatabase) 
+            {
+                string airbusstoel = stoelen.Seat;
+                string[] airbusstoelarray = airbusstoel.Split('-');
+                int row = Convert.ToInt32(airbusstoelarray[0]);
+                string seat = airbusstoelarray[1];
+                int seatnumber = 0;
+                if (seat == " A")
+                {
+                    seatnumber = 0;
+                }
+                else if (seat == " B")
+                {
+                    seatnumber = 1;
+                }
+                else if (seat == " C")
+                {
+                    seatnumber = 2;
+                }
+                else if (seat == " D")
+                {
+                    seatnumber = 3;
+                }
+                else if (seat == " E")
+                {
+                    seatnumber = 4;
+                }
+                else if (seat == " F")
+                {
+                    seatnumber = 5;
+                }
+                else if (seat == " G")
+                {
+                    seatnumber = 6;
+                } 
+                else if (seat == " H")
+                {
+                    seatnumber = 7;
+                }
+                else if (seat == " I")
+                {
+                    seatnumber = 8;
+                }
+                airbusseats[row - 1, seatnumber].IsReserved = true;
+            }
+
             Console.WriteLine("If you select a seat, you have a max bagage limit of 20 kg. If you have more, you have to pay extra.");
 
             Console.WriteLine("Seating plan:");
@@ -448,7 +452,7 @@ namespace Project_B.Presentation
 
                 for (int seat = 0; seat < 9; seat++) // Adjusted to 9 seats
                 {
-                    if ((row >= 43 && row <= 48) && (seat == 2 || seat == 6)) // If the current row is one of the rows 44-48 and the seat is the 3rd or 7th, skip the iteration
+                    if (row >= 43 && row <= 48 && (seat == 2 || seat == 6)) // If the current row is one of the rows 44-48 and the seat is the 3rd or 7th, skip the iteration
                     {
                         Console.Write("  ");
                         continue;
@@ -536,6 +540,23 @@ namespace Project_B.Presentation
 
                 Console.WriteLine();
             }
+            
+            Console.WriteLine("use your arrow keys to select a seat. Press enter to reserve the seat.");
+            Console.WriteLine("\nSeat Summary:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("the gray seats are Club Class and cost €200.");
+            Console.ResetColor(); 
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"the Pink seats are Seats with extra leg space class seats with the price €200.");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"the Cyan seats are Duo combo seats with the price €200.");
+            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine($"the Purple seats are Deluxe seats with the price €200.");
+            Console.ResetColor();
+            Console.WriteLine($"the White seats are Economy seats with the price €200.");
+            Console.ResetColor();
         }
     }
 }

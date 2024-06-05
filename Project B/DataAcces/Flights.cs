@@ -710,7 +710,9 @@ namespace Project_B.DataAcces
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
 
             DateTime time = DateTime.Now;
-            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
+
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}','0', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
+
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
                 c.Open();
