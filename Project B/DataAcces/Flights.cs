@@ -703,7 +703,7 @@ namespace Project_B.DataAcces
             }
         }
         // function for adding tickets to a plane
-        public static void reserveseat(int flightid, int userid, string seat, string seatclass, bool retourstatus, string extranotes)
+        public static void reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
         {
             Users user = Users.GetuserbyId(userid);
             Flight flight = GetFlightById(flightid);
@@ -711,7 +711,7 @@ namespace Project_B.DataAcces
 
             DateTime time = DateTime.Now;
 
-            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}','{retourstatus}', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
+            string sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('{user.Email}','{time}', '{user.Name}','{seat}', '{seatclass}', {flightid}, {user.Id}, '{flight.Gate}', '{flight.DepartureTime}', '{flight.Destination}','0', '{flight.Origin}','{flight.Distance}', '{extranotes}');";
 
             using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
             {
