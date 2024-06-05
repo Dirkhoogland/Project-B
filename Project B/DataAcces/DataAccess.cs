@@ -22,8 +22,7 @@ namespace Project_B.DataAcces
             {
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
-
-        }
+         }
 
         static void CreateTable()
         {
@@ -146,7 +145,6 @@ namespace Project_B.DataAcces
                             }
 
 
-
                             DateTime time = DateTime.Now;
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk','3', 'Business', 1, 1, '11', '{time}', 'Berlin',0,'Amsterdam', 150 , '-');";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
@@ -155,14 +153,13 @@ namespace Project_B.DataAcces
                             }
 
 
-
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('Email1','{time}', 'Berat', '2','Business', 1, 2, '11', '{time}','Berlin',0, 'Amsterdam',150 ,  '-');";
+
 
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-
 
 
 
@@ -174,13 +171,11 @@ namespace Project_B.DataAcces
 
 
 
-
                             sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes) VALUES('Email','{time}', 'Dirk','4','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam',150 , '-')";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-
 
 
 
@@ -191,7 +186,6 @@ namespace Project_B.DataAcces
                             {
                                 cmd1.ExecuteNonQuery();
                             }
-
 
 
 
