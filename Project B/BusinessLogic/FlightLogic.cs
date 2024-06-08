@@ -66,7 +66,7 @@ namespace Project_B.BusinessLogic
         public void AddFlyPoints(int userId, int kilometers)
         {
             int flyPoints = Users.GetFlyPoints(userId);
-            flyPoints += kilometers / 2000; // Uçuş mesafesine göre puan ekleyin, 2000 km başına 1 puan
+            flyPoints += kilometers / 2000; // 1 fly point per 2000 kilometers
             Users.UpdateFlyPoints(userId, flyPoints);
         }
 
@@ -82,6 +82,22 @@ namespace Project_B.BusinessLogic
             }
 
             return false;
+        }
+
+        public bool CanRedeemFlyPoints(int userId)
+        {
+            int flyPoints = Users.GetFlyPoints(userId);
+            return flyPoints >= 20;
+        }
+
+        public bool RefundFlyPoints(int userId)
+        {
+            int flyPoints = Users.GetFlyPoints(userId);
+
+            flyPoints += 20; // Refund the 20 points
+
+            Users.UpdateFlyPoints(userId, flyPoints);
+            return true;
         }
     }
 }
