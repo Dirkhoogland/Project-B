@@ -1,6 +1,5 @@
 ﻿using Project_B.DataAcces;
 using Project_B.Presentation;
-using System.Drawing.Printing;
 using System.Xml.Linq;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -20,6 +19,7 @@ namespace Project_B
 
                 return AnsiConsole.Prompt(flightPrompt);
             }
+
             public static void PrintImages()
             {
                 string[] image1 = new string[]
@@ -83,14 +83,12 @@ namespace Project_B
             }
             public static void Main(string[] args)
             {
-
                 DataAccess.Database();
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
                 var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Logout", "Exit" };
                 var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
-
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
                 int currentIndex = 0;
@@ -104,9 +102,7 @@ namespace Project_B
                 int itemsPerPage = 20;
                 List<string> options = new List<string> { filterFlightsText };
 
-
                 while (true)
-
                 {
                     AnsiConsole.Clear();
 
@@ -129,9 +125,7 @@ namespace Project_B
                     switch (selectedOption)
                     {
                         case "Login/Register":
-
                             AnsiConsole.Clear();
-
                             currentuser = Login();
                             if (currentuser != null)
                             {
@@ -327,7 +321,6 @@ namespace Project_B
                             Console.ReadLine();
                             break;
 
-
                         case "Flight History":
                             // Clear the console
                             AnsiConsole.Clear();
@@ -336,10 +329,8 @@ namespace Project_B
                             if (currentuser != null)
                             {
                                 // Call the method with the current user
-
                                 Userhistory.presentuserhistory(currentuser);
                                 Console.ReadKey();
-
                             }
                             else
                             {
@@ -348,16 +339,15 @@ namespace Project_B
                             }
                             break;
 
-                        //case "Add Fly Points to user":
-                        //    Console.Clear();
-                        //    Administration.AddFlyPointsToUser();
-                        //    Console.ReadKey();
-
+                        case "Add Fly Points to user":
+                            AnsiConsole.Clear();
+                            Administration.AddFlyPointsToUser();
+                            Console.ReadKey();
+                            break;
 
                         case "Manage Users":
                             var userMenuItems = new[] { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Present user with ID", "Back to previous menu" };
                             bool continueUsersLoop = true;
-
 
                             while (continueUsersLoop)
                             {
@@ -405,8 +395,5 @@ namespace Project_B
                 }
             }
         }
-
-
-    }     
+    }
 }
-
