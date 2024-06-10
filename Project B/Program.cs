@@ -349,10 +349,11 @@ namespace Project_B
                             }
                             break;
 
-                        //case "Add Fly Points to user":
-                        //    Console.Clear();
-                        //    Administration.AddFlyPointsToUser();
-                        //    Console.ReadKey();
+                        case "Add Fly Points to user":
+                            Console.Clear();
+                            Administration.AddFlyPointsToUser();
+                            Console.ReadKey();
+                            break;
 
 
                         case "Manage Users":

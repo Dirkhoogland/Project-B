@@ -59,7 +59,7 @@ namespace Project_B.Presentation
 
             Login.LoginLogic(email, password);
             Users user = Users.Getuser(email);
-            CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, 0, true);
+            CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, 0, user.FlyPoints, true);
             return currentUser;
         }
 
@@ -80,7 +80,7 @@ namespace Project_B.Presentation
                 Users user = Users.Getuser(email);
                 AnsiConsole.WriteLine($"[green]Successfully logged in user: {user.Name}[/]");
 
-                CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, user.rank, true);
+                CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, user.rank, user.FlyPoints, true);
                 return currentUser;
             }
         }
