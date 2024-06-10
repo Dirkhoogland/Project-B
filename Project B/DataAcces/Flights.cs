@@ -558,6 +558,7 @@ namespace Project_B.DataAcces
         public static List<Flight> FilterFlights()
         {
             AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[bold green]Filter Flights[/]");
             List<Flight> flights = GetFlights();
 
             if (flights == null)
@@ -609,13 +610,8 @@ namespace Project_B.DataAcces
         {
             AnsiConsole.Clear();
 
-            int consoleWidth = Console.WindowWidth;
             string title = "Add Flight";
-            int padding = (consoleWidth - title.Length) / 2;
-
-            AnsiConsole.WriteLine(new string('-', consoleWidth));
-            AnsiConsole.WriteLine($"{new string(' ', padding)}{title}{new string(' ', padding)}");
-            AnsiConsole.WriteLine(new string('-', consoleWidth));
+            AnsiConsole.MarkupLine($"[bold green]{title}[/]");
 
             var flightNumber = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter flight number: (1000-9999)[/]")
                 .Validate(value => value >= 1000 && value <= 9999, "[red]Please enter a number between 1000 and 9999[/]"));
