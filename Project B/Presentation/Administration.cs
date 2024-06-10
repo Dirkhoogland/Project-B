@@ -17,6 +17,7 @@ namespace Project_B.Presentation
 
             while (true)
             {
+                AnsiConsole.MarkupLine("[bold]All Users[/]");
                 var page = userlist.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
                 // Create a table and add columns
@@ -75,7 +76,8 @@ namespace Project_B.Presentation
 
             while (true)
             {
-                AnsiConsole.WriteLine($"Tickets from user: {userid}");
+                Console.Clear();
+                AnsiConsole.MarkupLine($"[bold green]Tickets from user: {userid}[/]");
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
 
@@ -133,6 +135,8 @@ namespace Project_B.Presentation
 
             while (true)
             {
+                Console.Clear();
+                AnsiConsole.MarkupLine("[bold green]All Tickets[/]");
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
 
@@ -193,7 +197,8 @@ namespace Project_B.Presentation
 
             while (true)
             {
-                AnsiConsole.WriteLine($"Tickets from flight: {flightid}");
+                Console.Clear();
+                AnsiConsole.MarkupLine($"[bold green]Tickets from flight: {flightid}[/]");
                 var page = userhistory.Skip(pageNumber * pageSize).Take(pageSize).ToList();
 
 
@@ -248,6 +253,8 @@ namespace Project_B.Presentation
 
             string rank = user.rank == 1 ? "Admin" : "User";
 
+            Console.Clear();
+            AnsiConsole.MarkupLine($"[bold green]Information of user with ID: {userid}[/]");
             // Create a table and add columns
             var table = new Table()
                 .Border(TableBorder.Rounded)

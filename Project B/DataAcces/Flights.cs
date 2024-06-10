@@ -260,6 +260,7 @@ namespace Project_B.DataAcces
 
             while (true)
             {
+                AnsiConsole.MarkupLine("[bold green]Update Flight[/]");
                 var flightTable = new Table().Border(TableBorder.Rounded);
                 flightTable.AddColumn("Time");
                 flightTable.AddColumn("Origin");
@@ -268,19 +269,10 @@ namespace Project_B.DataAcces
                 flightTable.AddColumn("Gate");
                 flightTable.AddColumn("Terminal");
 
-
                 int startRow = currentPage * rowsPerPage;
                 int endRow = Math.Min(startRow + rowsPerPage, flights.Count);
 
                 for (int i = startRow; i < endRow; i++)
-
-                if (Console.CursorTop >= flights.Count)
-                {
-                    Console.CursorTop = Console.CursorTop - flights.Count;
-                }
-
-                for (int i = 0; i < flights.Count; i++)
-
                 {
                     var flight = flights[i];
                     if (i == selectedRow)
