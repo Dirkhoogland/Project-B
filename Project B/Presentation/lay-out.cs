@@ -295,7 +295,7 @@ namespace Project_B.Presentation
                 }
                 var test = Console.ReadLine();
                 // creates the ticket inside the database
-                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, notes);
+                FlightLogic.Reserveseat(flightid, current.Id, seatplace, chosenSeat.Class, extraNotes);
                 chosenSeat.IsReserved = true;
                 Console.WriteLine("do you want to buy one more seat?");
                 string[] yesNoOptions2 = new string[] { "yes", "no" };

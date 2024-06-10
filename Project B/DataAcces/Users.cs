@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace Project_B.DataAcces
@@ -10,20 +11,21 @@ namespace Project_B.DataAcces
         public string Name;
         public string Password;
         public int rank;
+        public int FlyPoints;
 
-
-        public Users(int Id, string Email, string Name, string Password, int rank)
+        public Users(int Id, string Email, string Name, string Password, int rank, int FlyPoints)
         {
             this.Id = Id;
             this.Email = Email;
             this.Name = Name;
             this.Password = Password;
             this.rank = rank;
-         }
+            this.FlyPoints = FlyPoints;
+        }
 
         // retrieves all users into a list 
         public static List<Users> Getusers()
-         {
+        {
             string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
             string sql = "SELECT * FROM Users";
             List<Users> Userslist = new List<Users>();
@@ -41,7 +43,8 @@ namespace Project_B.DataAcces
                             string Name = rdr.GetString(2);
                             string Password = rdr.GetString(3);
                             int rank = rdr.GetInt32(4);
-                            Users user = new Users(Id, Email, Name, Password, rank);
+                            int FlyPoints = rdr.GetInt32(5);
+                            Users user = new Users(Id, Email, Name, Password, rank, FlyPoints);
                             Userslist.Add(user);
                         }
                     }
@@ -53,27 +56,27 @@ namespace Project_B.DataAcces
         // function to send user data to the database
         public static bool Newuser(string Email, string Name, string Password)
         {
-
-                string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
-                string sql = $"INSERT INTO Users(Email, Name, Password, Rank) VALUES('{Email}','{Name}', '{Password}', 0); ";
-                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True;";
+            string sql = $"INSERT INTO Users (Email, Name, Password, Rank, FlyPoints) VALUES ('{Email}', '{Name}', '{Password}', 0, 0);";
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
                 {
-                    c.Open();
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.ExecuteNonQuery();
                 }
-            
-         return true;
+            }
+
+            return true;
         }
         // gets users out of the database
         public static Users Getuser(string Email)
         {
-            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True;";
             string sql = @"SELECT * FROM Users WHERE Email = $Email LIMIT 1";
             int Id = 0;
             int Rank = 0;
+            int FlyPoints = 0;
             string UserEmail = string.Empty;
             string Name = string.Empty;
             string Password = string.Empty;
@@ -92,18 +95,20 @@ namespace Project_B.DataAcces
                             Name = rdr.GetString(2);
                             Password = rdr.GetString(3);
                             Rank = rdr.GetInt32(4);
+                            FlyPoints = rdr.GetInt32(5);
                         }
                     }
                 }
             }
             try
             {
-                Users user = new Users(Id, UserEmail, Name, Password, Rank);
+                Users user = new Users(Id, UserEmail, Name, Password, Rank, FlyPoints);
                 return user;
             }
-            catch(Exception ex) { return null; }
-            
-
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         public static Users GetuserbyId(int id)
         {
@@ -111,6 +116,7 @@ namespace Project_B.DataAcces
             string sql = @"SELECT * FROM Users WHERE ID = $id LIMIT 1";
             int Id = 0;
             int Rank = 0;
+            int FlyPoints = 0;
             string UserEmail = string.Empty;
             string Name = string.Empty;
             string Password = string.Empty;
@@ -129,19 +135,20 @@ namespace Project_B.DataAcces
                             Name = rdr.GetString(2);
                             Password = rdr.GetString(3);
                             Rank = rdr.GetInt32(4);
+                            FlyPoints = rdr.GetInt32(5);
                         }
                     }
                 }
             }
             try
             {
-                Users user = new Users(Id, UserEmail, Name, Password, Rank);
+                Users user = new Users(Id, UserEmail, Name, Password, Rank, FlyPoints);
                 return user;
             }
             catch (Exception ex) { return null; }
+        }
 
-
-        }// removes users from the database with email
+        // removes users from the database with email
         public static bool RemoveUser(string Email)
         {
             try
@@ -180,8 +187,45 @@ namespace Project_B.DataAcces
                 }
                 return true;
             }
-            catch (Exception ex) {  }
+            catch (Exception ex) { }
             return false;
+        }
+        // Updates user's fly points
+        public static void UpdateFlyPoints(int userId, int flyPoints)
+        {
+            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True;";
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string updateQuery = "UPDATE Users SET FlyPoints = @FlyPoints WHERE Id = @UserId";
+                using (var command = new SQLiteCommand(updateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.Parameters.AddWithValue("@FlyPoints", flyPoints);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Retrieves user's fly points
+        public static int GetFlyPoints(int userId)
+        {
+            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True;";
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+                string selectQuery = "SELECT FlyPoints FROM Users WHERE Id = @UserId";
+                using (var command = new SQLiteCommand(selectQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    var result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                }
+            }
+            return 0;
         }
     }
 }
