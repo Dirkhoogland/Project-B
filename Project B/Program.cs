@@ -345,6 +345,7 @@ namespace Project_B
                             Console.ReadKey();
                             break;
 
+
                         case "Manage Users":
                             var userMenuItems = new[] { "Present all users", "Present all tickets from a user", "Present all tickets", "Present all users from flight", "Present user with ID", "Back to previous menu" };
                             bool continueUsersLoop = true;

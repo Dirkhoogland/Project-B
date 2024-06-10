@@ -165,7 +165,10 @@ namespace Project_B.Presentation
 
             do
             {
-                Console.SetCursorPosition(0, Console.CursorTop - yesNoOptions.Length);
+                if (Console.CursorTop >= yesNoOptions.Length)
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop - yesNoOptions.Length);
+                }
                 for (int i = 0; i < yesNoOptions.Length; i++)
                 {
                     if (i == currentOption)
@@ -245,7 +248,7 @@ namespace Project_B.Presentation
                     int extraKg = Convert.ToInt32(Console.ReadLine());
                     int extraCost = extraKg * 4; // 4 euros per extra kg
 
-                    Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
+                    Console.WriteLine($"The extra cost for baggage is {extraCost} euros.");
 
                     chosenSeat.Price += extraCost; // Add extra cost to seat price
 
@@ -257,13 +260,16 @@ namespace Project_B.Presentation
                 }
 
                 Console.Clear(); // Clear console before asking about fly points
-                Console.WriteLine("Do you want to apply your fly points for a discount? (yes/no)");
+                Console.WriteLine("Do you want to apply your fly points for a discount?");
 
                 currentOption = 0;
 
                 do
                 {
-                    Console.SetCursorPosition(0, Console.CursorTop - yesNoOptions.Length - 1);
+                    if (Console.CursorTop >= yesNoOptions.Length)
+                    {
+                        Console.SetCursorPosition(0, Console.CursorTop - yesNoOptions.Length);
+                    }
                     for (int i = 0; i < yesNoOptions.Length; i++)
                     {
                         if (i == currentOption)
@@ -324,13 +330,16 @@ namespace Project_B.Presentation
                 int remainingPoints = flightLogic.GetFlyPoints(current.Id);
                 Console.WriteLine($"Your remaining fly points balance is {remainingPoints}.");
 
-                Console.WriteLine("Do you want to reserve the seat? (yes/no)");
+                Console.WriteLine("Do you want to reserve the seat?");
 
                 currentOption = 0;
 
                 do
                 {
-                    Console.SetCursorPosition(0, Console.CursorTop - yesNoOptions.Length - 1);
+                    if (Console.CursorTop >= yesNoOptions.Length)
+                    {
+                        Console.SetCursorPosition(0, Console.CursorTop - yesNoOptions.Length);
+                    }
                     for (int i = 0; i < yesNoOptions.Length; i++)
                     {
                         if (i == currentOption)
