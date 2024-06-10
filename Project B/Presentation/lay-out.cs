@@ -269,13 +269,15 @@ namespace Project_B.Presentation
 
                 currentOption = 0;
 
+                // Print the options once
+                for (int i = 0; i < yesNoOptions.Length; i++)
+                {
+                    Console.WriteLine(yesNoOptions[i]);
+                }
+
                 do
                 {
-                    int cursorTop = Console.CursorTop - yesNoOptions.Length - 1;
-                    if (cursorTop < 0)
-                    {
-                        cursorTop = 0;
-                    }
+                    int cursorTop = Console.CursorTop - yesNoOptions.Length; // Set cursorTop to the current cursor position
                     Console.SetCursorPosition(0, cursorTop);
                     for (int i = 0; i < yesNoOptions.Length; i++)
                     {
