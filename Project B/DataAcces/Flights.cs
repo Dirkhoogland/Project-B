@@ -260,6 +260,7 @@ namespace Project_B.DataAcces
 
             while (true)
             {
+                AnsiConsole.MarkupLine("[bold green]Update Flight[/]");
                 var flightTable = new Table().Border(TableBorder.Rounded);
                 flightTable.AddColumn("Time");
                 flightTable.AddColumn("Origin");
@@ -268,19 +269,10 @@ namespace Project_B.DataAcces
                 flightTable.AddColumn("Gate");
                 flightTable.AddColumn("Terminal");
 
-
                 int startRow = currentPage * rowsPerPage;
                 int endRow = Math.Min(startRow + rowsPerPage, flights.Count);
 
                 for (int i = startRow; i < endRow; i++)
-
-                if (Console.CursorTop >= flights.Count)
-                {
-                    Console.CursorTop = Console.CursorTop - flights.Count;
-                }
-
-                for (int i = 0; i < flights.Count; i++)
-
                 {
                     var flight = flights[i];
                     if (i == selectedRow)
@@ -558,6 +550,7 @@ namespace Project_B.DataAcces
         public static List<Flight> FilterFlights()
         {
             AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[bold green]Filter Flights[/]");
             List<Flight> flights = GetFlights();
 
             if (flights == null)
@@ -609,35 +602,34 @@ namespace Project_B.DataAcces
         {
             AnsiConsole.Clear();
 
-            int consoleWidth = Console.WindowWidth;
             string title = "Add Flight";
-            int padding = (consoleWidth - title.Length) / 2;
+            AnsiConsole.MarkupLine($"[bold green]{title}[/]");
 
-            AnsiConsole.WriteLine(new string('-', consoleWidth));
-            AnsiConsole.WriteLine($"{new string(' ', padding)}{title}{new string(' ', padding)}");
-            AnsiConsole.WriteLine(new string('-', consoleWidth));
+            var flightNumber = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter flight number: (1000-9999)[/]")
+                .Validate(value => value >= 1000 && value <= 9999, "[red]Please enter a number between 1000 and 9999[/]"));
 
-            var flightNumber = AnsiConsole.Prompt(new TextPrompt<int>("Enter flight number: (1000-9999)")
-                .Validate(value => value >= 1000 && value <= 9999, "Please enter a number between 1000 and 9999"));
+            var destination = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter destination:[/]")
+                .Validate(value => !int.TryParse(value, out _), "[red]Destination cannot be a number.[/]"));
+            destination = char.ToUpper(destination[0]) + destination.Substring(1).ToLower();
 
-            var destination = AnsiConsole.Ask<string>("Enter destination: ");
+            var origin = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter origin:[/]")
+                .Validate(value => !int.TryParse(value, out _), "[red]Origin cannot be a number.[/]"));
+            origin = char.ToUpper(origin[0]) + origin.Substring(1).ToLower();
 
-            var origin = AnsiConsole.Ask<string>("Enter origin: ");
-
-            var departureTimeString = AnsiConsole.Prompt(new TextPrompt<string>("Enter departure time: (dd/MM/yyyy HH:mm)")
-                .Validate(value => DateTime.TryParseExact(value, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) && date > DateTime.Now, "Please enter a future date and time in the format dd/MM/yyyy HH:mm"));
+            var departureTimeString = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter departure time: (dd/MM/yyyy HH:mm)[/]")
+                .Validate(value => DateTime.TryParseExact(value, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) && date > DateTime.Now, "[red]Please enter a future date and time in the format dd/MM/yyyy HH:mm[/]"));
 
             DateTime departureTime = DateTime.ParseExact(departureTimeString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
 
-            var terminal = AnsiConsole.Prompt(new TextPrompt<int>("Enter terminal: (1-4)")
-                .Validate(value => value >= 1 && value <= 4, "Please enter a number between 1 and 4"));
+            var terminal = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter terminal: (1-4)[/]")
+                .Validate(value => value >= 1 && value <= 4, "[red]Please enter a number between 1 and 4[/]"));
 
-            var gate = AnsiConsole.Prompt(new TextPrompt<int>("Enter gate: (1-24)")
-                .Validate(value => value >= 1 && value <= 24, "Please enter a number between 1 and 24"));
+            var gate = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter gate: (1-24)[/]")
+                .Validate(value => value >= 1 && value <= 24, "[red]Please enter a number between 1 and 24[/]"));
 
             var aircraftTypeOptions = new[] { "Boeing 787", "Boeing 737", "Airbus 330", "Exit" };
             var aircraftType = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("Enter aircraft type: ")
+                .Title("[blue]Enter aircraft type:[/]")
                 .AddChoices(aircraftTypeOptions));
             if (aircraftType == "Exit") return;
 
