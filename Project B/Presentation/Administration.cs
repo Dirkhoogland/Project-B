@@ -145,6 +145,7 @@ namespace Project_B.Presentation
                     .Border(TableBorder.Rounded)
                     .AddColumn("Flight")
                     .AddColumn("User")
+                    .AddColumn("Username")
                     .AddColumn("Seat")
                     .AddColumn("Class")
                     .AddColumn("Origin")
@@ -155,7 +156,7 @@ namespace Project_B.Presentation
                 // Add rows to the table
                 foreach (Bookinghistory history in page)
                 {
-                    table.AddRow(history.FlightId.ToString(), history.UserId.ToString(), history.Seat, history.SeatClass, history.Origin, history.Destination, history.Departuretime.ToString(), history.extranotes);
+                    table.AddRow(history.FlightId.ToString(), history.UserId.ToString(),history.Name, history.Seat, history.SeatClass, history.Origin, history.Destination, history.Departuretime.ToString(), history.extranotes);
 
                 }
 

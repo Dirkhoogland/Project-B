@@ -1,14 +1,10 @@
-
 ﻿using System.Data;
 using System.Data.SQLite;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Project_B.DataAcces
 {
     public class DataAccess
     {
-
         public static void Database()
         {
             CreateTable();
@@ -18,11 +14,11 @@ namespace Project_B.DataAcces
 
         public static string databasePath
         {
-           get
+            get
             {
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
-         }
+        }
 
         static void CreateTable()
         {
@@ -35,7 +31,8 @@ namespace Project_B.DataAcces
                     "Email VARCHAR(255)," +
                     "Name VARCHAR(255)," +
                     "Password VARCHAR(225)," +
-                    "Rank INTEGER)";
+                    "Rank INTEGER," +
+                    "FlyPoints INTEGER DEFAULT 0)";
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
                     c.Open();
@@ -44,21 +41,21 @@ namespace Project_B.DataAcces
                         cmd.ExecuteNonQuery();
                     }
                 }
-                
+
                 string sqlCommands =
-               "CREATE TABLE IF NOT EXISTS Flights(" +
-               "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
-               "FlightNumber VARCHAR(255)," +
-               "Destination VARCHAR(255)," +
-               "Origin VARCHAR(255)," +
-               "DepartureTime DATETIME," +
-               "Terminal VARCHAR(255)," +
-               "AircraftType VARCHAR(255)," +
-               "Gate VARCHAR(255)," +
-               "Seats INTEGER," +
-               "AvailableSeats INTEGER," +
-               "Airline VARCHAR(255)," +
-               "Distance INTEGER)";
+                   "CREATE TABLE IF NOT EXISTS Flights(" +
+                   "FlightID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                   "FlightNumber VARCHAR(255)," +
+                   "Destination VARCHAR(255)," +
+                   "Origin VARCHAR(255)," +
+                   "DepartureTime DATETIME," +
+                   "Terminal VARCHAR(255)," +
+                   "AircraftType VARCHAR(255)," +
+                   "Gate VARCHAR(255)," +
+                   "Seats INTEGER," +
+                   "AvailableSeats INTEGER," +
+                   "Airline VARCHAR(255)," +
+                   "Distance INTEGER)";
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
                     c.Open();
@@ -66,9 +63,8 @@ namespace Project_B.DataAcces
                     {
                         cmd.ExecuteNonQuery();
                     }
-
                 }
-                
+
                 string sql_tickets = "CREATE TABLE Tickets(" +
                 "TicketID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "Email VARCHAR(255)," +
@@ -85,7 +81,7 @@ namespace Project_B.DataAcces
                 "Origin VARCHAR(255)," +
                 "Distance INTEGER," +
                 "Extranotes VARCHAR(255)," +
-                "FOREIGN KEY(FlightID) REFERENCES Flights(FlightID)" +
+                "FOREIGN KEY(FlightID) REFERENCES Flights(FlightID)," +
                 "FOREIGN KEY(UserID) REFERENCES Users(ID))";
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
@@ -95,21 +91,8 @@ namespace Project_B.DataAcces
                         cmd.ExecuteNonQuery();
                     }
                 }
-
-                string sqlFlyPoints = "CREATE TABLE IF NOT EXISTS FlyPoints (" +
-                                      "UserId INTEGER PRIMARY KEY," +
-                                      "Points INTEGER)";
-                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
-                {
-                    c.Open();
-                    using (SQLiteCommand cmd = new SQLiteCommand(sqlFlyPoints, c))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                }
             }
             catch (Exception ex) { }
-
         }
 
         static void InsertData()
@@ -126,75 +109,29 @@ namespace Project_B.DataAcces
                     {
                         if (rdr.Read() == false)
                         {
-                            sql = "INSERT INTO Users(Email, Name, Password, Rank) VALUES('Email','Dirk', 'Password', 1);";
+                            sql = "INSERT INTO Users(Email, Name, Password, Rank, FlyPoints) VALUES('Email','Dirk', 'Password', 1, 0);";
                             using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
                             {
                                 cmd1.ExecuteNonQuery();
                             }
 
-                            sql = "INSERT INTO Users(Email, Name, Password, Rank) VALUES('Email1','Berat', 'Password', 1); ";
+                            sql = "INSERT INTO Users(Email, Name, Password, Rank, FlyPoints) VALUES('Email1','Berat', 'Password', 1, 0);";
                             using (SQLiteCommand cmd2 = new SQLiteCommand(sql, c))
                             {
                                 cmd2.ExecuteNonQuery();
                             }
 
-                            sql = "INSERT INTO Users(Email, Name, Password, Rank) VALUES('Email2','Mitchel', 'Password', 0); ";
+                            sql = "INSERT INTO Users(Email, Name, Password, Rank, FlyPoints) VALUES('Email2','Mitchel', 'Password', 0, 0);";
                             using (SQLiteCommand cmd3 = new SQLiteCommand(sql, c))
                             {
                                 cmd3.ExecuteNonQuery();
                             }
-
-
-                            DateTime time = DateTime.Now;
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk','3', 'Business', 1, 1, '11', '{time}', 'Berlin',0,'Amsterdam', 150 , '-');";
-                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
+                            
+                            sql = "INSERT INTO Users(Email, Name, Password, Rank, FlyPoints) VALUES('Email3','Talha', 'Password', 1, 0);";
+                            using (SQLiteCommand cmd3 = new SQLiteCommand(sql, c))
                             {
-                                cmd1.ExecuteNonQuery();
+                                cmd3.ExecuteNonQuery();
                             }
-
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name, Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('Email1','{time}', 'Berat', '2','Business', 1, 2, '11', '{time}','Berlin',0, 'Amsterdam',150 ,  '-');";
-
-
-                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
-                            {
-                                cmd1.ExecuteNonQuery();
-                            }
-
-
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,  Seat, SeatClass, FlightID, UserID, Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes ) VALUES('Email','{time}', 'Dirk', '1','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam', 150  , '-');";
-                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
-                            {
-                                cmd1.ExecuteNonQuery();
-                            }
-
-
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Retour, Origin, Distance, Extranotes) VALUES('Email','{time}', 'Dirk','4','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam',150 , '-')";
-                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
-                            {
-                                cmd1.ExecuteNonQuery();
-                            }
-
-
-
-                           
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID ,Gate, Departuretime, Destination,Retour,Origin, Distance ,Extranotes) VALUES('Email','{time}', 'Dirk','5','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam', 150 , '-');";
-                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
-                            {
-                                cmd1.ExecuteNonQuery();
-                            }
-
-
-
-                            sql = $"INSERT INTO Tickets(Email, PurchaseTime, Name,Seat, SeatClass,FlightID, UserID, Gate, Departuretime, Destination,Retour,Origin, Distance ,Extranotes) VALUES('Email','{time}', 'Dirk','6','Business', 1, 1, '11', '{time}', 'Berlin',0, 'Amsterdam', 150 , '-');";
-                            using (SQLiteCommand cmd1 = new SQLiteCommand(sql, c))
-                            {
-                                cmd1.ExecuteNonQuery();
-                            }
-
                             Flight.CreateFlightBoeing737();
                             CreateTestFlights();
                             CreateUsers();
@@ -252,7 +189,6 @@ namespace Project_B.DataAcces
             return aircraftType;
         }
 
-
         public static void ReadData()
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
@@ -270,36 +206,36 @@ namespace Project_B.DataAcces
                             string Email = rdr.GetString(1);
                             string Name = rdr.GetString(2);
                             string Password = rdr.GetString(3);
-                            Console.WriteLine(Id + " "+ Email + " "+ Name + " "+ Password);
+                            Console.WriteLine(Id + " " + Email + " " + Name + " " + Password);
                         }
                     }
                 }
             }
         }
 
-
-        public void UpdateFlyPoints(int userId, int flyPoints)
+        public static void UpdateFlyPoints(int userId, int flyPoints)
         {
-            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True;";
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
-                string insertOrUpdateQuery = "INSERT OR REPLACE INTO FlyPoints (UserId, Points) VALUES (@UserId, @Points)";
-                using (var command = new SQLiteCommand(insertOrUpdateQuery, connection))
+                string updateQuery = "UPDATE Users SET FlyPoints = @FlyPoints WHERE Id = @UserId";
+                using (var command = new SQLiteCommand(updateQuery, connection))
                 {
                     command.Parameters.AddWithValue("@UserId", userId);
-                    command.Parameters.AddWithValue("@Points", flyPoints);
+                    command.Parameters.AddWithValue("@FlyPoints", flyPoints);
                     command.ExecuteNonQuery();
                 }
             }
         }
-        public int GetFlyPoints(int userId)
+
+        public static int GetFlyPoints(int userId)
         {
-            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True;";
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
-                string selectQuery = "SELECT Points FROM FlyPoints WHERE UserId = @UserId";
+                string selectQuery = "SELECT FlyPoints FROM Users WHERE Id = @UserId";
                 using (var command = new SQLiteCommand(selectQuery, connection))
                 {
                     command.Parameters.AddWithValue("@UserId", userId);
@@ -312,6 +248,5 @@ namespace Project_B.DataAcces
             }
             return 0;
         }
-
     }
 }

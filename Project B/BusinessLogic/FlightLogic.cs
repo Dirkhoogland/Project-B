@@ -1,4 +1,6 @@
 using Project_B.DataAcces;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Project_B.BusinessLogic
 {
@@ -51,41 +53,51 @@ namespace Project_B.BusinessLogic
             return flights;
         }
 
-
-        public static void Reserveseat(int flightid,int userid, string seat, string seatclass, string extranotes)
-
+        public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
         {
             Flight.reserveseat(flightid, userid, seat, seatclass, extranotes);
         }
 
-        public int GetFlyPoints(int userId)
+        public static int GetFlyPoints(int userId)
         {
-            DataAccess dataAccess = new DataAccess();
-            return dataAccess.GetFlyPoints(userId);
+            return Users.GetFlyPoints(userId);
         }
 
         public void AddFlyPoints(int userId, int kilometers)
         {
-            int flyPoints = new DataAccess().GetFlyPoints(userId);
-            flyPoints += kilometers / 2000; // Uçuş mesafesine göre puan ekleyin, 2000 km başına 1 puan
-            DataAccess dataAccess = new DataAccess();
-            dataAccess.UpdateFlyPoints(userId, flyPoints);
+            int flyPoints = Users.GetFlyPoints(userId);
+            flyPoints += kilometers / 2000; // 1 fly point per 2000 kilometers
+            Users.UpdateFlyPoints(userId, flyPoints);
         }
 
         public bool RedeemFlyPoints(int userId)
         {
-            DataAccess dataAccess = new DataAccess();
-            int flyPoints = dataAccess.GetFlyPoints(userId);
+            int flyPoints = Users.GetFlyPoints(userId);
 
             if (flyPoints >= 20)
             {
                 flyPoints -= 20;
-                dataAccess.UpdateFlyPoints(userId, flyPoints);
+                Users.UpdateFlyPoints(userId, flyPoints);
                 return true;
             }
 
             return false;
         }
 
+        public bool CanRedeemFlyPoints(int userId)
+        {
+            int flyPoints = Users.GetFlyPoints(userId);
+            return flyPoints >= 20;
+        }
+
+        public bool RefundFlyPoints(int userId)
+        {
+            int flyPoints = Users.GetFlyPoints(userId);
+
+            flyPoints += 20; // Refund the 20 points
+
+            Users.UpdateFlyPoints(userId, flyPoints);
+            return true;
+        }
     }
 }
