@@ -88,7 +88,7 @@ namespace Project_B
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
-                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Logout", "Exit" };
+                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Download Ticket Data", "Logout", "Exit" };
                 var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
 
 
