@@ -90,7 +90,7 @@ namespace Project_B
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
                 var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Download Data Menu", "Logout", "Exit" };
                 var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
-                var downloadDataMenu = new[] { "Download Ticket Data", "Download Flight Data", "Download User Data", "Back to previous menu" };
+                var downloadDataMenu = new[] { "Download Ticket Data", "Download Flight Data", "Download User Data", "Load Flights from CSV", "Back to previous menu" };
 
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
@@ -320,7 +320,7 @@ namespace Project_B
                             }
                             break;
                         case "Download Data Menu":
-                            var downloadDataMenuItems = new[] { "Download Ticket Data", "Download Flight Data", "Download User Data", "Back to previous menu" };
+                            var downloadDataMenuItems = new[] { "Download Ticket Data", "Download Flight Data", "Download User Data", "Load Flights from CSV", "Back to previous menu" };
                             bool continueDownloadDataLoop = true;
                             while (continueDownloadDataLoop)
                             {
@@ -354,6 +354,10 @@ namespace Project_B
                                         Console.WriteLine("Data has been downloaded. Check your Documents folder on your personal computer.");
                                         Console.WriteLine("Press enter to continue.");
                                         Console.ReadLine();
+                                        break;
+                                    case "Load Flights from CSV":
+                                        Console.Clear();
+                                        LoadFromCSV.LoadFlightsFromCSV(DataAccess.databasePath);
                                         break;
                                     case "Back to previous menu":
                                         continueDownloadDataLoop = false;
