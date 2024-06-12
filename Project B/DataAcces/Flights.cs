@@ -368,7 +368,7 @@ namespace Project_B.DataAcces
                                         }
                                         else
                                         {
-                                            AnsiConsole.WriteLine("[red]Invalid input. Please enter a number between 1000 and 9999.[/]");
+                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1000 and 9999.[/]");
                                         }
                                     }
                                     break;
@@ -411,12 +411,12 @@ namespace Project_B.DataAcces
                                             }
                                             else
                                             {
-                                                AnsiConsole.WriteLine("[red]Invalid input. The departure time should be in the future.[/]");
+                                                AnsiConsole.MarkupLine("[red]Invalid input. The departure time should be in the future.[/]");
                                             }
                                         }
                                         else
                                         {
-                                            AnsiConsole.WriteLine("[red]Invalid input. Please enter a valid date and time in the format dd/MM/yyyy HH:mm.[/]");
+                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid date and time in the format dd/MM/yyyy HH:mm.[/]");
                                         }
                                     }
                                     break;
@@ -433,7 +433,7 @@ namespace Project_B.DataAcces
                                         }
                                         else
                                         {
-                                            AnsiConsole.WriteLine("[red]Invalid input. Please enter a number between 1 and 4.[/]");
+                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1 and 4.[/]");
                                         }
                                     }
                                     break;
@@ -450,7 +450,7 @@ namespace Project_B.DataAcces
                                         }
                                         else
                                         {
-                                            AnsiConsole.WriteLine("[red]Invalid input. Please enter a number between 1 and 24.[/]");
+                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1 and 24.[/]");
                                         }
                                     }
                                     break;
@@ -460,12 +460,13 @@ namespace Project_B.DataAcces
                     }
 
                     // Display the original and updated flight information
+                    Console.Clear();
                     AnsiConsole.MarkupLine($"[red]Original flight information:[/]\n{selectedFlight}\n");
                     AnsiConsole.MarkupLine($"[green]Updated flight information:[/]\n{flightToUpdate}");
 
                     // Ask the user if they want to save the changes
                     var saveChangesPrompt = new SelectionPrompt<string>()
-                        .Title("Do you want to save the changes?")
+                        .Title("\nDo you want to save the changes?")
                         .AddChoices(new List<string> { "Yes", "No" });
 
                     var saveChanges = AnsiConsole.Prompt(saveChangesPrompt) == "Yes";
