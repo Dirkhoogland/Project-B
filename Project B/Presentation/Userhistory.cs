@@ -27,7 +27,7 @@ namespace Project_B.Presentation
             while (userhistoryloop == true)
             {
                 AnsiConsole.Clear();
-
+                AnsiConsole.MarkupLine("[bold green]Your booking history:[/]");
                 var table = new Table()
                     .Border(TableBorder.Rounded)
                     .AddColumn(new TableColumn("[u]Flight ID[/]").Centered())

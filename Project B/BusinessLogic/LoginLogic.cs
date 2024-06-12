@@ -19,8 +19,20 @@ namespace Project_B.BusinessLogic
 
         public static CurrentUser Guestlogin(string Email)
         {
-            CurrentUser user = new(0, Email, "Guest", "Guest", 0, true);
+            CurrentUser user = new(0, Email, "Guest", "Guest", 0, 0, true);
             return user;
+        }
+    
+        public static CurrentUser LoginUser(string Email, string Password)
+        {
+            Users user = Users.Getuser(Email);
+            if (user == null || user.Password != Password)
+            {
+                return null;
+            }
+
+            CurrentUser currentUser = new CurrentUser(user.Id, user.Email, user.Name, user.Password, user.rank, user.FlyPoints, true);
+            return currentUser;
         }
     }
 }

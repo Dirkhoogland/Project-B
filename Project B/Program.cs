@@ -155,6 +155,7 @@ namespace Project_B
                         case "View Flights":
                             bool continueViewFlights = true;
                             AnsiConsole.Clear();
+                            AnsiConsole.MarkupLine("[bold green]View Flights[/]");
                             List<Flight> flights = Flight.GetFlights(); // get the list of flights without any filters
                             int selectedFlightIndex = 0;
                             isFilterActive = false;
@@ -162,7 +163,7 @@ namespace Project_B
                             while (continueViewFlights)
                             {
                                 AnsiConsole.Clear();
-
+                                AnsiConsole.MarkupLine("[bold green]View Flights[/]");
                                 // Add the flights for the current page to the options
                                 var pagedFlights = flights.Skip(currentPage * itemsPerPage).Take(itemsPerPage).ToList();
 
@@ -292,7 +293,7 @@ namespace Project_B
                                 AnsiConsole.Clear();
                                 var flightMenuIndex = AnsiConsole.Prompt(
                                     new SelectionPrompt<string>()
-                                        .Title("Manage Flights:")
+                                        .Title("[bold green]Manage Flights:[/]")
                                         .PageSize(10)
                                         .AddChoices(flightMenuItems));
 
@@ -348,10 +349,11 @@ namespace Project_B
                             }
                             break;
 
-                        //case "Add Fly Points to user":
-                        //    Console.Clear();
-                        //    Administration.AddFlyPointsToUser();
-                        //    Console.ReadKey();
+                        case "Add Fly Points to user":
+                            Console.Clear();
+                            Administration.AddFlyPointsToUser();
+                            Console.ReadKey();
+                            break;
 
 
                         case "Manage Users":
@@ -364,7 +366,7 @@ namespace Project_B
                                 AnsiConsole.Clear();
                                 var userMenuIndex = AnsiConsole.Prompt(
                                     new SelectionPrompt<string>()
-                                        .Title("Manage Users:")
+                                        .Title("[bold green]Manage Users:[/]")
                                         .PageSize(10)
                                         .AddChoices(userMenuItems));
 
