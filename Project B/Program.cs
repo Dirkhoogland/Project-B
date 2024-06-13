@@ -10,6 +10,7 @@ namespace Project_B
     {
         public class Program
         {
+              
             public static Flight SelectFlight(List<Flight> flights)
             {
                 var flightPrompt = new SelectionPrompt<Flight>()
@@ -83,6 +84,10 @@ namespace Project_B
             }
             public static void Main(string[] args)
             {
+<<<<<<< Updated upstream
+=======
+                Console.OutputEncoding = System.Text.Encoding.Unicode;
+>>>>>>> Stashed changes
                 DataAccess.Database();
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };
