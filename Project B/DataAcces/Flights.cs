@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -163,13 +164,12 @@ namespace Project_B.DataAcces
                 connection.Open();
 
                 // Create a new command
-                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Gate = @Gate WHERE FlightID = @FlightID", connection))
+                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Gate = @Gate WHERE FlightID = @FlightID", connection))
                 {
                     // Add the parameters
                     command.Parameters.AddWithValue("@DepartureTime", flightToUpdate.DepartureTime);
                     command.Parameters.AddWithValue("@Terminal", flightToUpdate.Terminal);
                     command.Parameters.AddWithValue("@FlightNumber", flightToUpdate.FlightNumber);
-                    command.Parameters.AddWithValue("@AircraftType", flightToUpdate.AircraftType);
                     command.Parameters.AddWithValue("@Seats", flightToUpdate.Seats);
                     command.Parameters.AddWithValue("@AvailableSeats", flightToUpdate.AvailableSeats);
                     command.Parameters.AddWithValue("@Destination", flightToUpdate.Destination);
@@ -341,7 +341,7 @@ namespace Project_B.DataAcces
 
                     AnsiConsole.Clear();
 
-                    string[] properties = { "Flight Number", "Destination", "Origin", "Departure Time", "Terminal", "Gate", "Aircraft Type"};
+                    string[] properties = { "Flight Number", "Destination", "Origin", "Departure Time", "Terminal", "Gate"};
 
                     foreach (string property in properties)
                     {
@@ -358,50 +358,115 @@ namespace Project_B.DataAcces
                             {
                                 case "Flight Number":
                                     // Update flight number
-                                    flightToUpdate.FlightNumber = AnsiConsole.Ask<string>("Enter new flight number (1000-9999): ");
+                                    while (true)
+                                    {
+                                        string flightNumberInput = AnsiConsole.Ask<string>("[blue]Enter new flight number (1000-9999): [/]");
+                                        if (int.TryParse(flightNumberInput, out int flightNumber) && flightNumber >= 1000 && flightNumber <= 9999)
+                                        {
+                                            flightToUpdate.FlightNumber = flightNumberInput;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1000 and 9999.[/]");
+                                        }
+                                    }
                                     break;
 
                                 case "Destination":
                                     // Update destination
-                                    flightToUpdate.Destination = AnsiConsole.Ask<string>("Enter new destination: ");
+                                    while (true)
+                                    {
+                                        string destinationInput = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter new destination: [/]")
+                                            .Validate(value => value.All(char.IsLetter), "[red]Destination should only contain letters.[/]"));
+                                        destinationInput = char.ToUpper(destinationInput[0]) + destinationInput.Substring(1).ToLower();
+                                        flightToUpdate.Destination = destinationInput;
+                                        break;
+                                    }
                                     break;
 
                                 case "Origin":
                                     // Update origin
-                                    flightToUpdate.Origin = AnsiConsole.Ask<string>("Enter new origin: ");
+                                    while (true)
+                                    {
+                                        string originInput = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter new origin: [/]")
+                                            .Validate(value => value.All(char.IsLetter), "[red]Origin should only contain letters.[/]"));
+                                        originInput = char.ToUpper(originInput[0]) + originInput.Substring(1).ToLower();
+                                        flightToUpdate.Origin = originInput;
+                                        break;
+                                    }
                                     break;
 
                                 case "Departure Time":
                                     // Update departure time
-                                    string departureTimeString = AnsiConsole.Ask<string>("Enter new departure time (dd/MM/yyyy HH:mm): ");
-                                    flightToUpdate.DepartureTime = DateTime.ParseExact(departureTimeString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                                    while (true)
+                                    {
+                                        string departureTimeString = AnsiConsole.Ask<string>("[blue]Enter new departure time (dd/MM/yyyy HH:mm): [/]");
+                                        if (DateTime.TryParseExact(departureTimeString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime departureTime))
+                                        {
+                                            if (departureTime > DateTime.Now)
+                                            {
+                                                flightToUpdate.DepartureTime = departureTime;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                AnsiConsole.MarkupLine("[red]Invalid input. The departure time should be in the future.[/]");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid date and time in the format dd/MM/yyyy HH:mm.[/]");
+                                        }
+                                    }
                                     break;
 
                                 case "Terminal":
                                     // Update terminal
-                                    flightToUpdate.Terminal = AnsiConsole.Ask<string>("Enter new terminal: ");
+                                    while (true)
+                                    {
+                                        string terminalInput = AnsiConsole.Ask<string>("[blue]Enter new terminal (1-4): [/]");
+                                        if (int.TryParse(terminalInput, out int terminal) && terminal >= 1 && terminal <= 4)
+                                        {
+                                            flightToUpdate.Terminal = terminal.ToString();
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1 and 4.[/]");
+                                        }
+                                    }
                                     break;
 
                                 case "Gate":
                                     // Update gate
-                                    flightToUpdate.Gate = AnsiConsole.Ask<string>("Enter new gate: ");
+                                    while (true)
+                                    {
+                                        string gateInput = AnsiConsole.Ask<string>("[blue]Enter new gate (1-24): [/]");
+                                        if (int.TryParse(gateInput, out int gate) && gate >= 1 && gate <= 24)
+                                        {
+                                            flightToUpdate.Gate = gate.ToString();
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1 and 24.[/]");
+                                        }
+                                    }
                                     break;
 
-                                case "Aircraft Type":
-                                    // Update aircraft type
-                                    flightToUpdate.AircraftType = AnsiConsole.Ask<string>("Enter new aircraft type: ");
-                                    break;
                             }
                         }
                     }
 
                     // Display the original and updated flight information
-                    AnsiConsole.MarkupLine($"[red]Original flight information:[/]\n{selectedFlight}");
+                    Console.Clear();
+                    AnsiConsole.MarkupLine($"[red]Original flight information:[/]\n{selectedFlight}\n");
                     AnsiConsole.MarkupLine($"[green]Updated flight information:[/]\n{flightToUpdate}");
 
                     // Ask the user if they want to save the changes
                     var saveChangesPrompt = new SelectionPrompt<string>()
-                        .Title("Do you want to save the changes?")
+                        .Title("\nDo you want to save the changes?")
                         .AddChoices(new List<string> { "Yes", "No" });
 
                     var saveChanges = AnsiConsole.Prompt(saveChangesPrompt) == "Yes";
@@ -415,7 +480,6 @@ namespace Project_B.DataAcces
                         selectedFlight.DepartureTime = flightToUpdate.DepartureTime;
                         selectedFlight.Terminal = flightToUpdate.Terminal;
                         selectedFlight.Gate = flightToUpdate.Gate;
-                        selectedFlight.AircraftType = flightToUpdate.AircraftType;
 
                         // Save the updated flight information
                         UpdateFlight(selectedFlight);

@@ -272,17 +272,27 @@ namespace Project_B.Presentation
         // add Fly Points to a user
         public static void AddFlyPointsToUser()
         {
-            Console.WriteLine("Enter the user ID to add Fly Points to:");
-            int userId = Convert.ToInt32(Console.ReadLine());
+            AnsiConsole.MarkupLine("[blue]Enter the user ID to add Fly Points to:[/]");
+            int userId;
+            while (!int.TryParse(Console.ReadLine(), out userId))
+            {
+                AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number.[/]");
+            }
 
-            Console.WriteLine("Enter the number of kilometers flown:");
-            int kilometers = Convert.ToInt32(Console.ReadLine());
+            AnsiConsole.MarkupLine("[blue]Enter the number of kilometers flown:[/]");
+            int kilometers;
+            while (!int.TryParse(Console.ReadLine(), out kilometers))
+            {
+                AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number.[/]");
+            }
 
             FlightLogic flightLogic = new FlightLogic();
+            int currentFlyPoints = FlightLogic.GetFlyPoints(userId);
             flightLogic.AddFlyPoints(userId, kilometers);
+            int newFlyPoints = FlightLogic.GetFlyPoints(userId);
+            int flyPointsAdded = newFlyPoints - currentFlyPoints;
 
-            Console.WriteLine("Fly Points added successfully.");
-
+            AnsiConsole.MarkupLine($"[green]Added {flyPointsAdded} Fly Points to user {userId}.[/]");
         }
     }
 }

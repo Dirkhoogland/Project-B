@@ -83,13 +83,14 @@ namespace Project_B
             }
             public static void Main(string[] args)
             {
-
+                Console.OutputEncoding = System.Text.Encoding.Unicode;
                 DataAccess.Database();
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
-                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Logout", "Exit" };
+                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Download Data Menu", "Logout", "Exit" };
                 var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
+                var downloadDataMenu = new[] { "Download Ticket Data", "Download Flight Data", "Download User Data", "Load Flights from CSV", "Back to previous menu" };
 
 
                 string[] menuItems = menuItemsGuest; // Default to guest menu
@@ -318,17 +319,52 @@ namespace Project_B
                                 }
                             }
                             break;
+                        case "Download Data Menu":
+                            var downloadDataMenuItems = new[] { "Download Ticket Data", "Download Flight Data", "Download User Data", "Load Flights from CSV", "Back to previous menu" };
+                            bool continueDownloadDataLoop = true;
+                            while (continueDownloadDataLoop)
+                            {
+                                AnsiConsole.Clear();
+                                var downloadDataIndex = AnsiConsole.Prompt(
+                                    new SelectionPrompt<string>()
+                                        .Title("[bold green]Download Data Menu:[/]")
+                                        .PageSize(10)
+                                        .AddChoices(downloadDataMenuItems));
 
-                        // Download ticket data in JSON format
-                        case "Download Ticket Data":
-                            Console.Clear();
-                            JSONconversion.Create_Json();
-                            Console.WriteLine("Data has been downloaded. Check your Documents folder on your personal computer.");
-                            Console.WriteLine("Press enter to continue.");
-                            Console.ReadLine();
+                                switch (downloadDataIndex)
+                                {
+                                    case "Download Ticket Data":
+                                        Console.Clear();
+                                        JSONconversion.Create_Json();
+                                        Console.WriteLine("Data has been downloaded. Check your Documents folder on your personal computer.");
+                                        Console.WriteLine("Press enter to continue.");
+                                        Console.ReadLine();
+                                        break;
+
+                                    case "Download Flight Data":
+                                        Console.Clear();
+                                        JSONconversionFlights.Create_Json_flights();
+                                        Console.WriteLine("Data has been downloaded. Check your Documents folder on your personal computer.");
+                                        Console.WriteLine("Press enter to continue.");
+                                        Console.ReadLine();
+                                        break;
+                                    case "Download User Data":
+                                        Console.Clear();
+                                        JSONconversionUsers.Create_Json_users();
+                                        Console.WriteLine("Data has been downloaded. Check your Documents folder on your personal computer.");
+                                        Console.WriteLine("Press enter to continue.");
+                                        Console.ReadLine();
+                                        break;
+                                    case "Load Flights from CSV":
+                                        Console.Clear();
+                                        LoadFromCSV.LoadFlightsFromCSV(DataAccess.databasePath);
+                                        break;
+                                    case "Back to previous menu":
+                                        continueDownloadDataLoop = false;
+                                        break;
+                                }
+                            }
                             break;
-
-
                         case "Flight History":
                             // Clear the console
                             AnsiConsole.Clear();
