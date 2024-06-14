@@ -164,7 +164,7 @@ namespace Project_B.DataAcces
                 connection.Open();
 
                 // Create a new command
-                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, AircraftType = @AircraftType, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Gate = @Gate WHERE FlightID = @FlightID", connection))
+                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET DepartureTime = @DepartureTime, Terminal = @Terminal, FlightNumber = @FlightNumber, Seats = @Seats, AvailableSeats = @AvailableSeats, Destination = @Destination, Origin = @Origin, Airline = @Airline, Gate = @Gate WHERE FlightID = @FlightID", connection))
                 {
                     // Add the parameters
                     command.Parameters.AddWithValue("@DepartureTime", flightToUpdate.DepartureTime);

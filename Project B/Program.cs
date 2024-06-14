@@ -83,7 +83,7 @@ namespace Project_B
             }
             public static void Main(string[] args)
             {
-
+                Console.OutputEncoding = System.Text.Encoding.Unicode;
                 DataAccess.Database();
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };

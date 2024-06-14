@@ -467,7 +467,7 @@ namespace Project_B.Presentation
                 string airbusstoel = stoelen.Seat;
                 string[] airbusstoelarray = airbusstoel.Split('-');
                 int row = Convert.ToInt32(airbusstoelarray[0]);
-                string seat = airbusstoelarray[1].Trim();
+                string seat = airbusstoelarray[1];
                 int seatnumber = 0;
                 if (seat == " A")
                 {
@@ -505,10 +505,8 @@ namespace Project_B.Presentation
                 {
                     seatnumber = 8;
                 }
-                if (row - 1 < airbusseats.GetLength(0) && seatnumber < airbusseats.GetLength(1))
-                {
-                    airbusseats[row - 1, seatnumber].IsReserved = true;
-                }
+                
+                airbusseats[row - 1, seatnumber].IsReserved = true;	
             }
 
             Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
