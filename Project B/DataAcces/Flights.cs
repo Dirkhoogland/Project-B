@@ -778,5 +778,43 @@ namespace Project_B.DataAcces
                 }
             }
         }
+        public static bool Removeflight(int FlightNumber)
+        {
+            try
+            {
+                string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sql = $"DELETE FROM Flights WHERE FlightNumber = {FlightNumber} ";
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex) { }
+            return false;
+        }
+        public static bool Removeticket(int FlightNumber)
+        {
+            try
+            {
+                string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sql = $"DELETE FROM Tickets WHERE FlightID = {FlightNumber} ";
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex) { }
+            return false;
+        }
     }
 }

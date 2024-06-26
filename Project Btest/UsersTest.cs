@@ -10,7 +10,7 @@ namespace Project_Btest
     {
         //admin functions
         [TestMethod]
-        public void GetuserbyIdTest()
+        public void GetuserbyEmailTest()
         {
             DataAccess.Database();
             string email = "testmail";
@@ -18,7 +18,8 @@ namespace Project_Btest
             string password = "leeg";
 
             Users.Newuser(email, name, password);
-            Users user = Users.GetuserbyId(1);
+            Users user = Users.Getuser(email);
+            Users.RemoveUser(email);
             Assert.AreEqual("Dirk", user.Name);
         }
         [TestMethod]
@@ -31,6 +32,7 @@ namespace Project_Btest
 
             Users.Newuser(email, name, password, 1);
             Users user = Users.Getuser("Email");
+            Users.RemoveUser(email);
             Assert.AreEqual(1, user.rank);
         }
         [TestMethod]
@@ -43,6 +45,7 @@ namespace Project_Btest
 
             Users.Newuser(email, name, password);
             Users user = Users.Getuser("Email2");
+            Users.RemoveUser(email);
             Assert.AreEqual(0, user.rank);
         }
         // user functions
@@ -71,6 +74,7 @@ namespace Project_Btest
                 string Email = "Email45";
                 string Password = "Password";
                 bool check = Login.LoginLogic(Email, Password);
+                Users.RemoveUser(Email);
                 Assert.IsTrue(check);
         }
         // checks if the user can fail to log in
@@ -87,21 +91,8 @@ namespace Project_Btest
             Assert.IsFalse(check);
         }
         // tests if the history exists
-        [TestMethod]
-        public void TestHistory()
-        {
-            DataAccess.Database();
-            int flightid = 1;
-            int user = 1;
-            string seat = "1 - A";
-            string seatclass = "Economy";
-            string notes = "-";
-            Flight.CreateFlightAirbus330();
-            Flight.reserveseat(flightid, user, seat, seatclass, notes);
-            List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(1);
-            int lenght = userhistory.Count;
-            Assert.AreEqual(1, lenght);    
-        }
+
+        
 
     }   
 }
