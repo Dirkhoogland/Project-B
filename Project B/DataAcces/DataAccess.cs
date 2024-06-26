@@ -8,7 +8,7 @@ namespace Project_B.DataAcces
         public static void Database()
         {
             CreateTable();
-            InsertData();
+
             //ReadData();
         }
 
@@ -95,7 +95,7 @@ namespace Project_B.DataAcces
             catch (Exception ex) { }
         }
 
-        static void InsertData()
+        public static void InsertData()
         {
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
             string sql = "SELECT * FROM Users";

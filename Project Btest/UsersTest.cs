@@ -13,7 +13,11 @@ namespace Project_Btest
         public void GetuserbyIdTest()
         {
             DataAccess.Database();
+            string email = "testmail";
+            string name = "Dirk";
+            string password = "leeg";
 
+            Users.Newuser(email, name, password);
             Users user = Users.GetuserbyId(1);
             Assert.AreEqual("Dirk", user.Name);
         }
@@ -21,6 +25,11 @@ namespace Project_Btest
         public void Testrankadmin()
         {
             DataAccess.Database();
+            string email = "Email";
+            string name = "Admintest";
+            string password = "leeg";
+
+            Users.Newuser(email, name, password, 1);
             Users user = Users.Getuser("Email");
             Assert.AreEqual(1, user.rank);
         }
@@ -28,6 +37,11 @@ namespace Project_Btest
         public void Testrankuser()
         {
             DataAccess.Database();
+            string email = "Email2";
+            string name = "Testuser";
+            string password = "leeg";
+
+            Users.Newuser(email, name, password);
             Users user = Users.Getuser("Email2");
             Assert.AreEqual(0, user.rank);
         }
@@ -49,7 +63,12 @@ namespace Project_Btest
         public void TestLogin()
         {
                 DataAccess.Database();
-                string Email = "Email";
+                string email = "Email45";
+                string name = "Testlogin";
+                string password = "Password";
+
+                Users.Newuser(email, name, password);
+                string Email = "Email45";
                 string Password = "Password";
                 bool check = Login.LoginLogic(Email, Password);
                 Assert.IsTrue(check);
@@ -72,9 +91,16 @@ namespace Project_Btest
         public void TestHistory()
         {
             DataAccess.Database();
+            int flightid = 1;
+            int user = 1;
+            string seat = "1 - A";
+            string seatclass = "Economy";
+            string notes = "-";
+            Flight.CreateFlightAirbus330();
+            Flight.reserveseat(flightid, user, seat, seatclass, notes);
             List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(1);
             int lenght = userhistory.Count;
-            Assert.AreEqual(5, lenght);    
+            Assert.AreEqual(1, lenght);    
         }
 
     }   

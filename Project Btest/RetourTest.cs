@@ -18,17 +18,7 @@ namespace Project_Btest
             int userId = 0;
             bool retourStatus = true;
             string extraNotes = "test";
-            Flight.reserveseat(flightId, userId, seat, seatClass, retourStatus,extraNotes);
-        }
-
-        public void TestRetourWithBaggage()
-        {
-
-        }
-
-        public void TestRetourCancellation()
-        {
-            
+            Flight.reserveseat(flightId, userId, seat, seatClass,extraNotes);
         }
     }
 }
