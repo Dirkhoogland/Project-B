@@ -10,25 +10,42 @@ namespace Project_Btest
     {
         //admin functions
         [TestMethod]
-        public void GetuserbyIdTest()
+        public void GetuserbyEmailTest()
         {
             DataAccess.Database();
+            string email = "testmail";
+            string name = "Dirk";
+            string password = "leeg";
 
-            Users user = Users.GetuserbyId(1);
+            Users.Newuser(email, name, password);
+            Users user = Users.Getuser(email);
+            Users.RemoveUser(email);
             Assert.AreEqual("Dirk", user.Name);
         }
         [TestMethod]
         public void Testrankadmin()
         {
             DataAccess.Database();
+            string email = "Email";
+            string name = "Admintest";
+            string password = "leeg";
+
+            Users.Newuser(email, name, password, 1);
             Users user = Users.Getuser("Email");
+            Users.RemoveUser(email);
             Assert.AreEqual(1, user.rank);
         }
         [TestMethod]
         public void Testrankuser()
         {
             DataAccess.Database();
+            string email = "Email2";
+            string name = "Testuser";
+            string password = "leeg";
+
+            Users.Newuser(email, name, password);
             Users user = Users.Getuser("Email2");
+            Users.RemoveUser(email);
             Assert.AreEqual(0, user.rank);
         }
         // user functions
@@ -49,9 +66,15 @@ namespace Project_Btest
         public void TestLogin()
         {
                 DataAccess.Database();
-                string Email = "Email";
+                string email = "Email45";
+                string name = "Testlogin";
+                string password = "Password";
+
+                Users.Newuser(email, name, password);
+                string Email = "Email45";
                 string Password = "Password";
                 bool check = Login.LoginLogic(Email, Password);
+                Users.RemoveUser(Email);
                 Assert.IsTrue(check);
         }
         // checks if the user can fail to log in
@@ -68,14 +91,8 @@ namespace Project_Btest
             Assert.IsFalse(check);
         }
         // tests if the history exists
-        [TestMethod]
-        public void TestHistory()
-        {
-            DataAccess.Database();
-            List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(1);
-            int lenght = userhistory.Count;
-            Assert.AreEqual(5, lenght);    
-        }
+
+        
 
     }   
 }

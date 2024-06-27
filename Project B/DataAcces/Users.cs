@@ -69,6 +69,21 @@ namespace Project_B.DataAcces
 
             return true;
         }
+        public static bool Newuser(string Email, string Name, string Password, int rank)
+        {
+            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True;";
+            string sql = $"INSERT INTO Users (Email, Name, Password, Rank, FlyPoints) VALUES ('{Email}', '{Name}', '{Password}', {rank}, 0);";
+            using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+            {
+                c.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            return true;
+        }
         // gets users out of the database
         public static Users Getuser(string Email)
         {

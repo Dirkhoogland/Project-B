@@ -1,5 +1,6 @@
 using Project_B.DataAcces;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 
 namespace Project_B.BusinessLogic
@@ -99,5 +100,6 @@ namespace Project_B.BusinessLogic
             Users.UpdateFlyPoints(userId, flyPoints);
             return true;
         }
+
     }
 }

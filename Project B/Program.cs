@@ -85,6 +85,7 @@ namespace Project_B
             {
                 Console.OutputEncoding = System.Text.Encoding.Unicode;
                 DataAccess.Database();
+                DataAccess.InsertData();
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
