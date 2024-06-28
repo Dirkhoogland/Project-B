@@ -3,14 +3,10 @@ using Project_B.BusinessLogic;
 
 namespace Project_B.Presentation
 {
-    public class BoeingSeat
+    public class BoeingSeat : Seat
     {
-        public string Class { get; set; }
-        public decimal Price { get; set; }
-        public bool IsReserved { get; set; }
-    
-
-    static BoeingSeat [,] boeingseats = new BoeingSeat[38, 9]; 
+    static Seat[,] boeingseats = new Seat[38, 9]; 
+     
     public void lay_out()
     {
     for (int i = 0; i < 38; i++)
@@ -29,7 +25,6 @@ namespace Project_B.Presentation
                 {
                     boeingseats[i, j] = new BoeingSeat { Class = "Business", Price = 200m, IsReserved = false };
                 }
-    
         }
     }
     }
@@ -131,7 +126,7 @@ namespace Project_B.Presentation
 
         public static void ReserveSeat(int row, int seat, CurrentUser current, int flightid)
         {
-            BoeingSeat chosenSeat = boeingseats[row, seat];
+            Seat chosenSeat = boeingseats[row, seat];
             if (chosenSeat.IsReserved)
             {
                 Console.WriteLine("This seat has already been reserved. Choose another seat.");

@@ -239,9 +239,9 @@ namespace Project_B
                                             switch (aircraftType)
                                             {
                                                 case "Boeing 737":
-                                                    Seat seats = new Seat();
-                                                    seats.lay_out();
-                                                    seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                    Boeing737 Boeing737seats = new Boeing737();
+                                                    Boeing737seats.lay_out();
+                                                    Boeing737seats.ToonMenu(currentuser, selectedFlight.FlightId);
                                                     break;
                                                 case "Boeing 787":
                                                     BoeingSeat boeing787Seats = new BoeingSeat();
