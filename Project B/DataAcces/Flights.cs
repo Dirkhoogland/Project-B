@@ -200,6 +200,7 @@ namespace Project_B.DataAcces
                             Flight flight = new Flight();
                             flight.FlightId = reader.GetInt32(reader.GetOrdinal("FlightId"));
                             flight.Gate = reader.GetString(reader.GetOrdinal("Gate"));
+                            flight.AircraftType = reader.GetString(reader.GetOrdinal("AircraftType"));
                             flight.Destination = reader.GetString(reader.GetOrdinal("Destination"));
                             flight.Origin = reader.GetString(reader.GetOrdinal("Origin"));
                             flight.DepartureTime = reader.GetDateTime(reader.GetOrdinal("DepartureTime"));

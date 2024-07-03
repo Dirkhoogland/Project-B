@@ -196,7 +196,7 @@ namespace Project_B.Presentation
 
                 if (currentOption2 == 0)
                 {
-                    //ChooseSeatWithArrowKeys(current, flightid);
+                    rebook(current, flightid);                   
                 }
                 else
                 {
@@ -221,6 +221,22 @@ namespace Project_B.Presentation
                 Console.WriteLine("You have cancelled your seat.");
             }
             
+        }
+        public static void rebook(CurrentUser current, int flightid)
+        {
+            Flight currentflight = FlightLogic.GetFlightByIdlogic(flightid);
+            if (currentflight.AircraftType == "Boeing 737")
+            {
+                Boeing737.ChooseSeatWithArrowKeys(current, flightid);
+            }
+            if (currentflight.AircraftType == "Boeing 787")
+            {
+                BoeingSeat.ChooseSeatWithArrowKeys(current, flightid);
+            }
+            if (currentflight.AircraftType == "Airbus 330")
+            {
+                AirbusSeat.ChooseSeatWithArrowKeys(current, flightid);
+            }
         }
         public static (bool, decimal) checkDiscount(int Id, decimal Price)
         {
