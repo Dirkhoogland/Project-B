@@ -173,6 +173,7 @@ namespace Project_B.Presentation
                     seatnumber = 8;
                 }
                 boeingseats[row - 1, seatnumber].IsReserved = true;
+                
             }
 
 

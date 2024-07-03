@@ -11,6 +11,7 @@ namespace Project_B.Presentation
         public bool IsReserved { get; set; }
 
         static Seat[,] seats = new Seat[100, 10];
+
         public static void ReserveSeat(int row, int seat, CurrentUser current, int flightid, string seatClass, decimal Price)
         {
 
