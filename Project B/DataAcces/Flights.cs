@@ -38,7 +38,7 @@ namespace Project_B.DataAcces
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
         }
-        static SQLiteConnection CreateConnection()
+        public static SQLiteConnection CreateConnection()
         {
             SQLiteConnection sqlite_conn;
             sqlite_conn = new SQLiteConnection($"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ");
