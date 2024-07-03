@@ -311,7 +311,7 @@ namespace Project_B
                                         break;
                                     case "Update Flight":
                                         AnsiConsole.Clear();
-                                        Flight.AdminUpdateFlight();
+                                        Flightlisting.AdminUpdateFlight();
                                         Console.ReadKey();
                                         break;
                                     case "Back to previous menu":

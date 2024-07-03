@@ -7,6 +7,11 @@ namespace Project_B.BusinessLogic
 {
     public class FlightLogic
     {
+        public static List<Flight> getadminflights()
+        {
+            List<Flight> Flights = Flight.Adminflightlist();
+            return Flights;
+        }
         public static List<Flight> GetFlights()
         {
             return Flight.GetFlights();
@@ -71,7 +76,7 @@ namespace Project_B.BusinessLogic
             Users.UpdateFlyPoints(userId, flyPoints);
         }
 
-        public bool RedeemFlyPoints(int userId)
+        public static bool RedeemFlyPoints(int userId)
         {
             int flyPoints = Users.GetFlyPoints(userId);
 
@@ -85,13 +90,13 @@ namespace Project_B.BusinessLogic
             return false;
         }
 
-        public bool CanRedeemFlyPoints(int userId)
+        public static bool CanRedeemFlyPoints(int userId)
         {
             int flyPoints = Users.GetFlyPoints(userId);
             return flyPoints >= 20;
         }
 
-        public bool RefundFlyPoints(int userId)
+        public static bool RefundFlyPoints(int userId)
         {
             int flyPoints = Users.GetFlyPoints(userId);
 

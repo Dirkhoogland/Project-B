@@ -85,62 +85,13 @@ namespace Project_B.Presentation
                 string baggageResponse = string.Empty;
 
                 Console.WriteLine("Do you want more baggage? (20 kg is included in the price)");
-
-                while (true)
+                (decimal cost,int kg) extraCost = (0, 0);
+                if (true)
                 {
-                    Console.Clear();
-                    Console.WriteLine("Do you want more baggage?");
-
-                    for (int i = 0; i < baggageOptions.Length; i++)
-                    {
-                        if (i == selectedIndex)
-                        {
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                            Console.ForegroundColor = ConsoleColor.Black;
-                        }
-
-                        Console.WriteLine(baggageOptions[i]);
-
-                        Console.ResetColor();
-                    }
-
-                    ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-
-                    switch (consoleKeyInfo.Key)
-                    {
-                        case ConsoleKey.UpArrow:
-                            selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
-                            break;
-                        case ConsoleKey.DownArrow:
-                            selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
-                            break;
-                        case ConsoleKey.Enter:
-                            baggageResponse = baggageOptions[selectedIndex];
-                            goto EndLoop;
-                    }
+                    extraCost = Extrabaggage(baggageResponse, baggageOptions, Price, selectedIndex);
                 }
 
-            EndLoop:
-                int extraCost = 0;
-                int extraKg = 0;
-                if (baggageResponse.ToLower() == "yes")
-                {
-                    Console.Write("How many kg do you want extra: ");
-                     extraKg = Convert.ToInt32(Console.ReadLine());
-                     extraCost = extraKg * 4; // 4 euros per extra kg
 
-                    Console.WriteLine($"The extra cost for baggage is {extraCost} euros."); 
-
-                    Price += extraCost; // Add extra cost to seat price
-
-                    Console.WriteLine($"Your total cost is {Price} euros.");
-                }
-                else
-                {
-                    Console.WriteLine($"Your total cost is {Price} euros.");
-                }
-                // counts where the seat is in the plane with numbers that customers understand
-                Console.Clear();
                 Console.WriteLine("Do you want to apply your fly points for a discount?");
 
                 currentOption = 0;
@@ -182,34 +133,19 @@ namespace Project_B.Presentation
                     }
                 } while (key.Key != ConsoleKey.Enter);
 
-                FlightLogic flightLogic = new FlightLogic();
+              FlightLogic flightLogic = new FlightLogic();
                 bool discountApplied = false;
-
+                (bool disc, decimal discprice) discountcheck = (false, 0);
                 if (currentOption == 0)
                 {
-                    if (flightLogic.CanRedeemFlyPoints(current.Id))
-                    {
-                        if (flightLogic.RedeemFlyPoints(current.Id))
-                        {
-                            decimal discount = Price * 0.1m;
-                            Price -= discount;
-                            Console.WriteLine($"10% discount applied. Your total cost is now {Price} euros.");
-                            discountApplied = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("You do not have enough fly points to redeem for a discount.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("You do not have enough fly points to redeem for a discount.");
-                    }
+                    discountcheck = checkDiscount(current.Id, Price);
+                    discountApplied = discountcheck.disc;
+                    Price = discountcheck.discprice;
                 }
 
                 if (!discountApplied)
                 {
-                    Console.WriteLine("No discount applied. Your total cost remains {0} euros.", Price);
+                    Console.WriteLine($"No discount applied. Your total cost remains {Price} euros.");
                 }
 
                 int remainingPoints = FlightLogic.GetFlyPoints(current.Id);
@@ -218,40 +154,12 @@ namespace Project_B.Presentation
                 Console.WriteLine("Press enter to continue.");
                 Console.ReadLine();
 
-                string seatplace = "";
-                int newseat = seat + 1;
-                if (newseat == 1)
-                {
-                    seatplace = (row + 1).ToString() + " - " + "A";
-                }
-                else if (newseat == 2)
-                {
-                    seatplace = (row + 1).ToString() + " - " + "B";
-                }
-                else if (newseat == 3)
-                {
-                    seatplace = (row + 1).ToString() + " - " + "C";
-                }
-                else if (newseat == 4)
-                {
-                    seatplace = (row + 1).ToString() + " - " + "D";
-                }
-                else if (newseat == 5)
-                {
-                    seatplace = (row + 1).ToString() + " - " + "E";
-                }
-                else if (newseat == 6)
-                {
-                    seatplace = (row + 1).ToString() + " - " + "F";
-                }
+                string seatplace = createSeat(seat , row);
+
                 //checks if there are notes to be added to the ticket
-                string notes = "";
-                if (extraCost > 0 || extraNotes != null) {
-                    notes = extraNotes + " And extra baggage of:" + extraCost + " Euro With a weight of" + extraKg;
-                }
-                var test = Console.ReadLine();
+                string notes = extranoteschecking(extraCost, extraNotes);
                 // creates the ticket inside the database
-                FlightLogic.Reserveseat(flightid, current.Id, seatplace, seatClass, "");
+                FlightLogic.Reserveseat(flightid, current.Id, seatplace, seatClass, notes);
                 Console.WriteLine("Do you want to buy one more seat?");
                 string[] yesNoOptions2 = new string[] { "yes", "no" };
                 int currentOption2 = 0;
@@ -287,7 +195,7 @@ namespace Project_B.Presentation
 
                 if (currentOption2 == 0)
                 {
-                    // ChooseSeatWithArrowKeys(current, flightid);
+                    //ChooseSeatWithArrowKeys(current, flightid);
                 }
                 else
                 {
@@ -296,7 +204,7 @@ namespace Project_B.Presentation
                 }
                 if (discountApplied)
                     {
-                        flightLogic.RefundFlyPoints(current.Id);
+                        FlightLogic.RefundFlyPoints(current.Id);
                         Console.WriteLine("You have cancelled your seat and flight points have been refunded.");
                     }
                     else
@@ -304,9 +212,8 @@ namespace Project_B.Presentation
                         Console.WriteLine("You have cancelled your seat.");
                     }
                 Console.WriteLine("seat succesfully reserved!");
-                //DisplaySeatLayoutBoeing737(flightid);
                 Console.ReadLine();
-                // DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
+                //DataAccess.SaveSeatSelection(row, seat, flightId, userId);  
             }
             else
             {
@@ -314,7 +221,127 @@ namespace Project_B.Presentation
             }
             
         }
-        
+        public static (bool, decimal) checkDiscount(int Id, decimal Price)
+        {
+            if (FlightLogic.CanRedeemFlyPoints(Id))
+            {
+                if (FlightLogic.RedeemFlyPoints(Id))
+                {
+                    decimal discount = Price * 0.1m;
+                    Price -= discount;
+                    Console.WriteLine($"10% discount applied. Your total cost is now {Price} euros.");
+                    return  (true, Price);
+                }
+                else
+                {
+                    Console.WriteLine("You do not have enough fly points to redeem for a discount.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("You do not have enough fly points to redeem for a discount.");
+            }
+            return (false, Price);
+
+        }
+        // uses the seat and row to create a user readable seat string
+        public static string createSeat(int seat, int row)
+        {
+            string seatplace = "";
+            int newseat = seat + 1;
+            if (newseat == 1)
+            {
+                seatplace = (row + 1).ToString() + " - " + "A";
+            }
+            else if (newseat == 2)
+            {
+                seatplace = (row + 1).ToString() + " - " + "B";
+            }
+            else if (newseat == 3)
+            {
+                seatplace = (row + 1).ToString() + " - " + "C";
+            }
+            else if (newseat == 4)
+            {
+                seatplace = (row + 1).ToString() + " - " + "D";
+            }
+            else if (newseat == 5)
+            {
+                seatplace = (row + 1).ToString() + " - " + "E";
+            }
+            else if (newseat == 6)
+            {
+                seatplace = (row + 1).ToString() + " - " + "F";
+            }
+            return seatplace;
+        }
+        // uses the baggage cost and extra kgs + notes to create a user redable string
+        public static string extranoteschecking((decimal cost, int kg)baggage, string extranotes)
+        {
+            string notes = "";
+            if (baggage.cost > 0 || extranotes != null)
+            {
+                notes = extranotes + " And extra baggage of:" + baggage.cost + " Euro With a weight of" + baggage.kg;
+            }
+            Console.ReadLine();
+            return notes;
+        }
+        // calculates the extra baggage cost for a user 
+        public static (decimal, int) Extrabaggage(string baggageResponse, string[] baggageOptions, decimal Price, int selectedIndex)
+        {
+            Console.Clear();
+            Console.WriteLine("Do you want more baggage?");
+
+            for (int i = 0; i < baggageOptions.Length; i++)
+            {
+                if (i == selectedIndex)
+                {
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+
+                Console.WriteLine(baggageOptions[i]);
+
+                Console.ResetColor();
+            }
+
+            ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
+
+            switch (consoleKeyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
+                    break;
+                case ConsoleKey.DownArrow:
+                    selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
+                    break;
+                case ConsoleKey.Enter:
+                    baggageResponse = baggageOptions[selectedIndex];
+                    break;
+            }
+            int extraCost = 0;
+            int extraKg = 0;
+            if (baggageResponse.ToLower() == "yes")
+            {
+                Console.Write("How many kg do you want extra: ");
+                extraKg = Convert.ToInt32(Console.ReadLine());
+                extraCost = extraKg * 4; // 4 euros per extra kg
+
+                Console.WriteLine($"The extra cost for baggage is {extraCost} euros.");
+
+                Price += extraCost; // Add extra cost to seat price
+
+                Console.WriteLine($"Your total cost is {Price} euros.");
+            }
+            else
+            {
+                Console.WriteLine($"Your total cost is {Price} euros.");
+            }
+
+            // counts where the seat is in the plane with numbers that customers understand
+            Console.Clear();
+            return (Price, extraKg);
+        }
         public static string AskQuestionWithMenu(string[] options)
         {
             int currentOption = 0;
