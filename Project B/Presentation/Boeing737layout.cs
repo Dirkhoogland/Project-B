@@ -162,11 +162,6 @@ namespace Project_B.Presentation
                 {
                     seatnumber = 5;
                 }
-                if (seats[row - 1, seatnumber].IsReserved)
-                {
-                    Console.WriteLine("This seat has already been reserved. Choose another seat.");
-                    return;
-                }
                 seats[row - 1, seatnumber].IsReserved = true;
 
             }

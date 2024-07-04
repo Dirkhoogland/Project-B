@@ -32,7 +32,7 @@ namespace Project_B.BusinessLogic
             Flight.UpdateFlight(flightToUpdate);
         }
 
-        public static Flight GetFlightById(int flightId)
+        public static Flight GetFlightByIdlogic(int flightId)
         {
             return Flight.GetFlightById(flightId);
         }
