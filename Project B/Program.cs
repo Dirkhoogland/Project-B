@@ -1,5 +1,6 @@
 ﻿using Project_B.DataAcces;
 using Project_B.Presentation;
+using System.Globalization;
 using System.Drawing.Printing;
 using System.Xml.Linq;
 using Spectre.Console;
@@ -89,7 +90,7 @@ namespace Project_B
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
-                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Download Data Menu", "Logout", "Exit" };
+                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Revenue", "Download Data Menu", "Logout", "Exit" };
                 var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
                 var downloadDataMenu = new[] { "Download Ticket Data", "Download Flight Data", "Download User Data", "Load Flights from CSV", "Back to previous menu" };
 
@@ -318,6 +319,106 @@ namespace Project_B
                                         continueManageFlightsLoop = false;
                                         break;
                                 }
+                            }
+                            break;
+                        case "Revenue":
+                            DateTime startDate = DateTime.MinValue, endDate = DateTime.MinValue;
+                            while (true)
+                            {
+                                string startDateString = AnsiConsole.Ask<string>("[blue]Enter start date (dd-MM-yyyy): [/]");
+                                if (DateTime.TryParseExact(startDateString, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid start date in the format dd/MM/yyyy.[/]");
+                                }
+                            }
+
+                            while (true)
+                            {
+                                string endDateString = AnsiConsole.Ask<string>("[blue]Enter end date (dd-MM-yyyy): [/]");
+                                if (DateTime.TryParseExact(endDateString, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate) && endDate >= startDate)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid end date in the format dd-MM-yyyy, that is after or on the start date.[/]");
+                                }
+                            }
+                            AnsiConsole.Clear();
+
+                            var revenueData = Revenue.GetRevenueDetailsByDestination(startDate, endDate);
+                            var revenuePerDestination = revenueData
+                                .GroupBy(item => item.Destination)
+                                .Select(group => new
+                                {
+                                    Destination = group.Key,
+                                    FlightsCount = group.Count(),
+                                    TotalSeatsSold = group.Sum(item => item.TotalSeatsSold),
+                                    EconomySeatsSold = group.Sum(item => item.EconomySeatsSold),
+                                    BusinessSeatsSold = group.Sum(item => item.BusinessSeatsSold),
+                                    DeluxeSeatsSold = group.Sum(item => item.DeluxeSeatsSold),
+                                    ExtraSpaceSeatsSold = group.Sum(item => item.ExtraSpaceSeatsSold),
+                                    DuoComboSeatsSold = group.Sum(item => item.DuoComboSeatsSold),
+                                    TotalProfit = group.Sum(item => item.TotalProfit)
+                                })
+                                .OrderByDescending(item => item.TotalProfit)
+                                .ToList();
+
+                            var destinationTable = new Table().Border(TableBorder.Rounded);
+
+                            // Add columns without titles to simulate colored headers in the first row
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+
+                            // Add the first row as a header with colors
+                            destinationTable.AddRow(
+                                "[yellow3_1]Destination[/]",
+                                "[grey27]Flights Count[/]",
+                                "[red1]Total Seats Sold[/]",
+                                "Economy Seats Sold",
+                                "[skyblue1]Business Seats Sold[/]",
+                                "[mediumorchid1]Deluxe Seats Sold[/]",
+                                "[deeppink1]Extra Space Seats Sold[/]",
+                                "[darkslategray2]Duo Combo Seats Sold[/]",
+                                "[chartreuse2]Total Profit[/]");
+
+                            foreach (var item in revenuePerDestination)
+                            {
+                                destinationTable.AddRow(
+                                    item.Destination,
+                                    item.FlightsCount.ToString(),
+                                    item.TotalSeatsSold.ToString(),
+                                    item.EconomySeatsSold.ToString(),
+                                    item.BusinessSeatsSold.ToString(),
+                                    item.DeluxeSeatsSold.ToString(),
+                                    item.ExtraSpaceSeatsSold.ToString(),
+                                    item.DuoComboSeatsSold.ToString(),
+                                    item.TotalProfit.ToString("C"));
+                            }
+                            AnsiConsole.Write(destinationTable);
+
+                            var prompt = new SelectionPrompt<string>()
+                                .Title("What would you like to do next?")
+                                .PageSize(10)
+                                .AddChoices(new[] { "Go back to previous menu" });
+
+                            string result = AnsiConsole.Prompt(prompt);
+
+                            switch (result)
+                            {
+                                case "Go back to previous menu":
+                                    break;
                             }
                             break;
                         case "Download Data Menu":
