@@ -262,7 +262,7 @@ namespace Project_B
                                         break;
                                     case ConsoleKey.F:
                                         // Handle filter flights
-                                        flights = Flight.FilterFlights();
+                                        flights = Flightlisting.FilterFlights();
                                         isFilterActive = true;
                                         break;
                                     case ConsoleKey.R:
@@ -304,7 +304,7 @@ namespace Project_B
                                 {
                                     case "Add Flight":
                                         AnsiConsole.Clear();
-                                        Flight.AdminAddFlight();
+                                        Flightlisting.AdminAddFlight();
                                         flights = Flight.GetFlights(); // Refresh the 'flights' list
                                         options = new List<string> { filterFlightsText, backText }; // reset the options
                                         options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
@@ -312,7 +312,7 @@ namespace Project_B
                                         break;
                                     case "Update Flight":
                                         AnsiConsole.Clear();
-                                        Flight.AdminUpdateFlight();
+                                        Flightlisting.AdminUpdateFlight();
                                         Console.ReadKey();
                                         break;
                                     case "Back to previous menu":

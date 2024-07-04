@@ -17,12 +17,12 @@ namespace Project_Btest
         }
         [TestMethod]
         public void CheckIfTableExists()
-        {
+        {   // assert
             DataAccess.Database();
             string tablename = "";
             bool check = false;
             try
-            {
+            {   // act
                 string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
                 string sqlCommands = "SELECT name FROM sqlite_master WHERE type='table' AND name='Flights'";;
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
@@ -53,13 +53,14 @@ namespace Project_Btest
                 {
                     check = false;
                 }
+            // assert 
             Assert.IsTrue(check);
         }
 
 
         [TestMethod]
         public void TestCreateFlights()
-        {
+        {   // arrange
             DataAccess.Database();
             Flight flight = new Flight
             {
@@ -91,12 +92,13 @@ namespace Project_Btest
                 Distance = 150
             };
             Flight.AddFlight(flight2);
-
+            // act
             var flights = Flight.GetFlights();
             int number = 1234;
             int number2 = 12345;
             Flight.Removeflight(number);
             Flight.Removeflight(number2);
+            // assert
             Assert.AreEqual(2, flights.Count);
 
         }
