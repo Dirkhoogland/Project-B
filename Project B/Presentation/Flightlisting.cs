@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Project_B.BusinessLogic;
 using Project_B.DataAcces;
 using Spectre.Console;
@@ -256,6 +251,157 @@ namespace Project_B.Presentation
                 }
 
                 AnsiConsole.Clear();
+            }
+        }
+
+        public static List<Flight> FilterFlights()
+        {
+            List<Flight> flights = FlightLogic.GetFlights();
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[bold green]Filter Flights[/]");
+
+
+            if (flights == null)
+            {
+                AnsiConsole.MarkupLine("[red]Error: Failed to get flights.[/]");
+                return new List<Flight>(); // return an empty list if there's an error
+            }
+
+            var yesNoOptions = new[] { "Yes", "No" };
+
+            var filterByDestination = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Do you want to filter by destination?")
+                    .AddChoices(yesNoOptions));
+
+            if (filterByDestination == "Yes")
+            {   
+                var destinations = flights.Select(f => f.Destination).Distinct().OrderBy(d => d).ToList();
+                var selectedDestination = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Please select a destination:")
+                        .PageSize(10)
+                        .AddChoices(destinations));
+
+                flights = FlightLogic.FilterFlightsdestination(flights, selectedDestination);
+            }
+
+            var filterByDepartureTime = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Do you want to filter by departure time?")
+                    .AddChoices(yesNoOptions));
+
+            if (filterByDepartureTime == "Yes")
+            {
+                var departureTimes = flights.Select(f => f.DepartureTime.ToString()).Distinct().OrderBy(d => d).ToList();
+                var selectedDepartureTime = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Please select a departure time:")
+                        .PageSize(10)
+                        .AddChoices(departureTimes));
+
+                flights = FlightLogic.FilterFlightsdeparture(flights, selectedDepartureTime);
+            }
+
+            return flights;
+        }
+
+        public static void AdminAddFlight()
+        {
+
+            AnsiConsole.Clear();
+
+            string title = "Add Flight";
+            AnsiConsole.MarkupLine($"[bold green]{title}[/]");
+
+            var flightNumber = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter flight number: (1000-9999)[/]")
+                .Validate(value => value >= 1000 && value <= 9999, "[red]Please enter a number between 1000 and 9999[/]"));
+
+            var destination = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter destination:[/]")
+                .Validate(value => !int.TryParse(value, out _), "[red]Destination cannot be a number.[/]"));
+            destination = char.ToUpper(destination[0]) + destination.Substring(1).ToLower();
+
+            var origin = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter origin:[/]")
+                .Validate(value => !int.TryParse(value, out _), "[red]Origin cannot be a number.[/]"));
+            origin = char.ToUpper(origin[0]) + origin.Substring(1).ToLower();
+
+            var departureTimeString = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter departure time: (dd/MM/yyyy HH:mm)[/]")
+                .Validate(value => DateTime.TryParseExact(value, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) && date > DateTime.Now, "[red]Please enter a future date and time in the format dd/MM/yyyy HH:mm[/]"));
+
+            DateTime departureTime = DateTime.ParseExact(departureTimeString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+
+            var terminal = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter terminal: (1-4)[/]")
+                .Validate(value => value >= 1 && value <= 4, "[red]Please enter a number between 1 and 4[/]"));
+
+            var gate = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter gate: (1-24)[/]")
+                .Validate(value => value >= 1 && value <= 24, "[red]Please enter a number between 1 and 24[/]"));
+
+            var aircraftTypeOptions = new[] { "Boeing 787", "Boeing 737", "Airbus 330", "Exit" };
+            var aircraftType = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                .Title("[blue]Enter aircraft type:[/]")
+                .AddChoices(aircraftTypeOptions));
+            if (aircraftType == "Exit") return;
+
+            int seats = 0, availableSeats = 0;
+            if (aircraftType == "Boeing 787")
+            {
+                seats = availableSeats = 219;
+            }
+            else if (aircraftType == "Boeing 737")
+            {
+                seats = availableSeats = 186;
+            }
+            else if (aircraftType == "Airbus 330")
+            {
+                seats = availableSeats = 345;
+            }
+
+            string airline = "New South";
+
+            Flight newFlight = new Flight
+            {
+                FlightNumber = flightNumber.ToString(),
+                Destination = destination,
+                Origin = origin,
+                DepartureTime = departureTime,
+                Terminal = terminal.ToString(),
+                AircraftType = aircraftType,
+                Gate = gate.ToString(),
+                Seats = seats,
+                AvailableSeats = availableSeats,
+                Airline = airline,
+                Distance = 100
+            };
+
+            AnsiConsole.Clear();
+            // Show the flight information
+            AnsiConsole.MarkupLine($"[blue]Flight Number: [/][green]{newFlight.FlightNumber}[/]");
+            AnsiConsole.MarkupLine($"[blue]Destination: [/][green]{newFlight.Destination}[/]");
+            AnsiConsole.MarkupLine($"[blue]Origin: [/][green]{newFlight.Origin}[/]");
+            AnsiConsole.MarkupLine($"[blue]Departure Time: [/][green]{newFlight.DepartureTime}[/]");
+            AnsiConsole.MarkupLine($"[blue]Terminal: [/][green]{newFlight.Terminal}[/]");
+            AnsiConsole.MarkupLine($"[blue]Gate: [/][green]{newFlight.Gate}[/]");
+            AnsiConsole.MarkupLine($"[blue]Aircraft Type: [/][green]{newFlight.AircraftType}[/]");
+            AnsiConsole.MarkupLine($"[blue]Seats: [/][green]{newFlight.Seats}[/]");
+            AnsiConsole.MarkupLine($"[blue]Available Seats: [/][green]{newFlight.AvailableSeats}[/]");
+
+            // Ask the user if they really want to add the flight
+            var confirmationOptions = new[] { "Yes", "No" };
+            var confirmation = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                .Title("Do you really want to add this flight?")
+                .AddChoices(confirmationOptions));
+
+            if (confirmation == "Yes")
+            {
+                FlightLogic.createflight(newFlight);
+
+                AnsiConsole.MarkupLine("[green]Flight added successfully![/]");
+                System.Threading.Thread.Sleep(3000);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[red]Flight not added.[/]");
+                System.Threading.Thread.Sleep(3000);
             }
         }
     }

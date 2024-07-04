@@ -16,6 +16,11 @@ namespace Project_B.BusinessLogic
         {
             return Flight.GetFlights();
         }
+        public static void createflight(Flight newFlight)
+        {
+            Flight.AddFlight(newFlight);
+        }
+
 
         public static void CreateFlights()
         {
@@ -37,27 +42,15 @@ namespace Project_B.BusinessLogic
             return Flight.GetFlightById(flightId);
         }
 
-        public List<Flight> FilterFlights(string destination, DateTime? departureDate, string airline)
+        public static List<Flight> FilterFlightsdestination(List<Flight> flights, string destination)
         {
-            List<Flight> flights = Flight.GetFlights();
-
-            if (!string.IsNullOrEmpty(destination))
-            {
-                flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
-            }
-
-            if (departureDate.HasValue)
-            {
-                flights = flights.Where(f => f.DepartureTime.Date == departureDate.Value.Date).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(airline))
-            {
-                flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
-            }
-
-            return flights;
+            return flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
         }
+        public static List<Flight> FilterFlightsdeparture(List<Flight> flights, string selectedDepartureTime)
+        {
+            return flights = flights.Where(f => f.DepartureTime.ToString() == selectedDepartureTime).ToList();
+        }
+
 
         public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
         {

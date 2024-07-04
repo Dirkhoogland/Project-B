@@ -77,46 +77,53 @@ namespace Project_B.Presentation
                         // Add extraNotes to the database...
                     }
                 } while (selectedOption != "Continue");
-                
-               Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
+
+                Console.WriteLine("If you select a seat, you have a max baggage limit of 20 kg. If you have more, you have to pay extra.");
 
                 string[] baggageOptions = { "yes", "no" };
                 int selectedIndex = 0;
                 string baggageResponse = string.Empty;
+                (decimal cost, int kg) extraCost = (0, 0);
                 Console.WriteLine("Do you want more baggage? (20 kg is included in the price)");
 
-
-                ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-                for (int i = 0; i < baggageOptions.Length; i++)
+                while (true)
                 {
-                    if (i == selectedIndex)
+                    Console.Clear();
+                    Console.WriteLine("Do you want more baggage?");
+
+                    for (int i = 0; i < baggageOptions.Length; i++)
                     {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.ForegroundColor = ConsoleColor.Black;
+                        if (i == selectedIndex)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                        }
+
+                        Console.WriteLine(baggageOptions[i]);
+
+                        Console.ResetColor();
                     }
 
-                    Console.WriteLine(baggageOptions[i]);
+                    ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
 
-                    Console.ResetColor();
-                }
-                switch (consoleKeyInfo.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
-                        break;
-                    case ConsoleKey.DownArrow:
-                        selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
-                        break;
-                    case ConsoleKey.Enter:
-                        baggageResponse = baggageOptions[selectedIndex];
-                        break;
+                    switch (consoleKeyInfo.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
+                            break;
+                        case ConsoleKey.Enter:
+                            baggageResponse = baggageOptions[selectedIndex];
+                            extraCost = Extrabaggage(baggageResponse, baggageOptions, Price, selectedIndex);
+                            break;
+                    }
+
+                    Console.Clear();
+                    break;
                 }
 
-                (decimal cost,int kg) extraCost = (0, 0);
-                if (true)
-                {
-                    extraCost = Extrabaggage(baggageResponse, baggageOptions, Price, selectedIndex);
-                }
 
 
                 Console.WriteLine("Do you want to apply your fly points for a discount?");
@@ -283,6 +290,7 @@ namespace Project_B.Presentation
             {
                 Console.WriteLine("You do not have enough fly points to redeem for a discount.");
             }
+            Console.ReadLine();
             return (false, Price);
 
         }
@@ -349,7 +357,7 @@ namespace Project_B.Presentation
             {
                 Console.WriteLine($"Your total cost is {Price} euros.");
             }
-
+            Console.ReadLine();
             // counts where the seat is in the plane with numbers that customers understand
             Console.Clear();
             return (Price, extraKg);
