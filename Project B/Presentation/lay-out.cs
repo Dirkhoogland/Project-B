@@ -83,8 +83,35 @@ namespace Project_B.Presentation
                 string[] baggageOptions = { "yes", "no" };
                 int selectedIndex = 0;
                 string baggageResponse = string.Empty;
-
                 Console.WriteLine("Do you want more baggage? (20 kg is included in the price)");
+
+
+                ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
+                for (int i = 0; i < baggageOptions.Length; i++)
+                {
+                    if (i == selectedIndex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                    }
+
+                    Console.WriteLine(baggageOptions[i]);
+
+                    Console.ResetColor();
+                }
+                switch (consoleKeyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
+                        break;
+                    case ConsoleKey.Enter:
+                        baggageResponse = baggageOptions[selectedIndex];
+                        break;
+                }
+
                 (decimal cost,int kg) extraCost = (0, 0);
                 if (true)
                 {
@@ -133,7 +160,6 @@ namespace Project_B.Presentation
                     }
                 } while (key.Key != ConsoleKey.Enter);
 
-              FlightLogic flightLogic = new FlightLogic();
                 bool discountApplied = false;
                 (bool disc, decimal discprice) discountcheck = (false, 0);
                 if (currentOption == 0)
@@ -305,36 +331,6 @@ namespace Project_B.Presentation
         // calculates the extra baggage cost for a user 
         public static (decimal, int) Extrabaggage(string baggageResponse, string[] baggageOptions, decimal Price, int selectedIndex)
         {
-            Console.Clear();
-            Console.WriteLine("Do you want more baggage?");
-
-            for (int i = 0; i < baggageOptions.Length; i++)
-            {
-                if (i == selectedIndex)
-                {
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    Console.ForegroundColor = ConsoleColor.Black;
-                }
-
-                Console.WriteLine(baggageOptions[i]);
-
-                Console.ResetColor();
-            }
-
-            ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
-
-            switch (consoleKeyInfo.Key)
-            {
-                case ConsoleKey.UpArrow:
-                    selectedIndex = (selectedIndex - 1 + baggageOptions.Length) % baggageOptions.Length;
-                    break;
-                case ConsoleKey.DownArrow:
-                    selectedIndex = (selectedIndex + 1) % baggageOptions.Length;
-                    break;
-                case ConsoleKey.Enter:
-                    baggageResponse = baggageOptions[selectedIndex];
-                    break;
-            }
             int extraCost = 0;
             int extraKg = 0;
             if (baggageResponse.ToLower() == "yes")
