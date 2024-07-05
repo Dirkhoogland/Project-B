@@ -55,7 +55,8 @@ namespace Project_B.DataAcces
                    "Seats INTEGER," +
                    "AvailableSeats INTEGER," +
                    "Airline VARCHAR(255)," +
-                   "Distance INTEGER)";
+                   "Distance INTEGER," +
+                   "Revenue INTEGER)";
                 using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
                     c.Open();

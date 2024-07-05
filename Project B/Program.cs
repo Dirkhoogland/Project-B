@@ -325,27 +325,27 @@ namespace Project_B
                             DateTime startDate = DateTime.MinValue, endDate = DateTime.MinValue;
                             while (true)
                             {
-                                string startDateString = AnsiConsole.Ask<string>("[blue]Enter start date (dd-MM-yyyy): [/]");
-                                if (DateTime.TryParseExact(startDateString, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
+                                string startDateString = AnsiConsole.Ask<string>("[blue]Enter start date (yyyy-MM-dd): [/]");
+                                if (DateTime.TryParseExact(startDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
                                 {
                                     break;
                                 }
                                 else
                                 {
-                                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid start date in the format dd/MM/yyyy.[/]");
+                                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid start date in the format yyyy-MM-dd.[/]");
                                 }
                             }
 
                             while (true)
                             {
-                                string endDateString = AnsiConsole.Ask<string>("[blue]Enter end date (dd-MM-yyyy): [/]");
-                                if (DateTime.TryParseExact(endDateString, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate) && endDate >= startDate)
+                                string endDateString = AnsiConsole.Ask<string>("[blue]Enter end date (yyyy-MM-dd): [/]");
+                                if (DateTime.TryParseExact(endDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate) && endDate >= startDate)
                                 {
                                     break;
                                 }
                                 else
                                 {
-                                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid end date in the format dd-MM-yyyy, that is after or on the start date.[/]");
+                                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid end date in the format yyyy-MM-dd, that is after or on the start date.[/]");
                                 }
                             }
                             AnsiConsole.Clear();
@@ -357,13 +357,8 @@ namespace Project_B
                                 {
                                     Destination = group.Key,
                                     FlightsCount = group.Count(),
-                                    TotalSeatsSold = group.Sum(item => item.TotalSeatsSold),
-                                    EconomySeatsSold = group.Sum(item => item.EconomySeatsSold),
-                                    BusinessSeatsSold = group.Sum(item => item.BusinessSeatsSold),
-                                    DeluxeSeatsSold = group.Sum(item => item.DeluxeSeatsSold),
-                                    ExtraSpaceSeatsSold = group.Sum(item => item.ExtraSpaceSeatsSold),
-                                    DuoComboSeatsSold = group.Sum(item => item.DuoComboSeatsSold),
-                                    TotalProfit = group.Sum(item => item.TotalProfit)
+                                    TotalSeatsSold = group.Sum(item => item.Seats - item.AvailableSeats),
+                                    TotalProfit = group.Sum(item => item.Revenue)
                                 })
                                 .OrderByDescending(item => item.TotalProfit)
                                 .ToList();
@@ -375,22 +370,12 @@ namespace Project_B
                             destinationTable.AddColumn(new TableColumn(""));
                             destinationTable.AddColumn(new TableColumn(""));
                             destinationTable.AddColumn(new TableColumn(""));
-                            destinationTable.AddColumn(new TableColumn(""));
-                            destinationTable.AddColumn(new TableColumn(""));
-                            destinationTable.AddColumn(new TableColumn(""));
-                            destinationTable.AddColumn(new TableColumn(""));
-                            destinationTable.AddColumn(new TableColumn(""));
 
                             // Add the first row as a header with colors
                             destinationTable.AddRow(
                                 "[yellow3_1]Destination[/]",
                                 "[grey27]Flights Count[/]",
                                 "[red1]Total Seats Sold[/]",
-                                "Economy Seats Sold",
-                                "[skyblue1]Business Seats Sold[/]",
-                                "[mediumorchid1]Deluxe Seats Sold[/]",
-                                "[deeppink1]Extra Space Seats Sold[/]",
-                                "[darkslategray2]Duo Combo Seats Sold[/]",
                                 "[chartreuse2]Total Profit[/]");
 
                             foreach (var item in revenuePerDestination)
@@ -399,11 +384,6 @@ namespace Project_B
                                     item.Destination,
                                     item.FlightsCount.ToString(),
                                     item.TotalSeatsSold.ToString(),
-                                    item.EconomySeatsSold.ToString(),
-                                    item.BusinessSeatsSold.ToString(),
-                                    item.DeluxeSeatsSold.ToString(),
-                                    item.ExtraSpaceSeatsSold.ToString(),
-                                    item.DuoComboSeatsSold.ToString(),
                                     item.TotalProfit.ToString("C"));
                             }
                             AnsiConsole.Write(destinationTable);

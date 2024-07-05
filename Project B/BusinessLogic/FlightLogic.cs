@@ -52,9 +52,9 @@ namespace Project_B.BusinessLogic
         }
 
 
-        public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
+        public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes, decimal price)
         {
-            Flight.reserveseat(flightid, userid, seat, seatclass, extranotes);
+            Flight.reserveseat(flightid, userid, seat, seatclass, extranotes, price);
         }
 
         public static int GetFlyPoints(int userId)
