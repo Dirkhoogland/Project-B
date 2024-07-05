@@ -16,64 +16,25 @@ namespace Project_B.DataAcces
 {
     class Revenue
     {
-        public string Destination { get; set; }
-        public int FlightsCount { get; set; }
-        public int TotalSeatsSold { get; set; }
-        public int EconomySeatsSold { get; set; }
-        public int BusinessSeatsSold { get; set; }
-        public int DeluxeSeatsSold { get; set; }
-        public int ExtraSpaceSeatsSold { get; set; }
-        public int DuoComboSeatsSold { get; set; }
-        public decimal TotalProfit { get; set; }
-        private static string databasePath
-        {
-            get
-            {
-                return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
-            }
-        }
 
-        public static SQLiteConnection CreateConnection()
+        public static List<Flight> GetRevenueDetailsByDestination(DateTime startDate, DateTime endDate)
         {
-            SQLiteConnection sqlite_conn;
-            sqlite_conn = new SQLiteConnection($"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ");
-            try 
-            { 
-                sqlite_conn.Open(); 
-            }
-            catch (Exception ex) 
-            { 
-                Console.WriteLine($"Failed to open SQLite connection: {ex.Message}");
-            }
-            return sqlite_conn;
-        }
-        public static List<Revenue> GetRevenueDetailsByDestination(DateTime startDate, DateTime endDate)
-        {
-            var dataList = new List<Revenue>();
+            string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True;";
+
+            var dataList = new List<Flight>();
             var query = @"
-                SELECT 
-                    Destination,
-                    COUNT(DISTINCT TicketID) AS FlightsCount,
-                    COUNT(TicketID) AS TotalSeatsSold,
-                    SUM(CASE WHEN SeatClass = 'Economy' THEN 1 ELSE 0 END) AS EconomySeatsSold,
-                    SUM(CASE WHEN SeatClass = 'Business' THEN 1 ELSE 0 END) AS BusinessSeatsSold,
-                    SUM(CASE WHEN SeatClass = 'Deluxe' THEN 1 ELSE 0 END) AS DeluxeSeatsSold,
-                    SUM(CASE WHEN SeatClass = 'Extra Space' THEN 1 ELSE 0 END) AS ExtraSpaceSeatsSold,
-                    SUM(CASE WHEN SeatClass = 'Duo Combo' THEN 1 ELSE 0 END) AS DuoComboSeatsSold,
-                    SUM(CASE WHEN SeatClass = 'Economy' THEN 100 ELSE 200 END) * COUNT(TicketID) AS TotalProfit
-                FROM Tickets
-                WHERE PurchaseTime BETWEEN @StartDate AND @EndDate
+                SELECT * FROM Flights WHERE DepartureTime BETWEEN @StartDate AND @EndDate
                 GROUP BY Destination";
 
             try
             {
-                using (var connection = CreateConnection())
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
                 {
-                    using (var command = new SQLiteCommand(query, connection))
+                    c.Open();
+                    using (var command = new SQLiteCommand(query, c))
                     {
-                        command.Parameters.AddWithValue("@StartDate", startDate.ToString("dd-MM-yyyy 00:00:00"));
-                        command.Parameters.AddWithValue("@EndDate", endDate.ToString("dd-MM-yyyy 23:59:59"));
-
+                        command.Parameters.AddWithValue("@StartDate", startDate);
+                        command.Parameters.AddWithValue("@EndDate", endDate);
                         using (var reader = command.ExecuteReader())
                         {
                             if (!reader.HasRows)
@@ -84,19 +45,16 @@ namespace Project_B.DataAcces
                             {
                                 while (reader.Read())
                                 {
-                                    var revenue = new Revenue
-                                    {
-                                        Destination = reader["Destination"].ToString(),
-                                        FlightsCount = Convert.ToInt32(reader["FlightsCount"]),
-                                        TotalSeatsSold = Convert.ToInt32(reader["TotalSeatsSold"]),
-                                        EconomySeatsSold = Convert.ToInt32(reader["EconomySeatsSold"]),
-                                        BusinessSeatsSold = Convert.ToInt32(reader["BusinessSeatsSold"]),
-                                        DeluxeSeatsSold = Convert.ToInt32(reader["DeluxeSeatsSold"]),
-                                        ExtraSpaceSeatsSold = Convert.ToInt32(reader["ExtraSpaceSeatsSold"]),
-                                        DuoComboSeatsSold = Convert.ToInt32(reader["DuoComboSeatsSold"]),
-                                        TotalProfit = Convert.ToInt32(reader["TotalProfit"])
-                                    };
-                                    dataList.Add(revenue);
+                                    Flight flight = new Flight();
+                                    flight.FlightId = reader.GetInt32(reader.GetOrdinal("FlightId"));
+                                    flight.Gate = reader.GetString(reader.GetOrdinal("Gate"));
+                                    flight.AircraftType = reader.GetString(reader.GetOrdinal("AircraftType"));
+                                    flight.Destination = reader.GetString(reader.GetOrdinal("Destination"));
+                                    flight.Origin = reader.GetString(reader.GetOrdinal("Origin"));
+                                    flight.DepartureTime = reader.GetDateTime(reader.GetOrdinal("DepartureTime"));
+                                    flight.Distance = reader.GetInt32(reader.GetOrdinal("Distance"));
+                                    flight.Revenue = reader.GetInt32(reader.GetOrdinal("Revenue"));
+                                    dataList.Add(flight);
                                 }
                             }
                         }

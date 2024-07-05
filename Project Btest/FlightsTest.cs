@@ -74,7 +74,8 @@ namespace Project_Btest
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = "1",
-                Distance = 150
+                Distance = 150,
+                Revenue = 0
             };
             Flight.AddFlight(flight);
             Flight flight2 = new Flight
@@ -89,7 +90,8 @@ namespace Project_Btest
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = "2",
-                Distance = 150
+                Distance = 150,
+                Revenue = 0
             };
             Flight.AddFlight(flight2);
             // act
@@ -120,7 +122,8 @@ namespace Project_Btest
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = "2",
-                Distance = 150
+                Distance = 150,
+                Revenue = 0
             };
             Flight.AddFlight(flight2);
             int number = 546;

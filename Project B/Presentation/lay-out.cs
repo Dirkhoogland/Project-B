@@ -192,7 +192,7 @@ namespace Project_B.Presentation
                 //checks if there are notes to be added to the ticket
                 string notes = extranoteschecking(extraCost, extraNotes);
                 // creates the ticket inside the database
-                FlightLogic.Reserveseat(flightid, current.Id, seatplace, seatClass, notes);
+                FlightLogic.Reserveseat(flightid, current.Id, seatplace, seatClass, notes, Price);
                 Console.WriteLine("Do you want to buy one more seat?");
                 string[] yesNoOptions2 = new string[] { "yes", "no" };
                 int currentOption2 = 0;
