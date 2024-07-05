@@ -1,15 +1,26 @@
 using Project_B.DataAcces;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 
 namespace Project_B.BusinessLogic
 {
     public class FlightLogic
     {
+        public static List<Flight> getadminflights()
+        {
+            List<Flight> Flights = Flight.Adminflightlist();
+            return Flights;
+        }
         public static List<Flight> GetFlights()
         {
             return Flight.GetFlights();
         }
+        public static void createflight(Flight newFlight)
+        {
+            Flight.AddFlight(newFlight);
+        }
+
 
         public static void CreateFlights()
         {
@@ -26,36 +37,24 @@ namespace Project_B.BusinessLogic
             Flight.UpdateFlight(flightToUpdate);
         }
 
-        public static Flight GetFlightById(int flightId)
+        public static Flight GetFlightByIdlogic(int flightId)
         {
             return Flight.GetFlightById(flightId);
         }
 
-        public List<Flight> FilterFlights(string destination, DateTime? departureDate, string airline)
+        public static List<Flight> FilterFlightsdestination(List<Flight> flights, string destination)
         {
-            List<Flight> flights = Flight.GetFlights();
-
-            if (!string.IsNullOrEmpty(destination))
-            {
-                flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
-            }
-
-            if (departureDate.HasValue)
-            {
-                flights = flights.Where(f => f.DepartureTime.Date == departureDate.Value.Date).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(airline))
-            {
-                flights = flights.Where(f => f.Airline.ToLower() == airline.ToLower()).ToList();
-            }
-
-            return flights;
+            return flights = flights.Where(f => f.Destination.ToLower() == destination.ToLower()).ToList();
+        }
+        public static List<Flight> FilterFlightsdeparture(List<Flight> flights, string selectedDepartureTime)
+        {
+            return flights = flights.Where(f => f.DepartureTime.ToString() == selectedDepartureTime).ToList();
         }
 
-        public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
+
+        public static void Reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes, decimal price)
         {
-            Flight.reserveseat(flightid, userid, seat, seatclass, extranotes);
+            Flight.reserveseat(flightid, userid, seat, seatclass, extranotes, price);
         }
 
         public static int GetFlyPoints(int userId)
@@ -70,7 +69,7 @@ namespace Project_B.BusinessLogic
             Users.UpdateFlyPoints(userId, flyPoints);
         }
 
-        public bool RedeemFlyPoints(int userId)
+        public static bool RedeemFlyPoints(int userId)
         {
             int flyPoints = Users.GetFlyPoints(userId);
 
@@ -84,13 +83,13 @@ namespace Project_B.BusinessLogic
             return false;
         }
 
-        public bool CanRedeemFlyPoints(int userId)
+        public static bool CanRedeemFlyPoints(int userId)
         {
             int flyPoints = Users.GetFlyPoints(userId);
             return flyPoints >= 20;
         }
 
-        public bool RefundFlyPoints(int userId)
+        public static bool RefundFlyPoints(int userId)
         {
             int flyPoints = Users.GetFlyPoints(userId);
 
@@ -99,5 +98,6 @@ namespace Project_B.BusinessLogic
             Users.UpdateFlyPoints(userId, flyPoints);
             return true;
         }
+
     }
 }

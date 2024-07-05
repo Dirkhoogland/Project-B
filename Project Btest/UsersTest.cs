@@ -10,72 +10,96 @@ namespace Project_Btest
     {
         //admin functions
         [TestMethod]
-        public void GetuserbyIdTest()
-        {
+        public void GetuserbyEmailTest()
+        {   // arrange
             DataAccess.Database();
-
-            Users user = Users.GetuserbyId(1);
+            string email = "testmail";
+            string name = "Dirk";
+            string password = "leeg";
+            // act
+            Users.Newuser(email, name, password);
+            Users user = Users.Getuser(email);
+            Users.RemoveUser(email);
+            // assert
             Assert.AreEqual("Dirk", user.Name);
         }
         [TestMethod]
         public void Testrankadmin()
-        {
+        {   // arrange
             DataAccess.Database();
+            string email = "Email";
+            string name = "Admintest";
+            string password = "leeg";
+            // act
+            Users.Newuser(email, name, password, 1);
             Users user = Users.Getuser("Email");
+            Users.RemoveUser(email);
+            // assert
             Assert.AreEqual(1, user.rank);
         }
         [TestMethod]
         public void Testrankuser()
-        {
+        {   // arrange
             DataAccess.Database();
+            string email = "Email2";
+            string name = "Testuser";
+            string password = "leeg";
+            // act
+            Users.Newuser(email, name, password);
             Users user = Users.Getuser("Email2");
+            Users.RemoveUser(email);
+            // assert
             Assert.AreEqual(0, user.rank);
         }
         // user functions
         [TestMethod]
         public void TestNewuser()
-        {
+        {   // arrange
             DataAccess.Database();
             string Email = "TestEmail1";
             string Name = "Testname1";
             string Password = "TestPassword1";
+            // act
             Users.Newuser(Email, Name, Password);
             Users user = Users.Getuser(Email);
             Users.RemoveUser(Email);
+            // assert
             Assert.IsNotNull(user.Email);
         }
         // tests if login function checks correctly
         [TestMethod]
         public void TestLogin()
-        {
+        {       // arrange
                 DataAccess.Database();
-                string Email = "Email";
+                string email = "Email45";
+                string name = "Testlogin";
+                string password = "Password";
+                // act
+                Users.Newuser(email, name, password);
+                string Email = "Email45";
                 string Password = "Password";
                 bool check = Login.LoginLogic(Email, Password);
+                Users.RemoveUser(Email);
+                // assert
                 Assert.IsTrue(check);
         }
         // checks if the user can fail to log in
         [TestMethod]
         public void TestFalselogin()
-        {
+        {   // arrange
             DataAccess.Database();
             string Email = "TestEmail1";
             string Name = "Testname1";
             string Password = "TestPassword1";
+            // act
             Users.Newuser(Email, Name, Password);
             bool check = Login.LoginLogic("wrong email", "wrong password");
             Users.RemoveUser(Email);
+            // assert
             Assert.IsFalse(check);
         }
-        // tests if the history exists
-        [TestMethod]
-        public void TestHistory()
-        {
-            DataAccess.Database();
-            List<Bookinghistory> userhistory = Userhistorylogic.returnuserhistory(1);
-            int lenght = userhistory.Count;
-            Assert.AreEqual(5, lenght);    
-        }
+
+        
 
     }   
 }

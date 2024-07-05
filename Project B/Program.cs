@@ -1,5 +1,6 @@
 ﻿using Project_B.DataAcces;
 using Project_B.Presentation;
+using System.Globalization;
 using System.Drawing.Printing;
 using System.Xml.Linq;
 using Spectre.Console;
@@ -85,10 +86,11 @@ namespace Project_B
             {
                 Console.OutputEncoding = System.Text.Encoding.Unicode;
                 DataAccess.Database();
+                DataAccess.InsertData();
 
                 var menuItemsGuest = new[] { "Login/Register", "Exit" };
                 var menuItemsUser = new[] { "View Flights", "Flight History", "Logout", "Exit" };
-                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Download Data Menu", "Logout", "Exit" };
+                var menuItemsAdmin = new[] { "View Flights", "Flight History", "Manage Flights", "Manage Users", "Add Fly Points to user", "Revenue", "Download Data Menu", "Logout", "Exit" };
                 var manageFlightsMenu = new[] { "Add Flight", "Update Flight", "Back" };
                 var downloadDataMenu = new[] { "Download Ticket Data", "Download Flight Data", "Download User Data", "Load Flights from CSV", "Back to previous menu" };
 
@@ -238,9 +240,9 @@ namespace Project_B
                                             switch (aircraftType)
                                             {
                                                 case "Boeing 737":
-                                                    Seat seats = new Seat();
-                                                    seats.lay_out();
-                                                    seats.ToonMenu(currentuser, selectedFlight.FlightId);
+                                                    Boeing737 Boeing737seats = new Boeing737();
+                                                    Boeing737seats.lay_out();
+                                                    Boeing737seats.ToonMenu(currentuser, selectedFlight.FlightId);
                                                     break;
                                                 case "Boeing 787":
                                                     BoeingSeat boeing787Seats = new BoeingSeat();
@@ -260,7 +262,7 @@ namespace Project_B
                                         break;
                                     case ConsoleKey.F:
                                         // Handle filter flights
-                                        flights = Flight.FilterFlights();
+                                        flights = Flightlisting.FilterFlights();
                                         isFilterActive = true;
                                         break;
                                     case ConsoleKey.R:
@@ -302,7 +304,7 @@ namespace Project_B
                                 {
                                     case "Add Flight":
                                         AnsiConsole.Clear();
-                                        Flight.AdminAddFlight();
+                                        Flightlisting.AdminAddFlight();
                                         flights = Flight.GetFlights(); // Refresh the 'flights' list
                                         options = new List<string> { filterFlightsText, backText }; // reset the options
                                         options.AddRange(flights.Select(f => f.ToString())); // add the flights to the options
@@ -310,13 +312,93 @@ namespace Project_B
                                         break;
                                     case "Update Flight":
                                         AnsiConsole.Clear();
-                                        Flight.AdminUpdateFlight();
+                                        Flightlisting.AdminUpdateFlight();
                                         Console.ReadKey();
                                         break;
                                     case "Back to previous menu":
                                         continueManageFlightsLoop = false;
                                         break;
                                 }
+                            }
+                            break;
+                        case "Revenue":
+                            DateTime startDate = DateTime.MinValue, endDate = DateTime.MinValue;
+                            while (true)
+                            {
+                                string startDateString = AnsiConsole.Ask<string>("[blue]Enter start date (yyyy-MM-dd): [/]");
+                                if (DateTime.TryParseExact(startDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid start date in the format yyyy-MM-dd.[/]");
+                                }
+                            }
+
+                            while (true)
+                            {
+                                string endDateString = AnsiConsole.Ask<string>("[blue]Enter end date (yyyy-MM-dd): [/]");
+                                if (DateTime.TryParseExact(endDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate) && endDate >= startDate)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid end date in the format yyyy-MM-dd, that is after or on the start date.[/]");
+                                }
+                            }
+                            AnsiConsole.Clear();
+
+                            var revenueData = Revenue.GetRevenueDetailsByDestination(startDate, endDate);
+                            var revenuePerDestination = revenueData
+                                .GroupBy(item => item.Destination)
+                                .Select(group => new
+                                {
+                                    Destination = group.Key,
+                                    FlightsCount = group.Count(),
+                                    TotalSeatsSold = group.Sum(item => item.Seats - item.AvailableSeats),
+                                    TotalProfit = group.Sum(item => item.Revenue)
+                                })
+                                .OrderByDescending(item => item.TotalProfit)
+                                .ToList();
+
+                            var destinationTable = new Table().Border(TableBorder.Rounded);
+
+                            // Add columns without titles to simulate colored headers in the first row
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+                            destinationTable.AddColumn(new TableColumn(""));
+
+                            // Add the first row as a header with colors
+                            destinationTable.AddRow(
+                                "[yellow3_1]Destination[/]",
+                                "[grey27]Flights Count[/]",
+                                "[red1]Total Seats Sold[/]",
+                                "[chartreuse2]Total Profit[/]");
+
+                            foreach (var item in revenuePerDestination)
+                            {
+                                destinationTable.AddRow(
+                                    item.Destination,
+                                    item.FlightsCount.ToString(),
+                                    item.TotalSeatsSold.ToString(),
+                                    item.TotalProfit.ToString("C"));
+                            }
+                            AnsiConsole.Write(destinationTable);
+
+                            var prompt = new SelectionPrompt<string>()
+                                .Title("What would you like to do next?")
+                                .PageSize(10)
+                                .AddChoices(new[] { "Go back to previous menu" });
+
+                            string result = AnsiConsole.Prompt(prompt);
+
+                            switch (result)
+                            {
+                                case "Go back to previous menu":
+                                    break;
                             }
                             break;
                         case "Download Data Menu":

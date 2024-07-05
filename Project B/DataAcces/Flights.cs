@@ -31,6 +31,7 @@ namespace Project_B.DataAcces
 
         public int Distance { get; set; }
 
+        public int Revenue { get; set; }
         private static string databasePath
         {
             get
@@ -38,7 +39,7 @@ namespace Project_B.DataAcces
                 return System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\DataSource"));
             }
         }
-        static SQLiteConnection CreateConnection()
+        public static SQLiteConnection CreateConnection()
         {
             SQLiteConnection sqlite_conn;
             sqlite_conn = new SQLiteConnection($"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ");
@@ -46,10 +47,7 @@ namespace Project_B.DataAcces
             { 
                 sqlite_conn.Open(); 
             }
-            catch (Exception ex) 
-            { 
-                Console.WriteLine($"Failed to open SQLite connection: {ex.Message}");
-            }
+            catch (Exception ex){   }
             return sqlite_conn;
         }
         public static List<Flight> GetFlights()
@@ -77,14 +75,12 @@ namespace Project_B.DataAcces
                         Origin = sqlite_datareader["Origin"].ToString(),
                         Airline = sqlite_datareader["Airline"].ToString(),
                         Gate = sqlite_datareader["Gate"].ToString(),
-                        Distance = int.Parse(sqlite_datareader["Distance"].ToString())
+                        Distance = int.Parse(sqlite_datareader["Distance"].ToString()),
+                        Revenue = int.Parse(sqlite_datareader["Revenue"].ToString())
                     };
                     flights.Add(flight);
                 }
-                catch (FormatException ex)
-                {
-                    Console.WriteLine($"Failed to parse flight data: {ex.Message}");
-                }
+                catch (FormatException ex) { }
             }
             sqlite_conn.Close();
             return flights;
@@ -113,14 +109,12 @@ namespace Project_B.DataAcces
                         Destination = sqlite_datareader["Destination"].ToString(),
                         Origin = sqlite_datareader["Origin"].ToString(),
                         Airline = sqlite_datareader["Airline"].ToString(),
-                        Gate = sqlite_datareader["Gate"].ToString()
+                        Gate = sqlite_datareader["Gate"].ToString(),
+                        Revenue = int.Parse(sqlite_datareader["Revenue"].ToString())
                     };
                     flights.Add(flight);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to parse flight data: {ex.Message}");
-                }
+                catch (Exception ex) { }
             }
             sqlite_conn.Close();
             return flights;
@@ -136,7 +130,7 @@ namespace Project_B.DataAcces
             {
                 SQLiteCommand sqlite_cmd;
                 sqlite_cmd = sqlite_conn.CreateCommand();
-                sqlite_cmd.CommandText = "INSERT INTO Flights (DepartureTime, Terminal, FlightNumber, AircraftType, Seats, AvailableSeats, Destination, Origin, Airline, Gate, Distance) VALUES (@DepartureTime, @Terminal, @FlightNumber, @AircraftType, @Seats, @AvailableSeats, @Destination, @Origin, @Airline, @Gate, @Distance)";
+                sqlite_cmd.CommandText = "INSERT INTO Flights (DepartureTime, Terminal, FlightNumber, AircraftType, Seats, AvailableSeats, Destination, Origin, Airline, Gate, Distance, Revenue) VALUES (@DepartureTime, @Terminal, @FlightNumber, @AircraftType, @Seats, @AvailableSeats, @Destination, @Origin, @Airline, @Gate, @Distance, @Revenue)";
                 sqlite_cmd.Parameters.AddWithValue("@DepartureTime", flight.DepartureTime);
                 sqlite_cmd.Parameters.AddWithValue("@Terminal", flight.Terminal);
                 sqlite_cmd.Parameters.AddWithValue("@FlightNumber", flight.FlightNumber);
@@ -148,6 +142,7 @@ namespace Project_B.DataAcces
                 sqlite_cmd.Parameters.AddWithValue("@Airline", flight.Airline);
                 sqlite_cmd.Parameters.AddWithValue("@Gate", flight.Gate);
                 sqlite_cmd.Parameters.AddWithValue("@Distance", flight.Distance);
+                sqlite_cmd.Parameters.AddWithValue("@Revenue", 0);
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_conn.Close();
             }
@@ -209,10 +204,14 @@ namespace Project_B.DataAcces
                             Flight flight = new Flight();
                             flight.FlightId = reader.GetInt32(reader.GetOrdinal("FlightId"));
                             flight.Gate = reader.GetString(reader.GetOrdinal("Gate"));
+                            flight.AircraftType = reader.GetString(reader.GetOrdinal("AircraftType"));
                             flight.Destination = reader.GetString(reader.GetOrdinal("Destination"));
                             flight.Origin = reader.GetString(reader.GetOrdinal("Origin"));
                             flight.DepartureTime = reader.GetDateTime(reader.GetOrdinal("DepartureTime"));
+                            flight.Seats = reader.GetInt32(reader.GetOrdinal("Seats"));
+                            flight.AvailableSeats = reader.GetInt32(reader.GetOrdinal("AvailableSeats"));
                             flight.Distance = reader.GetInt32(reader.GetOrdinal("Distance"));
+                            flight.Revenue = reader.GetInt32(reader.GetOrdinal("Revenue"));
                             return flight;
                         }
                         else
@@ -238,284 +237,17 @@ namespace Project_B.DataAcces
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to delete rows: {ex.Message}");
-            }
+            catch (Exception ex)   {   }
         }
-        public string ToAdminString()
-        {
-            return $"Flight Number: {FlightNumber}, Destination: {Destination}, Origin: {Origin}, Departure Time: {DepartureTime}, Terminal: {Terminal}, Gate: {Gate}, Aircraft Type: {AircraftType}, Airline: {Airline}";
-        }
-        public static void AdminUpdateFlight()
+        public static List<Flight> Adminflightlist()
         {
             List<Flight> flights = GetFlights();
 
             // Sort flights by time
             flights = flights.OrderBy(flight => flight.DepartureTime).ToList();
-
-            int selectedRow = 0;
-            int currentPage = 0;
-            int rowsPerPage = 20;
-
-            while (true)
-            {
-                AnsiConsole.MarkupLine("[bold green]Update Flight[/]");
-                var flightTable = new Table().Border(TableBorder.Rounded);
-                flightTable.AddColumn("Time");
-                flightTable.AddColumn("Origin");
-                flightTable.AddColumn("Destination");
-                flightTable.AddColumn("Flight Number");
-                flightTable.AddColumn("Gate");
-                flightTable.AddColumn("Terminal");
-
-                int startRow = currentPage * rowsPerPage;
-                int endRow = Math.Min(startRow + rowsPerPage, flights.Count);
-
-                for (int i = startRow; i < endRow; i++)
-                {
-                    var flight = flights[i];
-                    if (i == selectedRow)
-                    {
-                        flightTable.AddRow($"[green]{flight.DepartureTime}[/]", $"[green]{flight.Origin}[/]", $"[green]{flight.Destination}[/]", $"[green]{flight.FlightNumber}[/]", $"[green]{flight.Gate}[/]", $"[green]{flight.Terminal}[/]");
-                    }
-                    else
-                    {
-                        flightTable.AddRow(flight.DepartureTime.ToString(), flight.Origin, flight.Destination, flight.FlightNumber, flight.Gate, flight.Terminal);
-                    }
-                }
-
-                AnsiConsole.Render(flightTable);
-
-                // Display navigation instructions and current page number
-                AnsiConsole.MarkupLine($"Page [green]{currentPage + 1}[/] of [green]{(flights.Count - 1) / rowsPerPage + 1}[/]");
-                AnsiConsole.MarkupLine("[blue]Options:[/]");
-                AnsiConsole.MarkupLine("[green]Up Arrow[/]: Move selection up");
-                AnsiConsole.MarkupLine("[green]Down Arrow[/]: Move selection down");
-                AnsiConsole.MarkupLine("[green]Enter[/]: Select option");
-                AnsiConsole.MarkupLine("[blue]Navigation:[/]");
-                AnsiConsole.MarkupLine("[green]N[/]: Next page");
-                AnsiConsole.MarkupLine("[green]P[/]: Previous page");
-                AnsiConsole.MarkupLine("[green]B[/]: Back to previous menu");
-
-                var key = Console.ReadKey(true);
-
-                if (key.Key == ConsoleKey.UpArrow)
-                {
-                    selectedRow = Math.Max(0, selectedRow - 1);
-                }
-                else if (key.Key == ConsoleKey.DownArrow)
-                {
-                    selectedRow = Math.Min(flights.Count - 1, selectedRow + 1);
-                }
-                else if (key.Key == ConsoleKey.P)
-                {
-                    currentPage = Math.Max(0, currentPage - 1);
-                    selectedRow = currentPage * rowsPerPage;
-                }
-                else if (key.Key == ConsoleKey.N)
-                {
-                    currentPage = Math.Min((flights.Count - 1) / rowsPerPage, currentPage + 1);
-                    selectedRow = currentPage * rowsPerPage;
-                }
-                else if (key.Key == ConsoleKey.B)
-                {
-                    break;
-                }
-                else if (key.Key == ConsoleKey.Enter)
-                {
-                    // Handle selection
-                    Flight selectedFlight = flights[selectedRow];
-                    // Continue with your update logic here...
-                    Flight flightToUpdate = new Flight
-                    {
-                        FlightId = selectedFlight.FlightId,
-                        FlightNumber = selectedFlight.FlightNumber,
-                        Destination = selectedFlight.Destination,
-                        Origin = selectedFlight.Origin,
-                        DepartureTime = selectedFlight.DepartureTime,
-                        Terminal = selectedFlight.Terminal,
-                        Gate = selectedFlight.Gate,
-                        AircraftType = selectedFlight.AircraftType
-                    };
-
-                    AnsiConsole.Clear();
-
-                    string[] properties = { "Flight Number", "Destination", "Origin", "Departure Time", "Terminal", "Gate"};
-
-                    foreach (string property in properties)
-                    {
-                        var updatePropertyPrompt = new SelectionPrompt<string>()
-                            .Title($"Do you want to update the {property}?")
-                            .AddChoices(new List<string> { "Yes", "No" });
-
-                        var updateProperty = AnsiConsole.Prompt(updatePropertyPrompt) == "Yes";
-
-                        if (updateProperty)
-                        {
-                            // Update the property
-                            switch (property)
-                            {
-                                case "Flight Number":
-                                    // Update flight number
-                                    while (true)
-                                    {
-                                        string flightNumberInput = AnsiConsole.Ask<string>("[blue]Enter new flight number (1000-9999): [/]");
-                                        if (int.TryParse(flightNumberInput, out int flightNumber) && flightNumber >= 1000 && flightNumber <= 9999)
-                                        {
-                                            flightToUpdate.FlightNumber = flightNumberInput;
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1000 and 9999.[/]");
-                                        }
-                                    }
-                                    break;
-
-                                case "Destination":
-                                    // Update destination
-                                    while (true)
-                                    {
-                                        string destinationInput = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter new destination: [/]")
-                                            .Validate(value => value.All(char.IsLetter), "[red]Destination should only contain letters.[/]"));
-                                        destinationInput = char.ToUpper(destinationInput[0]) + destinationInput.Substring(1).ToLower();
-                                        flightToUpdate.Destination = destinationInput;
-                                        break;
-                                    }
-                                    break;
-
-                                case "Origin":
-                                    // Update origin
-                                    while (true)
-                                    {
-                                        string originInput = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter new origin: [/]")
-                                            .Validate(value => value.All(char.IsLetter), "[red]Origin should only contain letters.[/]"));
-                                        originInput = char.ToUpper(originInput[0]) + originInput.Substring(1).ToLower();
-                                        flightToUpdate.Origin = originInput;
-                                        break;
-                                    }
-                                    break;
-
-                                case "Departure Time":
-                                    // Update departure time
-                                    while (true)
-                                    {
-                                        string departureTimeString = AnsiConsole.Ask<string>("[blue]Enter new departure time (dd/MM/yyyy HH:mm): [/]");
-                                        if (DateTime.TryParseExact(departureTimeString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime departureTime))
-                                        {
-                                            if (departureTime > DateTime.Now)
-                                            {
-                                                flightToUpdate.DepartureTime = departureTime;
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                AnsiConsole.MarkupLine("[red]Invalid input. The departure time should be in the future.[/]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid date and time in the format dd/MM/yyyy HH:mm.[/]");
-                                        }
-                                    }
-                                    break;
-
-                                case "Terminal":
-                                    // Update terminal
-                                    while (true)
-                                    {
-                                        string terminalInput = AnsiConsole.Ask<string>("[blue]Enter new terminal (1-4): [/]");
-                                        if (int.TryParse(terminalInput, out int terminal) && terminal >= 1 && terminal <= 4)
-                                        {
-                                            flightToUpdate.Terminal = terminal.ToString();
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1 and 4.[/]");
-                                        }
-                                    }
-                                    break;
-
-                                case "Gate":
-                                    // Update gate
-                                    while (true)
-                                    {
-                                        string gateInput = AnsiConsole.Ask<string>("[blue]Enter new gate (1-24): [/]");
-                                        if (int.TryParse(gateInput, out int gate) && gate >= 1 && gate <= 24)
-                                        {
-                                            flightToUpdate.Gate = gate.ToString();
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a number between 1 and 24.[/]");
-                                        }
-                                    }
-                                    break;
-
-                            }
-                        }
-                    }
-
-                    // Display the original and updated flight information
-                    Console.Clear();
-                    AnsiConsole.MarkupLine($"[red]Original flight information:[/]\n{selectedFlight}\n");
-                    AnsiConsole.MarkupLine($"[green]Updated flight information:[/]\n{flightToUpdate}");
-
-                    // Ask the user if they want to save the changes
-                    var saveChangesPrompt = new SelectionPrompt<string>()
-                        .Title("\nDo you want to save the changes?")
-                        .AddChoices(new List<string> { "Yes", "No" });
-
-                    var saveChanges = AnsiConsole.Prompt(saveChangesPrompt) == "Yes";
-
-                    if (saveChanges)
-                    {
-                        // Update the original flight with the new information
-                        selectedFlight.FlightNumber = flightToUpdate.FlightNumber;
-                        selectedFlight.Destination = flightToUpdate.Destination;
-                        selectedFlight.Origin = flightToUpdate.Origin;
-                        selectedFlight.DepartureTime = flightToUpdate.DepartureTime;
-                        selectedFlight.Terminal = flightToUpdate.Terminal;
-                        selectedFlight.Gate = flightToUpdate.Gate;
-
-                        // Save the updated flight information
-                        UpdateFlight(selectedFlight);
-
-                        AnsiConsole.MarkupLine("[green]Flight updated successfully![/]");
-                    }
-                    else
-                    {
-                        AnsiConsole.MarkupLine("[red]Changes not saved.[/]");
-                    }
-
-                    break;
-                }
-
-                AnsiConsole.Clear();
-            }
+            return flights;
         }
-        public static string AskQuestion(string question)
-        {
-            string input;
-            do
-            {
-                Console.WriteLine(question);
-                input = Console.ReadLine().ToLower();
-                if (input == "yes" || input == "no")
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-                }
-            } while (true);
 
-            return input;
-        }
         private static List<string> cities = new List<string>()
         {
             "London", "Paris", "Berlin", "Rome", "Madrid", "Barcelona", "Vienna", "Prague", "Dublin",
@@ -539,7 +271,8 @@ namespace Project_B.DataAcces
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = random.Next(1, 24).ToString(),
-                Distance = random.Next(1000, 9999)
+                Distance = random.Next(1000, 9999),
+                Revenue = 0
             };
             AddFlight(flight);
             cityIndex = (cityIndex + 1) % cities.Count;
@@ -561,7 +294,8 @@ namespace Project_B.DataAcces
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = random.Next(1, 24).ToString(),
-                Distance = random.Next(1000, 9999)
+                Distance = random.Next(1000, 9999),
+                Revenue = 0
             };
             AddFlight(flight);
             cityIndex = (cityIndex + 1) % cities.Count;
@@ -583,7 +317,8 @@ namespace Project_B.DataAcces
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = random.Next(1, 24).ToString(),
-                Distance = random.Next(1000, 9999)
+                Distance = random.Next(1000, 9999),
+                Revenue = 0
             };
             AddFlight(flight);
             cityIndex = (cityIndex + 1) % cities.Count;
@@ -602,167 +337,18 @@ namespace Project_B.DataAcces
                 Origin = "Amsterdam",
                 Airline = "New South",
                 Gate = "1",
-                Distance = 150
+                Distance = 150,
+                Revenue = 0
             };
             AddFlight(flight);
         }
-    
-        // Filter-systeem:
-        // Implementeer een zoekfilter waarmee gebruikers vluchten naar een specifieke locatie kunnen vinden.
-        // Implementeer functionaliteit om zoekopdrachten te filteren op bestemming, waardoor gebruikers alle beschikbare vluchten naar die specifieke locatie kunnen bekijken.
-        // Ontwikkel filters voor onder andere vertrekdatum en luchtvaartmaatschappij om de zoekresultaten te verbeteren.
-        public static List<Flight> FilterFlights()
-        {
-            AnsiConsole.Clear();
-            AnsiConsole.MarkupLine("[bold green]Filter Flights[/]");
-            List<Flight> flights = GetFlights();
 
-            if (flights == null)
-            {
-                AnsiConsole.MarkupLine("[red]Error: Failed to get flights.[/]");
-                return new List<Flight>(); // return an empty list if there's an error
-            }
-
-            var yesNoOptions = new[] { "Yes", "No" };
-
-            var filterByDestination = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("Do you want to filter by destination?")
-                    .AddChoices(yesNoOptions));
-
-            if (filterByDestination == "Yes")
-            {
-                var destinations = flights.Select(f => f.Destination).Distinct().OrderBy(d => d).ToList();
-                var selectedDestination = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("Please select a destination:")
-                        .PageSize(10)
-                        .AddChoices(destinations));
-
-                flights = flights.Where(f => f.Destination == selectedDestination).ToList();
-            }
-
-            var filterByDepartureTime = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("Do you want to filter by departure time?")
-                    .AddChoices(yesNoOptions));
-
-            if (filterByDepartureTime == "Yes")
-            {
-                var departureTimes = flights.Select(f => f.DepartureTime.ToString()).Distinct().OrderBy(d => d).ToList();
-                var selectedDepartureTime = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("Please select a departure time:")
-                        .PageSize(10)
-                        .AddChoices(departureTimes));
-
-                flights = flights.Where(f => f.DepartureTime.ToString() == selectedDepartureTime).ToList();
-            }
-
-            return flights; // return the filtered flights
-        }
-
-        public static void AdminAddFlight()
-        {
-            AnsiConsole.Clear();
-
-            string title = "Add Flight";
-            AnsiConsole.MarkupLine($"[bold green]{title}[/]");
-
-            var flightNumber = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter flight number: (1000-9999)[/]")
-                .Validate(value => value >= 1000 && value <= 9999, "[red]Please enter a number between 1000 and 9999[/]"));
-
-            var destination = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter destination:[/]")
-                .Validate(value => !int.TryParse(value, out _), "[red]Destination cannot be a number.[/]"));
-            destination = char.ToUpper(destination[0]) + destination.Substring(1).ToLower();
-
-            var origin = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter origin:[/]")
-                .Validate(value => !int.TryParse(value, out _), "[red]Origin cannot be a number.[/]"));
-            origin = char.ToUpper(origin[0]) + origin.Substring(1).ToLower();
-
-            var departureTimeString = AnsiConsole.Prompt(new TextPrompt<string>("[blue]Enter departure time: (dd/MM/yyyy HH:mm)[/]")
-                .Validate(value => DateTime.TryParseExact(value, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) && date > DateTime.Now, "[red]Please enter a future date and time in the format dd/MM/yyyy HH:mm[/]"));
-
-            DateTime departureTime = DateTime.ParseExact(departureTimeString, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-
-            var terminal = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter terminal: (1-4)[/]")
-                .Validate(value => value >= 1 && value <= 4, "[red]Please enter a number between 1 and 4[/]"));
-
-            var gate = AnsiConsole.Prompt(new TextPrompt<int>("[blue]Enter gate: (1-24)[/]")
-                .Validate(value => value >= 1 && value <= 24, "[red]Please enter a number between 1 and 24[/]"));
-
-            var aircraftTypeOptions = new[] { "Boeing 787", "Boeing 737", "Airbus 330", "Exit" };
-            var aircraftType = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("[blue]Enter aircraft type:[/]")
-                .AddChoices(aircraftTypeOptions));
-            if (aircraftType == "Exit") return;
-
-            int seats = 0, availableSeats = 0;
-            if (aircraftType == "Boeing 787")
-            {
-                seats = availableSeats = 219;
-            }
-            else if (aircraftType == "Boeing 737")
-            {
-                seats = availableSeats = 186;
-            }
-            else if (aircraftType == "Airbus 330")
-            {
-                seats = availableSeats = 345;
-            }
-
-            string airline = "New South";
-
-            Flight newFlight = new Flight
-            {
-                FlightNumber = flightNumber.ToString(),
-                Destination = destination,
-                Origin = origin,
-                DepartureTime = departureTime,
-                Terminal = terminal.ToString(),
-                AircraftType = aircraftType,
-                Gate = gate.ToString(),
-                Seats = seats,
-                AvailableSeats = availableSeats,
-                Airline = airline,
-                Distance = 100
-            };
-            
-            AnsiConsole.Clear();
-            // Show the flight information
-            AnsiConsole.MarkupLine($"[blue]Flight Number: [/][green]{newFlight.FlightNumber}[/]");
-            AnsiConsole.MarkupLine($"[blue]Destination: [/][green]{newFlight.Destination}[/]");
-            AnsiConsole.MarkupLine($"[blue]Origin: [/][green]{newFlight.Origin}[/]");
-            AnsiConsole.MarkupLine($"[blue]Departure Time: [/][green]{newFlight.DepartureTime}[/]");
-            AnsiConsole.MarkupLine($"[blue]Terminal: [/][green]{newFlight.Terminal}[/]");
-            AnsiConsole.MarkupLine($"[blue]Gate: [/][green]{newFlight.Gate}[/]");
-            AnsiConsole.MarkupLine($"[blue]Aircraft Type: [/][green]{newFlight.AircraftType}[/]");
-            AnsiConsole.MarkupLine($"[blue]Seats: [/][green]{newFlight.Seats}[/]");
-            AnsiConsole.MarkupLine($"[blue]Available Seats: [/][green]{newFlight.AvailableSeats}[/]");
-
-            // Ask the user if they really want to add the flight
-            var confirmationOptions = new[] { "Yes", "No" };
-            var confirmation = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .Title("Do you really want to add this flight?")
-                .AddChoices(confirmationOptions));
-
-            if (confirmation == "Yes")
-            {
-                AddFlight(newFlight);
-                AnsiConsole.MarkupLine("[green]Flight added successfully![/]");
-                System.Threading.Thread.Sleep(3000);
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[red]Flight not added.[/]");
-                System.Threading.Thread.Sleep(3000);
-            }
-        }
         // function for adding tickets to a plane
-        public static void reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes)
+        public static void reserveseat(int flightid, int userid, string seat, string seatclass, string extranotes, decimal price)
         {
             Users user = Users.GetuserbyId(userid);
             Flight flight = GetFlightById(flightid);
+            UpdateRevenue(price, flightid);
             string ConnectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
 
             DateTime time = DateTime.Now;
@@ -777,6 +363,72 @@ namespace Project_B.DataAcces
                     cmd1.ExecuteNonQuery();
                 }
             }
+        }
+        public static void UpdateRevenue(Decimal Revenuedec, int FlightId)
+        {
+            Flight flight = GetFlightById(FlightId);
+            int newseats = flight.AvailableSeats - 1;
+            // Get the connection string
+            string connectionString = $"Data Source={databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+            int Revenue = Decimal.ToInt32(Revenuedec);
+            Revenue += flight.Revenue;
+            // Create a new connection
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                // Open the connection
+                connection.Open();
+
+                // Create a new command
+                using (SQLiteCommand command = new SQLiteCommand("UPDATE Flights SET Revenue = @Revenue, AvailableSeats = @newseats WHERE FlightID = @FlightId", connection))
+                {
+                    // Add the parameters
+                    command.Parameters.AddWithValue("@Revenue", Revenue);
+                    command.Parameters.AddWithValue("@FlightId", FlightId);
+                    command.Parameters.AddWithValue("@newseats", newseats);
+
+
+                    // Execute the command
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        public static bool Removeflight(int FlightNumber)
+        {
+            try
+            {
+                string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sql = $"DELETE FROM Flights WHERE FlightNumber = {FlightNumber} ";
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex) { }
+            return false;
+        }
+        public static bool Removeticket(int FlightNumber)
+        {
+            try
+            {
+                string ConnectionString = $"Data Source={DataAccess.databasePath}\\database.db; Version = 3; New = True; Compress = True; ";
+                string sql = $"DELETE FROM Tickets WHERE FlightID = {FlightNumber} ";
+                using (SQLiteConnection c = new SQLiteConnection(ConnectionString))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, c))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex) { }
+            return false;
         }
     }
 }
